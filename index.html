@@ -524,13 +524,22 @@ body{
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"
   onerror="window._fbLoadErr=true"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- Config injected at deploy time from GitHub Secrets; not in source control -->
+<script src="config.js" onerror="window._configLoadErr=true"></script>
 
 <script>
-let APP_CONFIG = null;
+let APP_CONFIG = window.APP_CONFIG || null;
 let FIREBASE_CONFIG = null;
 let ADMIN_API_URL = "";
 
 async function loadAppConfig() {
+  // Use config.js injected at deploy time (if available)
+  if (APP_CONFIG && APP_CONFIG.firebase && APP_CONFIG.firebase.projectId) {
+    FIREBASE_CONFIG = APP_CONFIG.firebase;
+    ADMIN_API_URL = APP_CONFIG.adminApiUrl || `https://us-central1-${APP_CONFIG.firebase.projectId}.cloudfunctions.net/adminLogin`;
+    return;
+  }
+  // Fallback: fetch from Cloud Function
   const fallbackApiUrl = "https://us-central1-gattupalli-gajulapalli.cloudfunctions.net/appConfig";
   const res = await fetch(fallbackApiUrl, { method: "GET", credentials: "omit", cache: "no-store" });
   if (!res.ok) throw new Error("Could not load app configuration");
