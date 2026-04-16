@@ -1,0 +1,3224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>అన్నదాన సత్రం</title>
+
+<!-- ─── Favicons / App Icons ─── -->
+<!-- Browser tab icon (SVG – crisp at any size) -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236B1A00'/%3E%3Cstop offset='1' stop-color='%23D96E0E'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='13' fill='url(%23g)'/%3E%3Ctext x='32' y='47' font-size='38' text-anchor='middle' font-family='serif'%3E%F0%9F%95%89%3C/text%3E%3C/svg%3E">
+<!-- Apple touch icon for iOS home screen -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236B1A00'/%3E%3Cstop offset='0.5' stop-color='%239B3A08'/%3E%3Cstop offset='1' stop-color='%23D96E0E'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='180' height='180' rx='38' fill='url(%23g)'/%3E%3Ctext x='90' y='130' font-size='105' text-anchor='middle' font-family='serif'%3E%F0%9F%95%89%3C/text%3E%3C/svg%3E">
+
+<!-- PWA / Add to Home Screen -->
+<meta name="application-name" content="అన్నదాన సత్రం">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="అన్నదాన సత్రం">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#9B3A08">
+<script>
+// Inline manifest for PWA name without needing a separate file
+(function(){
+  const m = {
+    name: 'అన్నదాన సత్రం',
+    short_name: 'అన్నదాన సత్రం',
+    start_url: '.',
+    display: 'standalone',
+    background_color: '#FFFAF3',
+    theme_color: '#9B3A08',
+    icons: [{
+      src: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236B1A00'/%3E%3Cstop offset='0.5' stop-color='%239B3A08'/%3E%3Cstop offset='1' stop-color='%23D96E0E'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='192' height='192' rx='38' fill='url(%23g)'/%3E%3Ctext x='96' y='138' font-size='112' text-anchor='middle' font-family='serif'%3E%F0%9F%95%89%3C/text%3E%3C/svg%3E",
+      sizes: '192x192', type: 'image/svg+xml'
+    }]
+  };
+  const json = JSON.stringify(m);
+  const b64  = btoa(unescape(encodeURIComponent(json)));
+  const link = document.createElement('link');
+  link.rel = 'manifest'; link.href = 'data:application/json;base64,' + b64;
+  document.currentScript.after(link);
+})();
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@400;700;900&family=Tiro+Telugu&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Lato:wght@400;700;900&family=Tiro+Telugu&display=swap"></noscript>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --saffron:#D4580C;--saffron-dark:#B5460A;--saffron-light:#FFF4E0;
+  --gold:#E8C97A;--gold-light:#FFF9EE;
+  --green:#2E7D32;--green-dark:#1B5E20;--green-light:#E8F5E9;
+  --red:#C62828;--red-light:#FFEBEE;
+  --blue:#1565C0;--blue-light:#E3F2FD;
+  --purple:#6A1B9A;
+  --text:#3A2808;--text2:#7A4A1A;--text3:#A07040;
+  --bg:#FFFAF3;--white:#fff;--border:#DFC99A;
+  --shadow:0 2px 12px rgba(30,15,0,.10);
+  --shadow-md:0 4px 20px rgba(30,15,0,.14);
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+  --safe-l:env(safe-area-inset-left,0px);
+  --safe-r:env(safe-area-inset-right,0px);
+  --nav-h:58px;
+  --hdr-h:90px;
+}
+
+/* ─── RESET / BASE ─── */
+html,body{
+  height:100%;width:100%;
+  overflow:hidden;
+  font-family:'Lato',sans-serif;
+  background:#f5e6c8;
+}
+body{
+  display:flex;align-items:stretch;justify-content:center;
+  padding:0;
+}
+
+/* ─── APP SHELL – true full-screen mobile layout ─── */
+.app{
+  width:100%;max-width:430px;
+  height:100vh;height:100dvh;           /* dynamic viewport height */
+  display:flex;flex-direction:column;
+  background:var(--bg);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(0,0,0,.2);
+}
+
+/* ─── HEADER ─── */
+.hdr{
+  background:linear-gradient(160deg,#6B1A00 0%,#9B3A08 30%,#C5500C 60%,#D96E0E 85%,#E8820F 100%);
+  padding:calc(8px + var(--safe-top)) 16px 10px;
+  text-align:center;flex-shrink:0;position:relative;
+}
+.hdr::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(255,220,100,.5),transparent)}
+.hdr-deco{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:3px}
+.hdr-line{height:1px;flex:1;max-width:50px;background:rgba(255,220,120,0.45)}
+.hdr-om{font-size:18px;cursor:pointer;transition:transform .25s;user-select:none;filter:drop-shadow(0 1px 3px rgba(0,0,0,.35))}
+.hdr-om:active{transform:scale(1.3) rotate(20deg)}
+.hdr-blessing{font-family:'Tiro Telugu',serif;font-size:11.5px;color:rgba(255,242,185,.92);letter-spacing:.5px;margin-bottom:3px;line-height:1.45;text-shadow:0 1px 4px rgba(0,0,0,.3)}
+.hdr-title{font-family:'Tiro Telugu',serif;font-size:18px;font-weight:700;color:#FFE9A0;letter-spacing:.5px;text-shadow:0 2px 8px rgba(0,0,0,.35);line-height:1.2;margin-bottom:2px}
+.hdr-sub{font-family:'Tiro Telugu',serif;font-size:14px;font-weight:600;color:#FFD97A;margin-top:2px;text-shadow:0 1px 5px rgba(0,0,0,.25);letter-spacing:.3px}
+.hdr-tag{font-family:'Tiro Telugu',serif;font-size:11px;color:rgba(255,230,172,.82);margin-top:2px;letter-spacing:.3px}
+
+/* ─── COMPACT PAGE HEADER (non-home pages) ─── */
+.hdr-compact{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:calc(6px + var(--safe-top)) 14px 8px;
+  gap:10px;
+}
+.hdr-compact-left{display:flex;align-items:center;gap:8px;min-width:0}
+.hdr-compact-icon{font-size:20px;line-height:1;flex-shrink:0}
+.hdr-compact-title{font-family:'Cinzel',serif;font-size:15px;font-weight:700;color:#FFE9A0;letter-spacing:.4px;text-shadow:0 1px 5px rgba(0,0,0,.3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hdr-compact-yr{font-size:10px;font-weight:700;background:rgba(255,255,255,.18);color:#FFE9A0;border-radius:8px;padding:3px 9px;letter-spacing:.5px;white-space:nowrap;flex-shrink:0}
+.hdr-compact-om{font-size:22px;cursor:pointer;transition:transform .25s;user-select:none;filter:drop-shadow(0 1px 3px rgba(0,0,0,.35));flex-shrink:0}
+.hdr-compact-om:active{transform:scale(1.3) rotate(20deg)}
+
+
+.year-bar{display:none!important}
+
+/* ─── HOME YEAR PICKER ─── */
+.yr-wrap{margin-bottom:14px}
+.yr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}
+.yr-label{font-size:9px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--text3)}
+.yr-add-btns{display:flex;gap:6px}
+.yr-add-btn{font-size:11px;font-weight:700;padding:4px 10px;border:1.5px solid var(--border);border-radius:8px;background:#fff;color:var(--text2);cursor:pointer;transition:all .18s;white-space:nowrap}
+.yr-add-btn:active{background:var(--saffron-light);border-color:var(--saffron);color:var(--saffron-dark)}
+.yr-row{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:3px;-webkit-overflow-scrolling:touch}
+.yr-row::-webkit-scrollbar{display:none}
+.yr-tile{flex-shrink:0;width:96px;border-radius:14px;padding:11px 11px 10px;border:2px solid var(--border);background:#fff;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.yr-tile:active{transform:scale(.96)}
+.yr-tile.sel{border-color:var(--saffron);background:linear-gradient(145deg,#FFF8EC,#FFE4AA);box-shadow:0 4px 16px rgba(212,88,12,.2)}
+.yr-tile-num{font-size:20px;font-weight:900;font-family:'Lato',sans-serif;color:var(--text);line-height:1;margin-bottom:6px}
+.yr-tile.sel .yr-tile-num{color:var(--saffron-dark)}
+.yr-now{position:absolute;top:6px;right:7px;font-size:7px;font-weight:700;letter-spacing:.6px;background:var(--saffron);color:#fff;border-radius:5px;padding:2px 5px;line-height:1.3}
+.yr-tile-d{font-size:9px;font-weight:700;color:var(--saffron-dark);margin-top:1px}
+.yr-tile-e{font-size:9px;font-weight:700;color:var(--green);margin-top:2px}
+.yr-tile-empty{font-size:9px;color:var(--text3);font-style:italic;margin-top:4px}
+
+/* ─── SCROLLABLE CONTENT AREA ─── */
+.screen{
+  flex:1;
+  overflow-y:auto;overflow-x:hidden;
+  padding:12px 12px;
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior:contain;
+}
+
+/* ─── BOTTOM NAV ─── */
+.nav{
+  display:flex;
+  background:#fff;
+  border-top:1.5px solid var(--border);
+  flex-shrink:0;
+  box-shadow:0 -2px 12px rgba(30,15,0,.08);
+  padding-bottom:var(--safe-bot);
+  min-height:var(--nav-h);
+}
+.nav-btn{
+  flex:1;padding:7px 2px 5px;
+  background:none;border:none;cursor:pointer;
+  font-size:7.5px;font-family:'Lato',sans-serif;font-weight:700;
+  letter-spacing:.5px;text-transform:uppercase;
+  color:var(--text3);
+  display:flex;flex-direction:column;align-items:center;gap:1px;
+  transition:color .2s;position:relative;
+  min-width:0;
+}
+.nav-btn.active{color:var(--saffron)}
+.nav-icon{font-size:18px;line-height:1}
+.nav-btn span:not(.nav-icon):not(.req-badge){
+  font-size:7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  max-width:100%;display:block;text-align:center;
+}
+.nav-btn.active .nav-bar{height:2.5px;width:22px;background:linear-gradient(90deg,var(--saffron-dark),var(--saffron));border-radius:2px}
+.nav-bar{height:2.5px;width:22px;border-radius:2px}
+
+/* ─── AUTH SCREEN (full-screen, scrollable) ─── */
+.auth-container{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:flex-start;
+  min-height:100vh;min-height:100dvh;
+  padding:max(20px,var(--safe-top)) 16px max(20px,var(--safe-bot));
+  background:linear-gradient(160deg,#2C0A00 0%,#7A2500 35%,#B5460A 70%,#E8740F 100%);
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.auth-card{
+  width:100%;max-width:390px;
+  background:#fff;border-radius:24px;overflow:hidden;
+  box-shadow:0 20px 60px rgba(0,0,0,.45);
+  margin:auto 0;
+}
+.auth-hero{
+  background:linear-gradient(170deg,#7A1E00 0%,#B5460A 40%,#D4580C 70%,#E8920A 100%);
+  padding:22px 20px 20px;text-align:center;position:relative;
+}
+.auth-hero::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:20px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 390 20'%3E%3Cpath fill='%23fff' d='M0 20 Q97.5 0 195 20 Q292.5 0 390 20 Z'/%3E%3C/svg%3E") no-repeat bottom/100%}
+.auth-om{font-size:46px;line-height:1;filter:drop-shadow(0 3px 8px rgba(0,0,0,.4));margin-bottom:8px;animation:auth-pulse 3s ease-in-out infinite}
+@keyframes auth-pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.auth-deco{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px}
+.auth-deco span{height:1px;width:28px;background:rgba(255,220,120,.5)}
+.auth-blessing{font-family:'Tiro Telugu',serif;font-size:12px;color:rgba(255,242,185,.88);line-height:1.55;margin-bottom:6px;letter-spacing:.4px;text-shadow:0 1px 4px rgba(0,0,0,.28)}
+.auth-title{font-family:'Tiro Telugu',serif;font-size:21px;font-weight:700;color:#FFE9A0;letter-spacing:.6px;text-shadow:0 2px 8px rgba(0,0,0,.32);line-height:1.2}
+.auth-sub1{font-family:'Tiro Telugu',serif;font-size:16px;font-weight:600;color:#FFD97A;margin-top:5px;text-shadow:0 1px 4px rgba(0,0,0,.22);letter-spacing:.3px}
+.auth-sub2{font-family:'Tiro Telugu',serif;font-size:12px;color:rgba(255,230,172,.84);margin-top:4px;letter-spacing:.4px}
+.auth-body{padding:20px 20px 24px}
+.auth-form-group{margin-bottom:12px}
+.auth-tab-row{display:flex;gap:0;margin-bottom:16px;background:#F5EDE0;border-radius:10px;padding:3px}
+.auth-tab{flex:1;padding:8px;border:none;border-radius:8px;font-size:12px;font-weight:700;font-family:'Lato',sans-serif;cursor:pointer;letter-spacing:.4px;background:transparent;color:var(--text3);transition:all .2s}
+.auth-tab.active{background:#fff;color:var(--saffron-dark);box-shadow:0 2px 8px rgba(0,0,0,.1)}
+
+/* invite status */
+.inv-status{border-radius:12px;padding:14px 16px;text-align:center;margin-bottom:4px}
+.inv-status.pending{background:#FFF8E1;border:1.5px solid #FFD54F}
+.inv-status.rejected{background:var(--red-light);border:1.5px solid #EF9A9A}
+.inv-status-icon{font-size:26px;margin-bottom:6px}
+.inv-status-title{font-size:13px;font-weight:700;margin-bottom:3px}
+.inv-status-msg{font-size:11px;color:var(--text3);line-height:1.5}
+
+/* ─── ADMIN PANEL ─── */
+.admin-req-card{background:#fff;border:1px solid var(--border);border-radius:14px;padding:13px;margin-bottom:10px;box-shadow:var(--shadow)}
+.admin-req-name{font-size:14px;font-weight:700;color:var(--text)}
+.admin-req-meta{font-size:11px;color:var(--text3);margin-top:2px}
+.admin-req-actions{display:flex;gap:8px;margin-top:10px}
+.approve-btn{flex:1;padding:10px;background:linear-gradient(135deg,#1B5E20,#2E7D32);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer}
+.reject-btn{flex:1;padding:10px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer}
+.req-badge{display:inline-block;background:var(--red);color:#fff;border-radius:10px;font-size:9px;font-weight:700;padding:1px 5px;margin-left:2px;vertical-align:middle;line-height:1.4}
+
+/* ─── HOME CARDS ─── */
+.home-cards{display:flex;flex-direction:column;gap:10px}
+.dash-card{border-radius:14px;padding:15px 15px 12px;cursor:pointer;transition:transform .15s,box-shadow .15s;border:1px solid transparent;position:relative;overflow:hidden}
+.dash-card::before{content:'';position:absolute;right:-20px;top:-20px;width:90px;height:90px;border-radius:50%;opacity:.08}
+.dash-card:active{transform:scale(0.97)}
+.dash-card.donation{background:linear-gradient(135deg,#FFF4E0,#FFE4B0);border-color:#E8C97A}
+.dash-card.donation::before{background:var(--saffron)}
+.dash-card.expense{background:linear-gradient(135deg,#E8F5E9,#C8E6C9);border-color:#A5D6A7}
+.dash-card.expense::before{background:var(--green)}
+.dash-card.balance{background:linear-gradient(135deg,#E3F2FD,#BBDEFB);border-color:#90CAF9}
+.dash-card.balance::before{background:var(--blue)}
+.dash-card .card-icon{font-size:26px;margin-bottom:5px}
+.dash-card .card-label{font-size:9px;font-weight:700;letter-spacing:1.3px;text-transform:uppercase;opacity:.65;display:flex;align-items:center;gap:6px}
+.dash-card .card-year{font-size:9px;background:rgba(0,0,0,.08);border-radius:10px;padding:1px 7px;font-weight:700;letter-spacing:.4px}
+.dash-card .card-amount{font-size:26px;font-weight:900;margin:3px 0 6px;font-family:'Lato',sans-serif;letter-spacing:-1px}
+.donation .card-amount{color:var(--saffron-dark)}
+.expense .card-amount{color:var(--green)}
+.balance .card-amount{color:var(--blue)}
+.dash-card .card-sub{font-size:10px;opacity:.6}
+.dash-card .card-arrow{position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:20px;opacity:.18}
+.card-chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:9.5px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.3px}
+.chip.green{background:var(--green-light);color:var(--green)}
+.chip.red{background:var(--red-light);color:var(--red)}
+.chip.blue{background:var(--blue-light);color:var(--blue)}
+
+/* ─── SECTION HEADER ─── */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.sec-hdr-left{display:flex;align-items:center;gap:7px}
+.sec-hdr h2{font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:var(--saffron-dark)}
+.count-pill{background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border-radius:20px;font-size:10px;font-weight:700;padding:2px 8px;letter-spacing:.3px}
+.add-btn{background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:700;font-family:'Lato',sans-serif;cursor:pointer;letter-spacing:.3px;transition:opacity .2s,transform .15s;box-shadow:0 2px 8px rgba(212,88,12,.3)}
+.add-btn:active{opacity:.85;transform:scale(.97)}
+
+/* ─── STATS ROW ─── */
+.stats-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.stat-box{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:11px 12px;position:relative;overflow:hidden;box-shadow:var(--shadow)}
+.stat-box::after{content:'';position:absolute;right:-12px;top:-12px;width:60px;height:60px;border-radius:50%;opacity:.07}
+.stat-box.orange::after{background:var(--saffron)}
+.stat-box.green::after{background:var(--green)}
+.stat-box.red::after{background:var(--red)}
+.stat-box .slabel{font-size:9px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
+.stat-box .sval{font-size:18px;font-weight:900;color:var(--text);font-family:'Lato',sans-serif}
+.stat-box.green .sval{color:var(--green)}
+.stat-box.red .sval{color:var(--red)}
+.stat-box.orange .sval{color:var(--saffron-dark)}
+.stat-box.blue .sval{color:var(--blue)}
+
+/* ─── LIST ITEMS ─── */
+.list-item{background:var(--white);border:1px solid var(--border);border-left:4px solid transparent;border-radius:12px;padding:12px;margin-bottom:8px;cursor:pointer;transition:all .15s;box-shadow:var(--shadow)}
+.list-item:active{transform:scale(.99)}
+.don-item{border-left-color:var(--saffron)}
+.exp-item{border-left-color:var(--green)}
+.list-item-open.don-item{border-color:var(--saffron);box-shadow:0 4px 18px rgba(212,88,12,.15)}
+.list-item-open.exp-item{border-color:var(--green);box-shadow:0 4px 18px rgba(46,125,50,.15)}
+.don-detail{margin-top:10px;padding-top:10px;border-top:1px dashed var(--gold)}
+.don-detail-row{display:flex;justify-content:space-between;align-items:flex-start;font-size:12px;padding:4px 0;color:var(--text);gap:8px}
+.don-detail-lbl{font-weight:700;color:var(--text3);white-space:nowrap;min-width:80px}
+.don-detail-actions{display:flex;flex-direction:row;gap:7px;margin-top:10px;flex-wrap:wrap;align-items:center}
+.det-btn{flex:1;min-width:80px;padding:10px 6px;border:none;border-radius:9px;font-size:11px;font-weight:700;font-family:'Lato',sans-serif;cursor:pointer;letter-spacing:.2px;transition:all .2s;white-space:nowrap;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.recv-btn{background:linear-gradient(135deg,#1B5E20,#2E7D32);color:#fff}
+.share-btn{background:linear-gradient(135deg,#128C7E,#25D366);color:#fff}
+.edit-btn{background:linear-gradient(135deg,#4A148C,#7B1FA2);color:#fff}
+.li-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:3px}
+.li-name{font-size:14px;font-weight:700;color:var(--text)}
+.li-amount{font-size:15px;font-weight:900;color:var(--saffron-dark)}
+.li-meta{font-size:11px;color:var(--text3);display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:2px}
+.badge{font-size:9px;font-weight:700;padding:2px 8px;border-radius:10px;letter-spacing:.3px}
+.badge.recv{background:var(--green-light);color:var(--green)}
+.badge.pend{background:var(--red-light);color:var(--red)}
+.badge.exp{background:var(--blue-light);color:var(--blue)}
+.badge.part{background:#FFF3E0;color:#E65100}
+.li-serial{font-size:10px;color:var(--text3);font-weight:700;margin-bottom:2px}
+
+/* ─── OVERLAY / BOTTOM SHEET FORM ─── */
+.overlay{position:fixed;inset:0;background:rgba(30,15,0,.5);z-index:100;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);padding-top:var(--hdr-h,90px)}
+.form-sheet{
+  background:var(--bg);
+  border-radius:22px 22px 0 0;
+  padding:18px 14px;
+  padding-bottom:max(calc(var(--nav-h) + var(--safe-bot) + 16px), 82px);
+  width:100%;
+  max-height:calc(100dvh - var(--hdr-h,90px));
+  overflow-y:auto;-webkit-overflow-scrolling:touch;
+}
+.form-title{font-family:'Cinzel',serif;font-size:14px;font-weight:700;color:var(--saffron-dark);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.close-btn{background:rgba(212,88,12,.1);border:none;width:30px;height:30px;border-radius:50%;font-size:18px;cursor:pointer;color:var(--text2);display:flex;align-items:center;justify-content:center;line-height:1;flex-shrink:0}
+.flabel{display:block;font-size:10px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--text2);margin-bottom:4px}
+.finput,.fselect,.ftextarea{
+  width:100%;padding:11px 12px;
+  font-size:16px; /* 16px prevents iOS auto-zoom */
+  font-family:'Lato',sans-serif;
+  background:var(--white);
+  border:1.5px solid var(--border);border-radius:9px;
+  color:var(--text);outline:none;
+  -webkit-appearance:none;appearance:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.finput:focus,.fselect:focus,.ftextarea:focus{border-color:var(--saffron);box-shadow:0 0 0 3px rgba(212,88,12,.1)}
+.ftextarea{resize:none;line-height:1.5}
+.fgroup{margin-bottom:10px}
+.sel-wrap{position:relative}
+.sel-wrap::after{content:'▾';position:absolute;right:10px;top:50%;transform:translateY(-50%);color:var(--saffron-dark);pointer-events:none;font-size:13px}
+.amt-card{background:#FFF4E0;border:1.5px solid var(--gold);border-radius:12px;padding:12px;margin-bottom:10px}
+.amt-row{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.rsym{font-size:22px;font-weight:700;color:var(--saffron-dark)}
+.amt-input{flex:1;padding:6px 8px;font-size:22px;font-weight:900;font-family:'Lato',sans-serif;background:transparent;border:none;border-bottom:2px solid var(--gold);border-radius:0;color:var(--text);outline:none}
+.amt-input:focus{border-bottom-color:var(--saffron)}
+.words-box{font-size:12px;font-style:italic;color:#5A3A10;background:rgba(255,255,255,.65);border:1px dashed var(--gold);border-radius:7px;padding:6px 10px;min-height:26px;word-break:break-word}
+.recv-row{display:flex;gap:10px;margin-bottom:10px}
+.ropt{flex:1;display:flex;align-items:center;gap:7px;padding:11px 12px;border-radius:9px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;font-size:13px;font-weight:700;color:var(--text2);transition:all .2s}
+.ropt input{display:none}
+.ropt.sel-yes{background:var(--green-light);border-color:var(--green);color:var(--green)}
+.ropt.sel-no{background:var(--red-light);border-color:var(--red);color:var(--red)}
+.rchk{width:16px;height:16px;border-radius:50%;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0}
+.sig-wrap{background:var(--white);border:1.5px solid var(--border);border-radius:9px;overflow:hidden;margin-bottom:10px}
+.sig-cv{display:block;width:100%;height:90px;cursor:crosshair;touch-action:none}
+.sig-bar{display:flex;justify-content:space-between;align-items:center;padding:5px 10px;border-top:1px solid var(--gold-light);background:var(--gold-light)}
+.sig-hint{font-size:10px;color:var(--text3);font-style:italic}
+.sig-clr{font-size:10px;padding:3px 10px;border:1px solid var(--border);border-radius:5px;background:var(--white);color:var(--saffron-dark);cursor:pointer;font-weight:700}
+.save-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#FFF5DC;border:none;border-radius:12px;font-size:15px;font-weight:700;font-family:'Cinzel',serif;letter-spacing:1.5px;cursor:pointer;transition:opacity .2s,transform .15s;box-shadow:0 4px 16px rgba(212,88,12,.35)}
+.save-btn:active{opacity:.85;transform:scale(.98)}
+.divhr{height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent);margin:5px 0}
+.upload-box{border:2px dashed var(--gold);border-radius:10px;background:var(--gold-light);padding:14px;text-align:center;cursor:pointer;transition:border-color .2s;min-height:70px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.upload-box:active{border-color:var(--saffron)}
+.upload-actions{margin-top:8px;display:flex;gap:8px}
+.upload-act-btn{flex:1;padding:8px;font-size:11px;font-weight:700;border:1.5px solid var(--border);border-radius:7px;background:var(--white);cursor:pointer}
+
+/* ─── TOAST ─── */
+.toast{
+  position:fixed;bottom:calc(var(--nav-h) + var(--safe-bot) + 10px);
+  left:50%;transform:translateX(-50%);
+  background:#2E7D32;color:#fff;padding:10px 20px;border-radius:22px;
+  font-size:12px;font-weight:700;z-index:999;
+  box-shadow:0 4px 20px rgba(0,0,0,.25);
+  display:none;white-space:nowrap;letter-spacing:.3px;
+  max-width:calc(100% - 32px);text-align:center;white-space:normal;
+}
+.empty{text-align:center;padding:28px 14px;color:var(--text3);font-size:13px;font-style:italic}
+
+/* ─── BALANCE SHEET ─── */
+.balance-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:14px;margin-bottom:12px;box-shadow:var(--shadow)}
+.bal-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f5e8cc}
+.bal-row:last-child{border-bottom:none}
+.bal-label{font-size:13px;color:var(--text2)}
+.bal-val{font-size:14px;font-weight:700}
+.bal-total{background:linear-gradient(135deg,var(--saffron-light),#FFE8A0);border-radius:10px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center;margin-top:10px;border:1px solid var(--gold)}
+.bal-total .bal-label{font-weight:700;color:var(--saffron-dark)}
+.bal-total .bal-val{font-size:20px;color:var(--saffron-dark)}
+
+/* ─── RECEIPT MODAL ─── */
+.rcpt-overlay{position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:500;display:flex;align-items:center;justify-content:center;padding:10px;backdrop-filter:blur(8px)}
+.rcpt-card{background:#fff;border-radius:22px;width:100%;max-width:360px;overflow:hidden;box-shadow:0 28px 70px rgba(0,0,0,.55);animation:rcptSlide .38s cubic-bezier(.34,1.56,.64,1);}
+@keyframes rcptSlide{from{transform:translateY(60px) scale(.88);opacity:0}to{transform:none;opacity:1}}
+.rcpt-header{background:linear-gradient(170deg,#7A1E00 0%,#B5460A 30%,#D4580C 60%,#E8740F 85%,#F0920A 100%);padding:0;text-align:center;color:#fff;position:relative;overflow:hidden}
+.rcpt-header::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60'%3E%3Ccircle cx='30' cy='30' r='28' fill='none' stroke='rgba(255,220,120,0.07)' stroke-width='1'/%3E%3C/svg%3E") repeat;opacity:.5}
+.rcpt-header::after{content:'';position:absolute;bottom:-1px;left:0;right:0;height:22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 360 22'%3E%3Cpath fill='%23fff' d='M0 22 Q90 0 180 22 Q270 0 360 22 Z'/%3E%3C/svg%3E") no-repeat bottom/100%}
+.rcpt-hdr-top{padding:10px 18px 3px;position:relative;z-index:1}
+.rcpt-om{font-size:30px;line-height:1;filter:drop-shadow(0 2px 6px rgba(0,0,0,.3));margin-bottom:6px}
+.rcpt-deco-line{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px}
+.rcpt-deco-line span{height:1px;width:28px;background:rgba(255,220,120,.5)}
+.rcpt-blessing{font-family:'Tiro Telugu',serif;font-size:11px;color:rgba(255,242,185,.92);line-height:1.5;margin-bottom:5px;letter-spacing:.4px;text-shadow:0 1px 4px rgba(0,0,0,.28)}
+.rcpt-village{font-family:'Tiro Telugu',serif;font-size:18px;font-weight:700;color:#FFE9A0;text-shadow:0 2px 8px rgba(0,0,0,.32);line-height:1.2;letter-spacing:.5px}
+.rcpt-sub1{font-family:'Tiro Telugu',serif;font-size:14px;font-weight:600;color:#FFD97A;margin-top:4px;text-shadow:0 1px 4px rgba(0,0,0,.22);letter-spacing:.3px}
+.rcpt-sub2{font-family:'Tiro Telugu',serif;font-size:11.5px;color:rgba(255,230,172,.86);margin-top:3px;letter-spacing:.3px}
+.rcpt-sub3{font-family:'Tiro Telugu',serif;font-size:10.5px;color:rgba(255,242,192,.75);letter-spacing:2px;text-transform:uppercase;margin-top:5px;font-weight:700}
+/* language share buttons */
+.rcpt-lang-row{display:flex;gap:7px;margin-bottom:8px}
+.rcpt-lang-btn{flex:1;padding:11px 6px;border:none;border-radius:11px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:5px;letter-spacing:.3px;transition:opacity .15s,transform .12s}
+.rcpt-lang-btn:active{opacity:.82;transform:scale(.97)}
+.rcpt-lang-te{background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;box-shadow:0 3px 10px rgba(180,70,10,.38)}
+.rcpt-lang-en{background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;box-shadow:0 3px 10px rgba(21,101,192,.38)}
+.rcpt-hdr-bottom{padding:8px 18px 26px;position:relative;z-index:1}
+.rcpt-status-badge{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,220,120,.45);border-radius:20px;padding:4px 14px;font-size:10px;font-weight:700;letter-spacing:1px;color:#FFE9A0}
+.rcpt-amount-band{background:linear-gradient(180deg,#FFF8E8 0%,#FFF3D0 100%);padding:14px 18px 18px;text-align:center;border-bottom:1px dashed #E8C97A;position:relative}
+.rcpt-serial-tag{display:inline-block;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border-radius:20px;padding:3px 12px;font-size:10px;font-weight:700;letter-spacing:1px;margin-bottom:8px;box-shadow:0 2px 8px rgba(212,88,12,.3)}
+.rcpt-amt-label{font-size:9px;color:var(--text3);letter-spacing:1.8px;text-transform:uppercase;margin-bottom:3px;font-weight:700}
+.rcpt-amt{font-size:40px;font-weight:900;color:var(--saffron-dark);font-family:'Lato',sans-serif;letter-spacing:-2px;line-height:1;text-shadow:0 2px 8px rgba(180,70,10,.15)}
+.rcpt-amt-words{font-size:11px;color:var(--text2);font-style:italic;margin-top:6px;line-height:1.6;background:rgba(255,255,255,.6);border-radius:6px;padding:5px 10px;display:inline-block;max-width:100%}
+.rcpt-section-lbl{font-size:9px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--saffron-dark);padding:9px 18px 4px;background:#FFFAF2;border-top:1px solid #F0E0C0;display:flex;align-items:center;gap:6px}
+.rcpt-section-lbl::after{content:'';flex:1;height:1px;background:linear-gradient(to right,#E8C97A,transparent)}
+.rcpt-body{background:#fff;padding:4px 18px 10px}
+.rcpt-row{display:flex;justify-content:space-between;align-items:flex-start;padding:7px 0;border-bottom:1px dashed #F5E8CC;gap:10px}
+.rcpt-row:last-child{border-bottom:none}
+.rcpt-lbl{font-size:10px;font-weight:700;color:#B09060;letter-spacing:.5px;text-transform:uppercase;min-width:58px;padding-top:2px;flex-shrink:0}
+.rcpt-val{font-size:12px;font-weight:600;color:#1A1A1A;text-align:right;line-height:1.4;word-break:break-word}
+.rcpt-footer{background:linear-gradient(135deg,#FFF4E0,#FFF8EE);border-top:1px solid #F0E0C0;padding:10px 18px 14px}
+.rcpt-thank{font-size:11px;color:var(--text3);text-align:center;margin-bottom:10px;font-style:italic;letter-spacing:.3px}
+.rcpt-btn-row{display:flex;gap:8px}
+.rcpt-wa-btn{flex:2;padding:12px 8px;background:linear-gradient(135deg,#128C7E,#25D366);color:#fff;border:none;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.3px;box-shadow:0 3px 10px rgba(37,211,102,.35)}
+.rcpt-close-btn{flex:1;padding:12px 8px;background:#F0EAE0;color:var(--text2);border:none;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.3px}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes om-progress{0%{transform:translateX(-100%)}100%{transform:translateX(350%)}}
+.om-loader{display:flex;flex-direction:column;align-items:center;gap:0}
+.om-loader-icon{font-size:40px;line-height:1}
+.om-loader-icon.large{font-size:48px}
+.om-loader-icon.small{font-size:32px}
+.om-progress-wrap{width:72px;height:3px;background:rgba(181,70,10,.15);border-radius:3px;overflow:hidden;margin:10px auto 0}
+.om-progress-bar{height:100%;width:35%;background:linear-gradient(90deg,var(--saffron-dark),var(--saffron));border-radius:3px;animation:om-progress 1.1s ease-in-out infinite}
+.om-loader-label{font-size:12px;color:var(--text3);font-weight:700;letter-spacing:.8px;margin-top:8px}
+
+/* ─── RBAC / ROLE BADGES ─── */
+.role-badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.role-badge.admin{background:#FDE8D0;color:#B5460A;border:1px solid #E8A87C}
+.role-badge.readwrite{background:#E3F2FD;color:#1565C0;border:1px solid #90CAF9}
+.role-badge.readonly{background:#F3E5F5;color:#6A1B9A;border:1px solid #CE93D8}
+.role-badge.readview{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7}
+.approval-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:700;letter-spacing:.4px}
+.approval-badge.pending{background:#FFF8E1;color:#F57F17;border:1px solid #FFD54F}
+.approval-badge.approved{background:#E8F5E9;color:#2E7D32;border:1px solid #A5D6A7}
+.approval-badge.rejected{background:#FFEBEE;color:#B71C1C;border:1px solid #EF9A9A}
+.approval-badge.sendback{background:#FFF3E0;color:#E65100;border:1px solid #FFCC80}
+.rbac-lock{opacity:.55;pointer-events:none;cursor:not-allowed}
+.rbac-warn{background:#FFF8E1;border:1px solid #FFE082;border-radius:10px;padding:10px 13px;font-size:12px;color:#7A5C00;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+.record-approve-card{background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.record-approve-card.pending-card{border-color:#FFD54F}
+.admin-tab-row{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none}
+.admin-tab-row::-webkit-scrollbar{display:none}
+.admin-tab{flex:1;padding:9px 6px;border-radius:10px;border:1.5px solid var(--border);background:#fff;font-size:11px;font-weight:700;cursor:pointer;color:var(--text2);white-space:nowrap;min-width:80px}
+.admin-tab.active{background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border-color:var(--saffron)}
+.dash-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.dash-stat-box{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
+.dash-stat-box:hover{transform:translateY(-2px);box-shadow:0 4px 14px rgba(181,70,10,.18);border-color:var(--saffron)}
+.dash-stat-box:active{transform:scale(.97)}
+.dash-stat-box.active-users{border-color:#2E7D32;background:#F1FBF4}
+.dash-stat-box.active-users .dash-stat-num{color:#2E7D32}
+.dash-active-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2E7D32;margin-right:4px;animation:pulse-dot 1.4s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+.dash-stat-num{font-size:24px;font-weight:900;color:var(--saffron-dark)}
+.dash-stat-lbl{font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-top:2px}
+
+/* ─── SORT BAR ─── */
+.sort-bar{display:flex;gap:6px;align-items:center;margin-bottom:10px;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;scrollbar-width:none}.sort-bar::-webkit-scrollbar{display:none}
+.sort-bar-label{font-size:9px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);margin-right:2px}
+.don-search-wrap{position:relative;margin-bottom:10px}
+.don-search-wrap .search-icon{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:15px;pointer-events:none;color:var(--text3)}
+.don-search-wrap input{width:100%;padding:9px 36px 9px 34px;border:1.5px solid var(--border);border-radius:22px;font-size:13px;background:#FDFAF6;outline:none;box-sizing:border-box;color:var(--text1);transition:border-color .2s}
+.don-search-wrap input:focus{border-color:var(--saffron)}
+.don-search-wrap .search-clear{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:15px;cursor:pointer;color:var(--text3);padding:2px 4px;line-height:1}
+.don-search-results{font-size:11px;color:var(--text3);text-align:center;margin:-4px 0 8px;font-weight:600}
+.sort-chip{padding:4px 11px;border-radius:20px;border:1.5px solid var(--border);font-size:10px;font-weight:700;cursor:pointer;white-space:nowrap;color:var(--text2);background:#fff;transition:all .18s;display:flex;align-items:center;gap:3px}
+.sort-chip.active{background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border-color:var(--saffron);box-shadow:0 2px 6px rgba(212,88,12,.3)}
+.sort-chip.active.green{background:linear-gradient(135deg,var(--green-dark),var(--green));border-color:var(--green);box-shadow:0 2px 6px rgba(46,125,50,.3)}
+@media (max-width:360px){
+  .hdr-title{font-size:13px}
+  .hdr-sub{font-size:11px}
+  .hdr-blessing{font-size:9px}
+  .nav-btn{font-size:6.5px}
+  .nav-icon{font-size:16px}
+  .stats-row{gap:6px}
+  .stat-box .sval{font-size:16px}
+  .dash-card .card-amount{font-size:22px}
+  .finput,.fselect,.ftextarea{font-size:16px}
+}
+
+/* ─── TABLET / LARGE SCREEN ─── */
+@media (min-width:430px){
+  .app{border-radius:0;box-shadow:0 0 60px rgba(0,0,0,.25)}
+}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+  <div class="hdr" id="hdr">
+    <div class="hdr-deco">
+      <div class="hdr-line"></div>
+      <div class="hdr-om" onclick="isLoggedIn && gotoPage('home')" title="Go Home">🕉</div>
+      <div class="hdr-line"></div>
+    </div>
+    <div class="hdr-blessing">శ్రీ శ్రీ శ్రీ మల్లెం కొండేశ్వర స్వామి వారి దివ్య ఆశీస్సులతో</div>
+    <div class="hdr-title">గట్టుపల్లె – గాజులపల్లె</div>
+    <div class="hdr-sub">అన్నదాన సత్రం</div>
+    <div class="hdr-tag">మల్లెంకొండ క్రింద</div>
+  </div>
+  <div class="year-bar" id="yearBar" style="display:none"></div>
+  <div class="screen" id="screen"><div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:60vh;gap:0"><div class="om-loader"><div class="om-loader-icon large">🕉</div><div class="om-progress-wrap"><div class="om-progress-bar"></div></div><div class="om-loader-label">Connecting…</div></div></div></div>
+  <nav class="nav" id="nav" style="display:none">
+    <button class="nav-btn active" id="nb-home" onclick="gotoPage('home')"><span class="nav-icon">🏠</span><span>Home</span><div class="nav-bar"></div></button>
+    <button class="nav-btn" id="nb-donation" onclick="gotoPage('donation')"><span class="nav-icon">🙏</span><span>Donations</span><div class="nav-bar"></div></button>
+    <button class="nav-btn" id="nb-expense" onclick="gotoPage('expense')"><span class="nav-icon">📋</span><span>Expenses</span><div class="nav-bar"></div></button>
+    <button class="nav-btn" id="nb-balance" onclick="gotoPage('balance')"><span class="nav-icon">📊</span><span>Balance</span><div class="nav-bar"></div></button>
+    <button class="nav-btn" id="nb-admin" onclick="gotoPage('admin')" style="display:none"><span class="nav-icon">👑</span><span>Admin<span id="req-badge" class="req-badge" style="display:none">0</span></span><div class="nav-bar"></div></button>
+    <button class="nav-btn" id="nb-logout" onclick="logout()" style="color:var(--red)"><span class="nav-icon">🚪</span><span>Logout</span><div class="nav-bar"></div></button>
+  </nav>
+</div>
+<div class="toast" id="toast"></div>
+<div id="rcptModal"></div>
+
+<!-- Firebase v8 SDK (stable) -->
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"
+  onerror="window._fbLoadErr=true"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"
+  onerror="window._fbLoadErr=true"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"
+  onerror="window._fbLoadErr=true"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+<script>
+let APP_CONFIG = null;
+let FIREBASE_CONFIG = null;
+let ADMIN_API_URL = "";
+
+async function loadAppConfig() {
+  const fallbackApiUrl = "https://us-central1-gattupalli-gajulapalli.cloudfunctions.net/appConfig";
+  const res = await fetch(fallbackApiUrl, { method: "GET", credentials: "omit", cache: "no-store" });
+  if (!res.ok) throw new Error("Could not load app configuration");
+  const payload = await res.json();
+  if (!payload || !payload.firebase || !payload.firebase.projectId) {
+    throw new Error("Invalid app configuration received");
+  }
+  APP_CONFIG = payload;
+  FIREBASE_CONFIG = payload.firebase;
+  ADMIN_API_URL = payload.adminApiUrl || `https://us-central1-${payload.firebase.projectId}.cloudfunctions.net/adminLogin`;
+}
+
+function normalizeEmail(email) {
+  return String(email || '').trim().toLowerCase();
+}
+
+/* ── PASSWORD HASHING (SHA-256 via Web Crypto) ── */
+async function hashPassword(password) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(password);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+let fsDb = null;
+let fbAuth = null;
+let fbConfigured = false;
+
+async function initFirebase() {
+  try {
+    if (!FIREBASE_CONFIG) throw new Error("App configuration missing");
+    if (!firebase.apps.length) firebase.initializeApp(FIREBASE_CONFIG);
+    fbAuth = firebase.auth();
+    fsDb = firebase.firestore();
+    await fsDb.enablePersistence({ synchronizeTabs: true }).catch(() => {});
+    fbConfigured = true;
+    return true;
+  } catch(e) {
+    console.error('Firebase init error', e);
+    fbConfigured = false;
+    return false;
+  }
+}
+
+/* ── Firestore DB helpers ── */
+async function dbAdd(col, data) {
+  const clean = stripUndefined(data);
+  const ref = await fsDb.collection(col).add(clean);
+  return ref.id;
+}
+async function dbGetAll(col) {
+  const snap = await fsDb.collection(col).get();
+  return snap.docs.map(d => ({ ...d.data(), id: d.id }));
+}
+async function dbUpdate(col, data) {
+  const { id, ...rest } = data;
+  const clean = stripUndefined(rest);
+  await fsDb.collection(col).doc(String(id)).set(clean);
+}
+async function dbGetByField(col, field, val) {
+  const snap = await fsDb.collection(col).where(field, '==', val).limit(1).get();
+  if (snap.empty) return null;
+  const d = snap.docs[0];
+  return { ...d.data(), id: d.id };
+}
+async function dbMetaGet(key) {
+  try {
+    const doc = await fsDb.collection('metadata').doc(key).get();
+    return doc.exists ? doc.data().value : null;
+  } catch { return null; }
+}
+async function dbMetaSet(key, val) {
+  await fsDb.collection('metadata').doc(key).set({ value: val });
+}
+async function dbDelete(col, id) {
+  await fsDb.collection(col).doc(String(id)).delete();
+}
+
+function stripUndefined(obj) {
+  return JSON.parse(JSON.stringify(obj, (_, v) => v === undefined ? null : v));
+}
+
+async function tryAdminLogin(email, password) {
+  try {
+    const res = await fetch(ADMIN_API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password })
+    });
+    if (res.status === 401 || res.status === 404) return null;
+    if (!res.ok) throw new Error('Admin login service error');
+    const payload = await res.json();
+    if (payload.customToken && fbAuth) {
+      await fbAuth.signInWithCustomToken(payload.customToken);
+    }
+    return payload.user || null;
+  } catch (e) {
+    console.warn('Admin login unavailable', e);
+    return null;
+  }
+}
+
+/* ─── ROLE HELPERS ─── */
+function getUserRole() { return (currentUser?.role || 'readonly').trim().toLowerCase(); }
+function canAdmin()    { return getUserRole() === 'admin'; }
+function canWrite()    { return getUserRole() === 'admin' || getUserRole() === 'readwrite'; }
+function roleBadgeHtml(role) {
+  const labels = { admin:'👑 Admin', readwrite:'✏️ Read & Write', readonly:'🔒 Read & Data Mask', readview:'👁 Read Only' };
+  return `<span class="role-badge ${role}">${labels[role]||role}</span>`;
+}
+function maskMobile(v) {
+  if (!v) return '—';
+  const s = String(v).replace(/\D/g,'');
+  return s.length >= 4 ? '●●●● ●●●● ' + s.slice(-4) : '●●●●●●●●●●';
+}
+function maskText(v) {
+  if (!v) return '—';
+  const words = String(v).trim().split(/\s+/);
+  return words.map((w,i) => i===0 ? w[0]+'●'.repeat(Math.max(w.length-1,2)) : '●'.repeat(w.length||3)).join(' ');
+}
+function maskedField(v, type, maskForReadView) {
+  if (canWrite()) return v || '—';
+  const role = getUserRole();
+  if (role === 'readview') {
+    if (maskForReadView) {
+      if (type === 'mobile') return maskMobile(v);
+      if (type === 'text')   return maskText(v);
+    }
+    return v || '—';
+  }
+  if (type === 'mobile') return maskMobile(v);
+  if (type === 'text')   return maskText(v);
+  return v || '—';
+}
+function maskedAmount(amount, status) {
+  return fmt(amount);
+}
+function showRbacAlert(section) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:900;display:flex;align-items:center;justify-content:center;padding:24px';
+  overlay.innerHTML = `<div style="background:#fff;border-radius:18px;padding:24px;width:100%;max-width:320px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.25)">
+    <div style="font-size:40px;margin-bottom:10px">🔒</div>
+    <div style="font-size:16px;font-weight:800;margin-bottom:6px;color:#B5460A">Access Restricted</div>
+    <div style="font-size:13px;color:#666;line-height:1.6;margin-bottom:18px">You have <b>Read-Only</b> access.<br>Adding ${section} requires <b>Read &amp; Write</b> permission.<br><br>Please contact the admin to upgrade your access.</div>
+    <button onclick="this.closest('div[style*=fixed]').remove()" style="width:100%;padding:12px;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px">OK, Got it</button>
+  </div>`;
+  document.body.appendChild(overlay);
+}
+function approvalBadgeHtml(status) {
+  const map = { pending_approval:['pending','⏳ Pending Approval'], approved:['approved','✅ Approved'], rejected:['rejected','✗ Rejected'], sendback:['sendback','↩ Needs Resubmit'] };
+  const [cls, label] = map[status] || ['pending', status];
+  return `<span class="approval-badge ${cls}">${label}</span>`;
+}
+
+/* ─── STATE ─── */
+let donations=[], expenses=[], donSerial=1, expSerial=1;
+let currentPage='home', showDonForm=false, showExpForm=false;
+let donReceived='', receiptDataUrl=null;
+let sigCtx, sigDrawing=false, sigLX=0, sigLY=0;
+let currentUser=null, isLoggedIn=false;
+let liveActiveSessions=[], _sessionId=null, _activeSessionsUnsub=null, _heartbeatInterval=null, _inactivityInterval=null, _lastActivityTime=Date.now();
+let viewingDonId=null, editingDonId=null;
+let viewingExpId=null, editingExpId=null;
+let currentYear = new Date().getFullYear();
+let donSort='serial-desc', expSort='serial-desc'; // sort state
+let donSearch=''; // search query
+
+/* ─── AUTH ─── */
+async function login(email, password) {
+  email = normalizeEmail(email);
+  if (!email || !password) { showToast('⚠ Please enter email and password'); return; }
+  showToast('🕉 Signing in…');
+  const adminUser = await tryAdminLogin(email, password);
+  if (adminUser) {
+    currentUser = {
+      id: adminUser.id,
+      email: adminUser.email,
+      name: adminUser.name || 'Admin',
+      role: adminUser.role || 'admin'
+    };
+    isLoggedIn = true;
+    try { localStorage.setItem('satram_session', JSON.stringify(currentUser)); } catch(e) {}
+    await loadDataFromDB();
+    trackActiveSession();
+    currentPage = 'home';
+    render();
+    showToast('✓ Welcome, ' + currentUser.name + '!');
+    return;
+  }
+  const user = await dbGetByField('users', 'email', email);
+  const hashedInput = await hashPassword(password);
+
+  // Support both legacy plaintext passwords and new hashed passwords
+  const isHashMatch = user && user.password === hashedInput;
+  const isPlainMatch = user && user.password === password; // legacy fallback
+
+  if (!user || (!isHashMatch && !isPlainMatch)) {
+    // Check if they have a pending/rejected invite request
+    if (!user) {
+      const req = await dbGetByField('inviteRequests','email',email).catch(()=>null);
+      if (req && req.status==='pending') {
+        const af=document.getElementById('authForm');
+        if(af) af.innerHTML=`<div class="inv-status pending"><div class="inv-status-icon">⏳</div><div class="inv-status-title" style="color:#B8860B">Access Pending Approval</div><div class="inv-status-msg">Your invitation request is still under review by the admin. Please wait for approval.</div></div>
+        <button class="save-btn" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#5A5A5A,#3A3A3A)" onclick="showLoginForm()">← Back to Login</button>`;
+        showToast('⏳ Your request is under review');
+        return;
+      }
+      if (req && req.status==='rejected') {
+        const af=document.getElementById('authForm');
+        if(af) af.innerHTML=`<div class="inv-status rejected"><div class="inv-status-icon">❌</div><div class="inv-status-title" style="color:var(--red)">Access Not Approved</div><div class="inv-status-msg">Your invitation request was not approved. Please contact the admin for more information.</div></div>
+        <button class="save-btn" style="width:100%;margin-top:12px;background:linear-gradient(135deg,#5A5A5A,#3A3A3A)" onclick="showLoginForm()">← Back to Login</button>`;
+        showToast('✗ Access not approved');
+        return;
+      }
+    }
+    showToast('✗ Invalid email or password'); return;
+  }
+  currentUser = {
+    id:user.id,
+    email:user.email,
+    name:user.name,
+    role: user.role || 'readonly'
+  };
+  isLoggedIn = true;
+  // Auto-upgrade plaintext password to hash silently
+  if (isPlainMatch && !isHashMatch) {
+    try { await dbUpdate('users', { ...user, password: hashedInput }); } catch(e) {}
+  }
+  try { localStorage.setItem('satram_session', JSON.stringify(currentUser)); } catch(e) {}
+  await loadDataFromDB();
+  trackActiveSession();
+  currentPage = 'home';
+  render();
+  showToast('✓ Welcome, ' + user.name + '!');
+}
+
+function showMyProfile() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;display:flex;align-items:flex-end;justify-content:center';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:480px;box-shadow:0 -8px 40px rgba(0,0,0,.2)">
+      <div style="padding:14px 0 0;display:flex;justify-content:center"><div style="width:40px;height:4px;background:#E0D8D0;border-radius:4px"></div></div>
+      <div style="padding:18px 22px 0;display:flex;align-items:center;gap:14px">
+        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0">${(currentUser?.name||'?')[0].toUpperCase()}</div>
+        <div>
+          <div style="font-size:16px;font-weight:800">${currentUser?.name||'—'}</div>
+          <div style="font-size:12px;color:#888;margin-top:2px">📧 ${currentUser?.email||'—'}</div>
+          <div style="margin-top:4px">${roleBadgeHtml(getUserRole())}</div>
+        </div>
+      </div>
+      <div style="padding:18px 22px;display:flex;flex-direction:column;gap:12px">
+        <div>
+          <label style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">Display Name</label>
+          <input id="prof-name" class="finput" value="${currentUser?.name||''}" placeholder="Your name" style="width:100%;padding:10px 12px;font-size:14px">
+        </div>
+        ${canWrite()?`<div>
+          <label style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">New Password</label>
+          <div style="position:relative">
+            <input id="prof-pass" class="finput" type="password" placeholder="Leave blank to keep current" style="width:100%;padding:10px 38px 10px 12px;font-size:14px">
+            <span onclick="const i=document.getElementById('prof-pass');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px">👁</span>
+          </div>
+        </div>
+        <div>
+          <label style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">Confirm Password</label>
+          <div style="position:relative">
+            <input id="prof-pass2" class="finput" type="password" placeholder="Confirm new password" style="width:100%;padding:10px 38px 10px 12px;font-size:14px">
+            <span onclick="const i=document.getElementById('prof-pass2');i.type=i.type==='password'?'text':'password'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:16px">👁</span>
+          </div>
+        </div>`:''}
+        <div id="prof-err" style="display:none;background:#FFEBEE;color:#C62828;border-radius:8px;padding:8px 12px;font-size:12px"></div>
+        <button onclick="saveMyProfile()" style="width:100%;padding:13px;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:14px">💾 Save Changes</button>
+        <button onclick="this.closest('div[style*=fixed]').remove()" style="width:100%;padding:12px;background:#F5F0EA;border:none;border-radius:12px;font-weight:700;cursor:pointer;font-size:13px;color:#666">Cancel</button>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', e => { if (e.target===overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+async function saveMyProfile() {
+  const name  = (document.getElementById('prof-name')?.value||'').trim();
+  const pass  = document.getElementById('prof-pass')?.value||'';
+  const pass2 = document.getElementById('prof-pass2')?.value||'';
+  const err   = document.getElementById('prof-err');
+  const showErr = msg => { err.textContent=msg; err.style.display='block'; };
+  err.style.display='none';
+  if (!name) return showErr('Name cannot be empty.');
+  if (pass && pass.length < 6) return showErr('Password must be at least 6 characters.');
+  if (pass && pass !== pass2) return showErr('Passwords do not match.');
+  try {
+    const updates = { name };
+    if (pass) updates.password = await hashPassword(pass);
+    await fsDb.collection('users').doc(String(currentUser.id)).update(updates);
+    currentUser.name = name;
+    try { localStorage.setItem('satram_session', JSON.stringify(currentUser)); } catch(e) {}
+    document.querySelector('div[style*=fixed]')?.remove();
+    render();
+    showToast('✓ Profile updated successfully!');
+  } catch(e) { showErr('Error saving profile. Try again.'); console.error(e); }
+}
+
+async function logout() {
+  if (!confirm('Are you sure you want to logout?')) return;
+  pruneEmptyYears();
+  await clearActiveSession();
+  if (_userUnsub) { _userUnsub(); _userUnsub=null; }
+  if (_donUnsub)  { _donUnsub();  _donUnsub=null; }
+  if (_expUnsub)  { _expUnsub();  _expUnsub=null; }
+  if (fbAuth) { try { await fbAuth.signOut(); } catch(e) {} }
+  currentUser=null; isLoggedIn=false; donations=[]; expenses=[];
+  try { localStorage.removeItem('satram_session'); } catch(e) {}
+  currentPage='login'; render();
+  showToast('✓ Logged out');
+}
+
+async function trackActiveSession() {
+  if (!currentUser || !fsDb) return;
+  _sessionId = currentUser.id + '_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+  _lastActivityTime = Date.now();
+  const IDLE_TIMEOUT = 180000;
+  const ACTIVE_WINDOW = 210000;
+
+  const updateLastSeen = async () => {
+    try { if (_sessionId && fsDb) await fsDb.collection('activeSessions').doc(String(_sessionId)).update({ lastSeen: new Date().toISOString() }); } catch(e) {}
+  };
+
+  let _heartbeatThrottle = 0;
+  const onActivity = () => {
+    _lastActivityTime = Date.now();
+    const now = Date.now();
+    if (now - _heartbeatThrottle > 30000) { _heartbeatThrottle = now; updateLastSeen(); }
+  };
+  ['mousemove','mousedown','keydown','touchstart','scroll','click'].forEach(ev =>
+    document.addEventListener(ev, onActivity, { passive: true })
+  );
+
+  try {
+    await fsDb.collection('activeSessions').doc(String(_sessionId)).set({
+      userId: currentUser.id, name: currentUser.name, email: currentUser.email,
+      role: currentUser.role || 'readonly', loginTime: new Date().toISOString(), lastSeen: new Date().toISOString()
+    });
+    if (_activeSessionsUnsub) _activeSessionsUnsub();
+    _activeSessionsUnsub = fsDb.collection('activeSessions').onSnapshot(snap => {
+      const cutoff = Date.now() - ACTIVE_WINDOW;
+      liveActiveSessions = snap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .filter(s => s.lastSeen && new Date(s.lastSeen).getTime() > cutoff);
+      const el = document.getElementById('dash-active-count');
+      if (el) {
+        el.innerHTML = `<span class="dash-active-dot"></span>${liveActiveSessions.length}`;
+      } else if (currentPage === 'admin' && adminTab === 'dashboard') {
+        renderAdminPanel();
+      }
+    }, err => console.warn('activeSessions sync error', err));
+
+    if (_heartbeatInterval) clearInterval(_heartbeatInterval);
+    _heartbeatInterval = setInterval(async () => {
+      try { if (_sessionId && fsDb) await fsDb.collection('activeSessions').doc(String(_sessionId)).update({ lastSeen: new Date().toISOString() }); } catch(e) {}
+    }, 30000);
+
+    let _idleWarningShown = false;
+    if (_inactivityInterval) clearInterval(_inactivityInterval);
+    _inactivityInterval = setInterval(() => {
+      if (!isLoggedIn) return;
+      const idle = Date.now() - _lastActivityTime;
+      if (idle > IDLE_TIMEOUT) {
+        const warn = document.getElementById('idle-warning-banner');
+        if (warn) warn.remove();
+        clearInterval(_inactivityInterval); _inactivityInterval = null;
+        forceLogout('⏱ You were logged out due to 3 minutes of inactivity.');
+      } else if (idle > 120000 && !_idleWarningShown) {
+        _idleWarningShown = true;
+        if (!document.getElementById('idle-warning-banner')) {
+          const banner = document.createElement('div');
+          banner.id = 'idle-warning-banner';
+          banner.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:999;background:#7B3F00;color:#fff;border-radius:14px;padding:14px 18px;max-width:320px;width:90%;box-shadow:0 6px 24px rgba(0,0,0,.4);display:flex;flex-direction:column;gap:10px;animation:slideUp .3s ease';
+          banner.innerHTML = `
+            <div style="display:flex;align-items:center;gap:8px">
+              <span style="font-size:22px">⏱</span>
+              <div>
+                <div style="font-weight:800;font-size:14px">Session Expiring Soon</div>
+                <div style="font-size:12px;opacity:.85;margin-top:2px">No activity for 2 minutes. Session will expire in <b>60 seconds</b>.</div>
+              </div>
+            </div>
+            <button onclick="(function(){_lastActivityTime=Date.now();document.getElementById('idle-warning-banner').remove();_idleWarningShown=false;})()" style="width:100%;padding:10px;background:#fff;color:#7B3F00;border:none;border-radius:9px;font-weight:800;cursor:pointer;font-size:13px">Stay Logged In</button>`;
+          document.body.appendChild(banner);
+        }
+      } else if (idle <= 120000 && _idleWarningShown) {
+        _idleWarningShown = false;
+        const warn = document.getElementById('idle-warning-banner');
+        if (warn) warn.remove();
+      }
+    }, 5000);
+
+    window.addEventListener('beforeunload', () => { if (_sessionId && fsDb) { fsDb.collection('activeSessions').doc(String(_sessionId)).delete().catch(()=>{}); } });
+  } catch(e) { console.warn('Session tracking error', e); }
+}
+
+async function clearActiveSession() {
+  const warn = document.getElementById('idle-warning-banner');
+  if (warn) warn.remove();
+  if (_heartbeatInterval) { clearInterval(_heartbeatInterval); _heartbeatInterval = null; }
+  if (_inactivityInterval) { clearInterval(_inactivityInterval); _inactivityInterval = null; }
+  if (_activeSessionsUnsub) { _activeSessionsUnsub(); _activeSessionsUnsub = null; }
+  if (_sessionId && fsDb) { try { await fsDb.collection('activeSessions').doc(String(_sessionId)).delete(); } catch(e) {} }
+  _sessionId = null;
+}
+
+function showActiveUsersModal() {
+  const sessions = liveActiveSessions;
+  const grouped = {};
+  sessions.forEach(s => {
+    const uid = s.email || s.userId || s.id;
+    if (!grouped[uid]) grouped[uid] = { info: s, sessions: [] };
+    grouped[uid].sessions.push(s);
+  });
+  const groups = Object.values(grouped);
+  const totalSessions = sessions.length;
+  const totalUsers = groups.length;
+
+  const timeAgo = (iso) => {
+    if (!iso) return '—';
+    const diff = Math.floor((Date.now() - new Date(iso).getTime()) / 1000);
+    if (diff < 60) return diff + 's ago';
+    if (diff < 3600) return Math.floor(diff/60) + 'm ago';
+    return new Date(iso).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'});
+  };
+
+  const rows = groups.length === 0
+    ? `<div style="text-align:center;padding:32px 0;color:#bbb">
+        <div style="font-size:32px;margin-bottom:8px">👥</div>
+        <div style="font-size:13px">No active sessions</div>
+       </div>`
+    : groups.map(g => {
+        const s = g.info;
+        const count = g.sessions.length;
+        const avatar = (s.name||'?')[0].toUpperCase();
+        const sessionRows = g.sessions.map((ss, i) => {
+          const sLogin = ss.loginTime ? new Date(ss.loginTime).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}) : '—';
+          const sLast  = timeAgo(ss.lastSeen);
+          return `<div style="display:flex;align-items:center;justify-content:space-between;padding:5px 8px;background:#FFF8F2;border-radius:7px;border-left:2px solid #E8A87C">
+            <div style="font-size:11px;font-weight:700;color:#B5460A">Session ${i+1}</div>
+            <div style="font-size:10px;color:#999">Login ${sLogin}</div>
+            <div style="font-size:10px;color:#4CAF50;font-weight:600">● ${sLast}</div>
+          </div>`;
+        }).join('');
+        return `<div style="background:#FFFAF4;border:1px solid #F0E8D8;border-radius:14px;padding:12px 14px;margin-bottom:10px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+            <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0">${avatar}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name||'Unknown'}</div>
+              <div style="font-size:10px;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">📧 ${s.email||'—'}</div>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
+              ${roleBadgeHtml(s.role||'readonly')}
+              <span style="background:${count>1?'#E3F2FD':'#E8F5E9'};color:${count>1?'#1565C0':'#2E7D32'};font-size:10px;font-weight:800;padding:2px 8px;border-radius:20px">${count} session${count!==1?'s':''}</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:4px">${sessionRows}</div>
+        </div>`;
+      }).join('');
+
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:900;display:flex;align-items:flex-end;justify-content:center';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:22px 22px 0 0;padding:0;width:100%;max-width:480px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 -8px 40px rgba(0,0,0,.2)">
+      <div style="padding:14px 20px 0;display:flex;align-items:center;justify-content:space-between">
+        <div style="width:40px;height:4px;background:#E0D8D0;border-radius:4px;margin:0 auto"></div>
+      </div>
+      <div style="padding:12px 20px 8px;display:flex;align-items:center;justify-content:space-between">
+        <div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="dash-active-dot"></span>
+            <span style="font-size:17px;font-weight:800">Active Now</span>
+          </div>
+          <div style="font-size:11px;color:#999;margin-top:2px">${totalUsers} user${totalUsers!==1?'s':''} · ${totalSessions} session${totalSessions!==1?'s':''} · live</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:28px;font-weight:900;color:#2E7D32;line-height:1">${totalSessions}</div>
+          <div style="font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.5px">Sessions</div>
+        </div>
+      </div>
+      <div style="flex:1;overflow-y:auto;padding:8px 20px 16px">${rows}</div>
+      <div style="padding:12px 20px 20px;border-top:1px solid #F0EAE0">
+        <button onclick="this.closest('div[style*=fixed]').remove()" style="width:100%;padding:13px;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;border:none;border-radius:12px;font-weight:800;cursor:pointer;font-size:14px">Close</button>
+      </div>
+    </div>`;
+  overlay.addEventListener('click', e => { if (e.target === overlay) overlay.remove(); });
+  document.body.appendChild(overlay);
+}
+
+let _donUnsub = null, _expUnsub = null, _userUnsub = null;
+
+function startRealtimeSync() {
+  if (!fsDb) return;
+  if (_donUnsub) _donUnsub();
+  if (_expUnsub) _expUnsub();
+  _donUnsub = fsDb.collection('donations').onSnapshot(snap => {
+    donations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    donations.sort((a,b) => (a.serial||0) - (b.serial||0));
+    render();
+  }, err => console.warn('donations sync error', err));
+  _expUnsub = fsDb.collection('expenses').onSnapshot(snap => {
+    expenses = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    expenses.sort((a,b) => (a.serial||0) - (b.serial||0));
+    render();
+  }, err => console.warn('expenses sync error', err));
+  startUserWatcher();
+}
+
+function startUserWatcher() {
+  if (!fsDb || !currentUser?.id) return;
+  if (_userUnsub) _userUnsub();
+  _userUnsub = fsDb.collection('users').doc(String(currentUser.id)).onSnapshot(snap => {
+    if (!isLoggedIn) return;
+    if (!snap.exists) {
+      forceLogout('🔒 Your account has been removed by the admin.');
+      return;
+    }
+    const data = snap.data();
+    if (data.role && data.role !== currentUser.role) {
+      currentUser.role = data.role;
+      try { localStorage.setItem('satram_session', JSON.stringify(currentUser)); } catch(e) {}
+      showToast('ℹ️ Your access role was updated to: ' + data.role);
+      render();
+    }
+  }, err => console.warn('user watcher error', err));
+}
+
+async function forceLogout(message) {
+  if (_userUnsub) { _userUnsub(); _userUnsub = null; }
+  if (_donUnsub)  { _donUnsub();  _donUnsub = null; }
+  if (_expUnsub)  { _expUnsub();  _expUnsub = null; }
+  await clearActiveSession();
+  currentUser = null; isLoggedIn = false; donations = []; expenses = [];
+  try { localStorage.removeItem('satram_session'); } catch(e) {}
+  currentPage = 'login';
+  render();
+  setTimeout(() => {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:999;display:flex;align-items:center;justify-content:center;padding:24px';
+    overlay.innerHTML = `<div style="background:#fff;border-radius:18px;padding:28px;width:100%;max-width:320px;text-align:center;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+      <div style="font-size:40px;margin-bottom:10px">🔒</div>
+      <div style="font-size:16px;font-weight:800;color:#B5460A;margin-bottom:8px">Session Ended</div>
+      <div style="font-size:13px;color:#666;line-height:1.6;margin-bottom:20px">${message}</div>
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="width:100%;padding:12px;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;border:none;border-radius:10px;font-weight:700;cursor:pointer;font-size:13px">OK</button>
+    </div>`;
+    document.body.appendChild(overlay);
+  }, 300);
+}
+
+async function loadDataFromDB() {
+  try {
+    showToast('🕉 Loading data…');
+    donations = await dbGetAll('donations');
+    expenses  = await dbGetAll('expenses');
+    donations.sort((a,b) => (a.serial||0) - (b.serial||0));
+    expenses.sort((a,b)  => (a.serial||0) - (b.serial||0));
+    donSerial = (await dbMetaGet('donSerial')) || donations.length + 1;
+    expSerial = (await dbMetaGet('expSerial')) || expenses.length + 1;
+    await loadExpCats();
+    startRealtimeSync();
+  } catch(err) { console.warn('Load error', err); showToast('⚠ Error loading data'); }
+}
+
+async function saveToDB() {
+  await dbMetaSet('donSerial', donSerial);
+  await dbMetaSet('expSerial', expSerial);
+}
+
+/* ─── YEAR HELPERS ─── */
+function getRecordYear(r) {
+  if (r.year) return r.year;
+  if (r.date) return parseInt(r.date.split('-')[0]);
+  return new Date().getFullYear();
+}
+
+// Years the user has manually added (prev/future) — persisted to localStorage
+let _extraYears = new Set();
+
+function _loadPersistedYears() {
+  try {
+    const raw = localStorage.getItem('satram_extraYears');
+    if (raw) JSON.parse(raw).forEach(y => _extraYears.add(Number(y)));
+  } catch(e) {}
+  try {
+    const sy = localStorage.getItem('satram_currentYear');
+    if (sy) currentYear = parseInt(sy, 10);
+  } catch(e) {}
+}
+
+function _savePersistedYears() {
+  try {
+    localStorage.setItem('satram_extraYears', JSON.stringify([..._extraYears]));
+    localStorage.setItem('satram_currentYear', String(currentYear));
+  } catch(e) {}
+}
+
+function getBaseYears() {
+  // Only years with actual data + real current year
+  const TODAY = new Date().getFullYear();
+  const yrs = new Set([TODAY]);
+  donations.forEach(d => yrs.add(getRecordYear(d)));
+  expenses.forEach(e  => yrs.add(getRecordYear(e)));
+  return yrs;
+}
+
+function getAvailableYears() {
+  const yrs = new Set([...getBaseYears(), ..._extraYears, currentYear]);
+  return Array.from(yrs).sort();
+}
+
+function yearStats(yr) {
+  return {
+    d: donations.filter(x => getRecordYear(x) === yr).length,
+    e: expenses.filter(x => getRecordYear(x) === yr).length
+  };
+}
+
+function addExtraYear(yr) {
+  _extraYears.add(yr);
+  currentYear = yr;
+  _savePersistedYears();
+  render();
+  // scroll the new card into view after render
+  requestAnimationFrame(() => {
+    const el = document.getElementById('yrtile-' + yr);
+    if (el) el.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+  });
+}
+
+function yearDonations() { return donations.filter(d => getRecordYear(d) === currentYear); }
+function yearExpenses()  { return expenses.filter(e => getRecordYear(e) === currentYear); }
+
+function switchYear(yr) { currentYear = yr; _savePersistedYears(); render(); }
+
+/* ─── TOTALS ─── */
+function totals() {
+  const yd = yearDonations(), ye = yearExpenses();
+  const totalDon  = yd.reduce((s,d) => s + (parseFloat(d.amount)||0), 0);
+  const recvDon   = yd.filter(d=>d.received==='yes').reduce((s,d) => s+(parseFloat(d.amount)||0), 0);
+  const pendDon   = totalDon - recvDon;
+  const totalExp  = ye.reduce((s,e) => s + (parseFloat(e.amount)||0), 0);
+  const expPaid   = ye.reduce((s,e) => s + (parseFloat(e.paidAmount)||0), 0);
+  const expPending= totalExp - expPaid;
+  const balance   = recvDon - totalExp;
+  return { totalDon, recvDon, pendDon, totalExp, expPaid, expPending, balance,
+           donCount:yd.length, expCount:ye.length };
+}
+
+/* ─── PRUNE EMPTY EXTRA YEARS ─── */
+function pruneEmptyYears() {
+  const TODAY = new Date().getFullYear();
+  for (const yr of [..._extraYears]) {
+    const st = yearStats(yr);
+    if (st.d === 0 && st.e === 0) _extraYears.delete(yr);
+  }
+  // If selected year has no data and isn't the real current year, snap back
+  const cs = yearStats(currentYear);
+  if (cs.d === 0 && cs.e === 0 && currentYear !== TODAY) currentYear = TODAY;
+  _savePersistedYears();
+}
+
+/* ─── NAV / RENDER ─── */
+function gotoPage(p) {
+  if (p === 'home') { pruneEmptyYears(); loadDataFromDB(); }
+  currentPage=p; showDonForm=false; showExpForm=false;
+  viewingDonId=null; editingDonId=null; viewingExpId=null; editingExpId=null;
+  donSearch='';
+  ['home','donation','expense','balance','admin'].forEach(x => {
+    const btn = document.getElementById('nb-'+x);
+    if (btn) btn.className = 'nav-btn' + (p===x?' active':'');
+  });
+  render();
+}
+
+function isAdmin() { return canAdmin(); }
+
+function render() {
+  const sc  = document.getElementById('screen');
+  const nav = document.getElementById('nav');
+  const hdr = document.getElementById('hdr');
+  const yb  = document.getElementById('yearBar');
+  if (!isLoggedIn) {
+    nav.style.display='none'; hdr.style.display='none'; yb.style.display='none';
+    sc.innerHTML = renderLogin();
+    const af = document.getElementById('authForm');
+    if (af) af.innerHTML = renderLoginForm();
+    return;
+  }
+  hdr.style.display='block'; nav.style.display='flex';
+  yb.style.display='none';
+
+  // ── Header: full on Home, compact on all other pages ──
+  const PAGE_META = {
+    donation: { icon:'🙏', title:'Donations' },
+    expense:  { icon:'📋', title:'Expenses' },
+    balance:  { icon:'📊', title:'Balance Sheet' },
+    admin:    { icon:'👑', title:'Admin Panel' },
+  };
+  if (currentPage === 'home') {
+    hdr.className = 'hdr';
+    hdr.innerHTML = `
+      <div class="hdr-deco">
+        <div class="hdr-line"></div>
+        <div class="hdr-om" onclick="isLoggedIn && gotoPage('home')" title="Go Home">🕉</div>
+        <div class="hdr-line"></div>
+      </div>
+      <div class="hdr-blessing">శ్రీ శ్రీ శ్రీ మల్లెం కొండేశ్వర స్వామి వారి దివ్య ఆశీస్సులతో</div>
+      <div class="hdr-title">గట్టుపల్లె – గాజులపల్లె</div>
+      <div class="hdr-sub">అన్నదాన సత్రం</div>
+      <div class="hdr-tag">మల్లెంకొండ క్రింద</div>`;
+  } else {
+    const m = PAGE_META[currentPage] || { icon:'📄', title:'Page' };
+    hdr.className = 'hdr';
+    hdr.innerHTML = `<div class="hdr-compact">
+      <div class="hdr-compact-left">
+        <span class="hdr-compact-icon">${m.icon}</span>
+        <span class="hdr-compact-title">${m.title}</span>
+      </div>
+      <span class="hdr-compact-yr">${currentYear}</span>
+      <div onclick="showMyProfile()" title="My Profile" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);color:#FFE9A0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer;flex-shrink:0;border:1.5px solid rgba(255,220,120,.4)">${(currentUser?.name||'?')[0].toUpperCase()}</div>
+      <div class="hdr-compact-om" onclick="gotoPage('home')" title="Go Home">🕉</div>
+    </div>`;
+  }
+  // Re-measure header height after content update
+  requestAnimationFrame(() => {
+    if (hdr.offsetHeight) document.documentElement.style.setProperty('--hdr-h', hdr.offsetHeight + 'px');
+  });
+
+  // show/hide admin button & badge
+  const adminBtn = document.getElementById('nb-admin');
+  if (adminBtn) adminBtn.style.display = isAdmin() ? 'flex' : 'none';
+  if (isAdmin()) {
+    dbGetAll('inviteRequests').then(reqs => {
+      const pending = reqs.filter(r=>r.status==='pending').length;
+      const badge = document.getElementById('req-badge');
+      if (badge) { badge.textContent=pending; badge.style.display=pending>0?'inline':'none'; }
+    }).catch(()=>{});
+  }
+  if (currentPage==='home')          sc.innerHTML = renderHome();
+  else if (currentPage==='donation') sc.innerHTML = renderDonation();
+  else if (currentPage==='expense')  sc.innerHTML = renderExpense();
+  else if (currentPage==='admin')    { sc.innerHTML='<div style="padding:14px" id="adminPanel"><div style="text-align:center;padding:32px;color:var(--text3)"><div class="om-loader"><div class="om-loader-icon small">🕉</div><div class="om-progress-wrap"><div class="om-progress-bar"></div></div><div class="om-loader-label">Loading…</div></div></div></div>'; renderAdminPanel(); }
+  else                               sc.innerHTML = renderBalance();
+  if ((currentPage==='donation' && showDonForm)||(currentPage==='donation' && editingDonId)) initSig('sigCanvas');
+  if (currentPage === 'home') {
+    requestAnimationFrame(() => {
+      const tile = document.getElementById('yrtile-' + currentYear);
+      if (tile) tile.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    });
+  }
+}
+
+/* ─── YEAR BAR stub ─── */
+function renderYearBar() { return ''; }
+
+/* ─── HOME YEAR PICKER ─── */
+function renderYearPicker() {
+  const TODAY = new Date().getFullYear();
+  const yrs = getAvailableYears();
+  const minYr = Math.min(...yrs);
+  const maxYr = Math.max(...yrs);
+
+  const tiles = yrs.map(yr => {
+    const st = yearStats(yr);
+    const isSel   = yr === currentYear;
+    const isToday = yr === TODAY;
+    const yrHasData = st.d > 0 || st.e > 0;
+    return `<div class="yr-tile${isSel?' sel':''}" id="yrtile-${yr}" onclick="switchYear(${yr})">
+      ${isToday ? '<span class="yr-now">NOW</span>' : ''}
+      <div class="yr-tile-num">${yr}</div>
+      ${yrHasData
+        ? `${st.d > 0 ? `<div class="yr-tile-d">🙏 ${st.d} donation${st.d>1?'s':''}</div>` : ''}${st.e > 0 ? `<div class="yr-tile-e">📋 ${st.e} expense${st.e>1?'s':''}</div>` : ''}`
+        : `<div class="yr-tile-empty">No data</div>`}
+    </div>`;
+  }).join('');
+
+  return `<div class="yr-wrap">
+    <div class="yr-header">
+      <span class="yr-label">📅 Year</span>
+      <div class="yr-add-btns">
+        <button class="yr-add-btn" onclick="addExtraYear(${minYr - 1})">‹ ${minYr - 1}</button>
+        <button class="yr-add-btn" onclick="addExtraYear(${maxYr + 1})">${maxYr + 1} ›</button>
+      </div>
+    </div>
+    <div class="yr-row" id="yrRow">${tiles}</div>
+  </div>`;
+}
+
+/* ─── AUTH RENDERS ─── */
+function renderLogin() {
+  return `<div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-hero">
+        <div class="auth-om">🕉</div>
+        <div class="auth-deco"><span></span>✦<span></span></div>
+        <div class="auth-blessing">శ్రీ శ్రీ శ్రీ మల్లెం కొండేశ్వర స్వామి వారి దివ్య ఆశీస్సులతో</div>
+        <div class="auth-title">గట్టుపల్లె – గాజులపల్లె</div>
+        <div class="auth-sub1">అన్నదాన సత్రం</div>
+        <div class="auth-sub2">మల్లెంకొండ క్రింద</div>
+      </div>
+      <div class="auth-body">
+        <div class="auth-tab-row">
+          <button class="auth-tab active" id="tab-login" onclick="showLoginForm()">🔐 Login</button>
+          <button class="auth-tab" id="tab-invite" onclick="showInviteForm()">📩 Request Access</button>
+        </div>
+        <div id="authForm"></div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderLoginForm() {
+  return `<div>
+    <div class="auth-form-group"><label class="flabel">Email</label><input class="finput" type="email" id="login-email" placeholder="your@email.com" style="width:100%;padding:10px" onkeydown="if(event.key==='Enter')loginUser()"></div>
+    <div class="auth-form-group"><label class="flabel">Password</label><input class="finput" type="password" id="login-pass" placeholder="Enter password" style="width:100%;padding:10px" onkeydown="if(event.key==='Enter')loginUser()"></div>
+    <button class="save-btn" style="width:100%" onclick="loginUser()">🔐 Sign In</button>
+  </div>`;
+}
+
+function renderInviteForm() {
+  return `<div>
+    <div style="background:#FFF8E1;border:1px solid #FFD54F;border-radius:10px;padding:11px 13px;margin-bottom:14px;font-size:11px;color:#7A5C00;line-height:1.6">
+      🔒 This app is invitation-only. Submit your details and choose a password. Admin will review and assign your access level.
+    </div>
+    <div class="auth-form-group"><label class="flabel">Full Name</label><input class="finput" type="text" id="inv-name" placeholder="Your full name" style="width:100%;padding:10px"></div>
+    <div class="auth-form-group"><label class="flabel">Email</label><input class="finput" type="email" id="inv-email" placeholder="your@email.com" style="width:100%;padding:10px"></div>
+    <div class="auth-form-group"><label class="flabel">Mobile Number</label><input class="finput" type="tel" id="inv-mobile" placeholder="10-digit mobile" maxlength="10" style="width:100%;padding:10px"></div>
+    <div class="auth-form-group"><label class="flabel">Set Password</label><input class="finput" type="password" id="inv-pass" placeholder="Min 6 characters" style="width:100%;padding:10px"></div>
+    <div class="auth-form-group"><label class="flabel">Reason / How do you know this Satram?</label><textarea class="ftextarea" id="inv-reason" rows="2" placeholder="Brief reason for access…" style="width:100%"></textarea></div>
+    <button class="save-btn" style="width:100%;background:linear-gradient(135deg,#4A148C,#7B1FA2)" onclick="submitInviteRequest()">📩 Submit Request</button>
+  </div>`;
+}
+
+function showLoginForm() {
+  document.getElementById('tab-login')?.classList.add('active');
+  document.getElementById('tab-invite')?.classList.remove('active');
+  const af=document.getElementById('authForm'); if(af) af.innerHTML=renderLoginForm();
+}
+function showInviteForm() {
+  document.getElementById('tab-invite')?.classList.add('active');
+  document.getElementById('tab-login')?.classList.remove('active');
+  const af=document.getElementById('authForm'); if(af) af.innerHTML=renderInviteForm();
+}
+function loginUser()  { login(document.getElementById('login-email')?.value, document.getElementById('login-pass')?.value); }
+
+async function submitInviteRequest() {
+  const name   = (document.getElementById('inv-name')?.value||'').trim();
+  const email  = normalizeEmail(document.getElementById('inv-email')?.value||'');
+  const pass   = (document.getElementById('inv-pass')?.value||'').trim();
+  const mobile = (document.getElementById('inv-mobile')?.value||'').trim();
+  const reason = (document.getElementById('inv-reason')?.value||'').trim();
+  if (!name||!email) { showToast('⚠ Name and email are required'); return; }
+  if (!pass||pass.length<6) { showToast('⚠ Password must be at least 6 characters'); return; }
+  showToast('🕉 Submitting request…');
+  try {
+    const existing = await dbGetByField('users','email',email);
+    if (existing) { showToast('✗ An account with this email already exists'); return; }
+    const prev = await dbGetByField('inviteRequests','email',email);
+    if (prev && prev.status==='pending') {
+      const af=document.getElementById('authForm');
+      if(af) af.innerHTML = `<div class="inv-status pending"><div class="inv-status-icon">⏳</div><div class="inv-status-title" style="color:#B8860B">Request Already Submitted</div><div class="inv-status-msg">Your request is under review by the admin. Please wait for approval before trying to login.</div></div>`;
+      return;
+    }
+    const hashedPass = await hashPassword(pass);
+    await dbAdd('inviteRequests', { name, email, mobile, reason, hashedPassword:hashedPass, status:'pending', createdAt:new Date().toISOString() });
+    const af=document.getElementById('authForm');
+    if(af) af.innerHTML = `<div class="inv-status pending"><div class="inv-status-icon">✅</div><div class="inv-status-title" style="color:#2E7D32">Request Submitted!</div><div class="inv-status-msg">Your request has been sent to the admin. Once approved you can login with the password you set.</div></div>`;
+    showToast('✓ Request submitted successfully!');
+  } catch(err) { showToast('✗ Error submitting request'); console.error(err); }
+}
+
+/* ─── ADMIN PANEL ─── */
+let adminTab = 'dashboard';
+
+async function renderAdminPanel() {
+  const panel = document.getElementById('adminPanel');
+  if (!panel) return;
+  try {
+    const reqs = await dbGetAll('inviteRequests');
+    const pendingReqs  = reqs.filter(r=>r.status==='pending');
+    const approvedReqs = reqs.filter(r=>r.status==='approved');
+    const rejectedReqs = reqs.filter(r=>r.status==='rejected');
+
+    const allUsers = await dbGetAll('users');
+    const pendingDons = donations.filter(d=>(d.approvalStatus||'approved')==='pending_approval'||(d.approvalStatus||'approved')==='sendback');
+    const pendingExps = expenses.filter(e=>(e.approvalStatus||'approved')==='pending_approval'||(e.approvalStatus||'approved')==='sendback');
+    const totalPendingRecords = pendingDons.length + pendingExps.length;
+
+    const badge = document.getElementById('req-badge');
+    const totalBadge = pendingReqs.length + totalPendingRecords;
+    if (badge) { badge.textContent=totalBadge; badge.style.display=totalBadge>0?'inline':'none'; }
+
+    const mkUserCard = (r, type) => `
+      <div class="admin-req-card">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <div class="admin-req-name">${r.name}</div>
+          ${type==='approved'?roleBadgeHtml(r.role||'readonly'):''}
+        </div>
+        <div class="admin-req-meta">📧 ${r.email}${r.mobile?' · 📱 '+r.mobile:''}</div>
+        ${r.reason?`<div class="admin-req-meta" style="margin-top:4px;font-style:italic">"${r.reason}"</div>`:''}
+        <div class="admin-req-meta" style="margin-top:4px">🕒 ${new Date(r.createdAt).toLocaleString('en-IN')}</div>
+        <div class="admin-req-actions">
+          ${type==='pending'?`
+            <button class="approve-btn" onclick="approveRequest('${r.id}','${r.email}','${r.name}')">✅ Approve</button>
+            <button class="reject-btn"  onclick="rejectRequest('${r.id}')">✗ Reject</button>
+          `:''}
+          ${type==='approved'?`
+            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#4A148C,#7B1FA2);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="changeUserRole('${r.id}','${r.email}','${r.name}','${r.role||'readonly'}')">✏️ Role</button>
+            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="resetUserPassword('${r.email}','${r.name}')">🔑 Password</button>
+            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="deleteUser('${r.id}','${r.email}','${r.name}')">🗑 Delete</button>
+          `:''}
+          ${type==='rejected'?`
+            <button class="approve-btn" onclick="approveRequest('${r.id}','${r.email}','${r.name}')">✅ Approve</button>
+            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="deleteUser('${r.id}','${r.email}','${r.name}')">🗑 Delete</button>
+          `:''}
+        </div>
+      </div>`;
+
+    const mkRecordCard = (rec, type) => {
+      const isSendback = rec.approvalStatus === 'sendback';
+      const title = type==='don' ? `#${String(rec.serial).padStart(3,'0')} · ${rec.name} · ₹${rec.amount}` : `#${String(rec.serial).padStart(3,'0')} · ${rec.description||rec.category} · ₹${rec.amount}`;
+      const meta = type==='don' ? `${rec.date}${rec.city?' · 🏙 '+rec.city:''}` : `${rec.date}${rec.category?' · '+rec.category:''}`;
+      return `<div class="record-approve-card pending-card">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+          <div>
+            <div style="font-size:13px;font-weight:700">${title}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">${meta}</div>
+            ${rec.submittedByName?`<div style="font-size:10px;color:var(--text3)">By: ${rec.submittedByName}</div>`:''}
+          </div>
+          ${approvalBadgeHtml(rec.approvalStatus)}
+        </div>
+        ${isSendback&&rec.adminRemarks?`<div class="rbac-warn" style="margin-bottom:8px">↩ <b>Sent Back:</b> ${rec.adminRemarks}</div>`:''}
+        ${rec.receiptImage?`<img src="${rec.receiptImage}" style="width:100%;max-height:120px;object-fit:contain;border-radius:8px;border:1px solid var(--border);margin-bottom:8px">`:''}
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <button onclick="adminApproveRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#2E7D32,#388E3C);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✅ Approve</button>
+          <button onclick="adminSendBackRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#E65100,#F57C00);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">↩ Send Back</button>
+          <button onclick="adminRejectRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✗ Reject</button>
+        </div>
+      </div>`;
+    };
+
+    const dashHtml = `
+      <div class="dash-stats-grid">
+        <div class="dash-stat-box active-users" onclick="showActiveUsersModal()">
+          <div class="dash-stat-num" id="dash-active-count"><span class="dash-active-dot"></span>${liveActiveSessions.length}</div>
+          <div class="dash-stat-lbl">Active Now</div>
+        </div>
+        <div class="dash-stat-box" onclick="adminTab='users';renderAdminPanel()">
+          <div class="dash-stat-num">${allUsers.length}</div><div class="dash-stat-lbl">Total Users</div>
+        </div>
+        <div class="dash-stat-box" onclick="adminTab='users';renderAdminPanel()">
+          <div class="dash-stat-num">${pendingReqs.length}</div><div class="dash-stat-lbl">Pending Requests</div>
+        </div>
+        <div class="dash-stat-box" onclick="adminTab='records';renderAdminPanel()">
+          <div class="dash-stat-num">${totalPendingRecords}</div><div class="dash-stat-lbl">Records to Approve</div>
+        </div>
+        <div class="dash-stat-box" onclick="adminTab='users';renderAdminPanel()">
+          <div class="dash-stat-num">${approvedReqs.length}</div><div class="dash-stat-lbl">Approved Users</div>
+        </div>
+        <div class="dash-stat-box" onclick="gotoPage('donation')">
+          <div class="dash-stat-num">${donations.filter(d=>(d.approvalStatus||'approved')==='approved').length}</div><div class="dash-stat-lbl">Approved Donations</div>
+        </div>
+        <div class="dash-stat-box" onclick="gotoPage('expense')">
+          <div class="dash-stat-num">${expenses.filter(e=>(e.approvalStatus||'approved')==='approved').length}</div><div class="dash-stat-lbl">Approved Expenses</div>
+        </div>
+      </div>`;
+
+    const usersHtml = `
+      <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--saffron-dark);margin-bottom:8px">
+        ⏳ Pending Requests <span class="count-pill">${pendingReqs.length}</span>
+      </div>
+      ${pendingReqs.length===0?'<div class="empty">No pending requests.</div>':pendingReqs.map(r=>mkUserCard(r,'pending')).join('')}
+      ${approvedReqs.length>0?`<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin:14px 0 8px">✅ Approved <span class="count-pill" style="background:var(--green)">${approvedReqs.length}</span></div>${approvedReqs.map(r=>mkUserCard(r,'approved')).join('')}`:''}
+      ${rejectedReqs.length>0?`<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin:14px 0 8px">✗ Rejected <span class="count-pill" style="background:var(--red)">${rejectedReqs.length}</span></div>${rejectedReqs.map(r=>mkUserCard(r,'rejected')).join('')}`:''}`;
+
+    const recordsHtml = totalPendingRecords === 0
+      ? '<div class="empty">No records pending approval.</div>'
+      : [
+          pendingDons.length > 0 ? `<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--saffron-dark);margin-bottom:8px">🙏 Donations <span class="count-pill">${pendingDons.length}</span></div>${pendingDons.map(d=>mkRecordCard(d,'don')).join('')}` : '',
+          pendingExps.length > 0 ? `<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin:14px 0 8px">📋 Expenses <span class="count-pill">${pendingExps.length}</span></div>${pendingExps.map(e=>mkRecordCard(e,'exp')).join('')}` : ''
+        ].join('');
+
+    const catsHtml = renderCategoriesTab();
+    const tabContent = adminTab==='dashboard' ? dashHtml : adminTab==='users' ? usersHtml : adminTab==='records' ? recordsHtml : catsHtml;
+
+    panel.innerHTML = `
+      <div class="sec-hdr"><div class="sec-hdr-left"><h2>Admin Panel</h2></div></div>
+      <div class="admin-tab-row">
+        <button class="admin-tab ${adminTab==='dashboard'?'active':''}" onclick="adminTab='dashboard';renderAdminPanel()">📊 Dashboard</button>
+        <button class="admin-tab ${adminTab==='users'?'active':''}" onclick="adminTab='users';renderAdminPanel()">👥 Users${pendingReqs.length>0?' ('+pendingReqs.length+')':''}</button>
+        <button class="admin-tab ${adminTab==='records'?'active':''}" onclick="adminTab='records';renderAdminPanel()">📋 Records${totalPendingRecords>0?' ('+totalPendingRecords+')':''}</button>
+        <button class="admin-tab ${adminTab==='categories'?'active':''}" onclick="adminTab='categories';renderAdminPanel()">🏷 Categories</button>
+      </div>
+      ${tabContent}`;
+  } catch(err) { const panel=document.getElementById('adminPanel'); if(panel) panel.innerHTML='<div class="empty">Error loading admin panel.</div>'; console.error(err); }
+}
+
+function renderCategoriesTab() {
+  const rows = EXP_CATS.map((c, i) => `
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #F5EDE0">
+      <div style="flex:1;font-size:13px;font-weight:600">${c}</div>
+      <button onclick="editCategory(${i})" style="padding:6px 10px;background:#EDE7F6;color:#4A148C;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
+      <button onclick="deleteCategory(${i})" style="padding:6px 10px;background:#FFEBEE;color:#B71C1C;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer">🗑</button>
+    </div>`).join('');
+  return `
+    <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--saffron-dark);margin-bottom:10px">
+      📋 Expense Categories <span class="count-pill">${EXP_CATS.length}</span>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <input id="cat-new-input" class="finput" placeholder="New category name…" style="flex:1;padding:9px 12px;font-size:13px">
+      <button onclick="addCategory()" style="padding:9px 14px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap">+ Add</button>
+    </div>
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:4px 12px">
+      ${rows || '<div class="empty">No categories yet.</div>'}
+    </div>`;
+}
+
+async function addCategory() {
+  const input = document.getElementById('cat-new-input');
+  const val = (input?.value || '').trim();
+  if (!val) { showToast('⚠ Enter a category name'); return; }
+  if (EXP_CATS.includes(val)) { showToast('⚠ Category already exists'); return; }
+  EXP_CATS.push(val);
+  await saveExpCats();
+  showToast('✅ Category added');
+  renderAdminPanel();
+}
+
+async function deleteCategory(idx) {
+  if (!confirm(`Delete category "${EXP_CATS[idx]}"?`)) return;
+  EXP_CATS.splice(idx, 1);
+  await saveExpCats();
+  showToast('🗑 Category deleted');
+  renderAdminPanel();
+}
+
+function editCategory(idx) {
+  const old = EXP_CATS[idx];
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML = `<div style="background:#fff;border-radius:18px;padding:24px;width:100%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+    <div style="font-size:15px;font-weight:800;margin-bottom:14px">✏️ Edit Category</div>
+    <input id="cat-edit-input" class="finput" value="${old.replace(/"/g,'&quot;')}" style="width:100%;padding:10px 12px;font-size:13px;margin-bottom:16px;box-sizing:border-box">
+    <div id="cat-edit-err" style="color:#C62828;font-size:11px;margin-bottom:8px;display:none"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="flex:1;padding:11px;border-radius:9px;border:1.5px solid #ddd;background:#f5f5f5;font-weight:700;cursor:pointer">Cancel</button>
+      <button onclick="window._doEditCat(${idx})" style="flex:2;padding:11px;border-radius:9px;border:none;background:linear-gradient(135deg,#4A148C,#7B1FA2);color:#fff;font-weight:700;cursor:pointer">💾 Save</button>
+    </div>
+  </div>`;
+  window._doEditCat = async function(i) {
+    const val = (document.getElementById('cat-edit-input')?.value || '').trim();
+    const errEl = document.getElementById('cat-edit-err');
+    if (!val) { errEl.textContent='Category name cannot be empty'; errEl.style.display='block'; return; }
+    if (val !== EXP_CATS[i] && EXP_CATS.includes(val)) { errEl.textContent='Category already exists'; errEl.style.display='block'; return; }
+    EXP_CATS[i] = val;
+    await saveExpCats();
+    overlay.remove();
+    showToast('✅ Category updated');
+    renderAdminPanel();
+  };
+  document.body.appendChild(overlay);
+  setTimeout(() => { const el=document.getElementById('cat-edit-input'); if(el){el.focus();el.select();} }, 100);
+}
+
+async function adminApproveRecord(type, id) {
+  try {
+    const col = type==='don'?'donations':'expenses';
+    const arr = type==='don'?donations:expenses;
+    const rec = arr.find(r=>r.id===id);
+    if (!rec) return;
+    const updated = { ...rec, approvalStatus:'approved', approvedAt:new Date().toISOString(), approvedBy:currentUser.name };
+    await dbUpdate(col, updated);
+    if (type==='don') { const i=donations.findIndex(d=>d.id===id); if(i>=0) donations[i]=updated; }
+    else { const i=expenses.findIndex(e=>e.id===id); if(i>=0) expenses[i]=updated; }
+    showToast('✅ Record approved!');
+    renderAdminPanel();
+  } catch(err) { showToast('✗ Error approving record'); console.error(err); }
+}
+
+async function adminRejectRecord(type, id) {
+  if (!confirm('Reject this record? This cannot be undone.')) return;
+  try {
+    const col = type==='don'?'donations':'expenses';
+    const arr = type==='don'?donations:expenses;
+    const rec = arr.find(r=>r.id===id);
+    if (!rec) return;
+    const updated = { ...rec, approvalStatus:'rejected', rejectedAt:new Date().toISOString(), rejectedBy:currentUser.name };
+    await dbUpdate(col, updated);
+    if (type==='don') { const i=donations.findIndex(d=>d.id===id); if(i>=0) donations[i]=updated; }
+    else { const i=expenses.findIndex(e=>e.id===id); if(i>=0) expenses[i]=updated; }
+    showToast('✗ Record rejected');
+    renderAdminPanel();
+  } catch(err) { showToast('✗ Error rejecting record'); console.error(err); }
+}
+
+async function adminSendBackRecord(type, id) {
+  const remarks = prompt('Enter remarks for the submitter (explain what needs to be fixed or uploaded):');
+  if (remarks === null) return;
+  if (!remarks.trim()) { showToast('⚠ Please enter remarks'); return; }
+  try {
+    const col = type==='don'?'donations':'expenses';
+    const arr = type==='don'?donations:expenses;
+    const rec = arr.find(r=>r.id===id);
+    if (!rec) return;
+    const updated = { ...rec, approvalStatus:'sendback', adminRemarks:remarks.trim(), sentBackAt:new Date().toISOString(), sentBackBy:currentUser.name };
+    await dbUpdate(col, updated);
+    if (type==='don') { const i=donations.findIndex(d=>d.id===id); if(i>=0) donations[i]=updated; }
+    else { const i=expenses.findIndex(e=>e.id===id); if(i>=0) expenses[i]=updated; }
+    showToast('↩ Record sent back with remarks');
+    renderAdminPanel();
+  } catch(err) { showToast('✗ Error sending back record'); console.error(err); }
+}
+
+async function changeUserRole(reqId, email, name, currentRole) {
+  const newRole = await showRolePickerModal(name, email, currentRole);
+  if (!newRole || newRole === currentRole) return;
+  try {
+    showToast('🕉 Updating role…');
+    const user = await dbGetByField('users','email',email);
+    if (user) await dbUpdate('users', { ...user, role:newRole, updatedAt:new Date().toISOString() });
+    await fsDb.collection('inviteRequests').doc(String(reqId)).update({ role:newRole, updatedAt:new Date().toISOString() });
+    showToast('✅ Role updated to '+newRole+'!');
+    renderAdminPanel();
+  } catch(err) { showToast('✗ Error updating role'); console.error(err); }
+}
+
+async function deleteUser(reqId, email, name) {
+  if (!confirm(`Delete user "${name}" (${email})?\n\nThis will remove their access and cannot be undone.`)) return;
+  try {
+    showToast('🕉 Deleting…');
+    // Remove from users collection
+    const user = await dbGetByField('users', 'email', email);
+    if (user) await dbDelete('users', user.id);
+    // Remove invite request
+    await fsDb.collection('inviteRequests').doc(String(reqId)).delete();
+    showToast('🗑 User deleted');
+    renderAdminPanel();
+  } catch(err) { showToast('✗ Error deleting user'); console.error(err); }
+}
+
+function resetUserPassword(email, name) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px';
+  overlay.innerHTML = `<div style="background:#fff;border-radius:18px;padding:24px;width:100%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+    <div style="font-size:16px;font-weight:800;margin-bottom:2px">🔑 Reset Password</div>
+    <div style="font-size:12px;color:#888;margin-bottom:18px">${name} · ${email}</div>
+    <div style="margin-bottom:12px">
+      <label style="font-size:11px;font-weight:700;color:#555;display:block;margin-bottom:5px">New Password</label>
+      <div style="position:relative">
+        <input id="rp-new" type="password" placeholder="Min 6 characters" style="width:100%;padding:10px 40px 10px 12px;border:1.5px solid #E0E0E0;border-radius:9px;font-size:13px;box-sizing:border-box;outline:none">
+        <span onclick="const i=document.getElementById('rp-new');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'👁':'🙈'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:14px">👁</span>
+      </div>
+    </div>
+    <div style="margin-bottom:18px">
+      <label style="font-size:11px;font-weight:700;color:#555;display:block;margin-bottom:5px">Confirm Password</label>
+      <div style="position:relative">
+        <input id="rp-confirm" type="password" placeholder="Re-enter password" style="width:100%;padding:10px 40px 10px 12px;border:1.5px solid #E0E0E0;border-radius:9px;font-size:13px;box-sizing:border-box;outline:none">
+        <span onclick="const i=document.getElementById('rp-confirm');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'👁':'🙈'" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);cursor:pointer;font-size:14px">👁</span>
+      </div>
+    </div>
+    <div id="rp-err" style="color:#C62828;font-size:11px;margin-bottom:10px;display:none"></div>
+    <div style="display:flex;gap:8px">
+      <button onclick="this.closest('div[style*=fixed]').remove()" style="flex:1;padding:11px;border-radius:9px;border:1.5px solid #ddd;background:#f5f5f5;font-weight:700;cursor:pointer">Cancel</button>
+      <button onclick="window._doResetPassword('${email}','${name}')" style="flex:2;padding:11px;border-radius:9px;border:none;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;font-weight:700;cursor:pointer">🔑 Update Password</button>
+    </div>
+  </div>`;
+  window._doResetPassword = async function(em, nm) {
+    const np = document.getElementById('rp-new')?.value || '';
+    const cf = document.getElementById('rp-confirm')?.value || '';
+    const errEl = document.getElementById('rp-err');
+    if (np.length < 6) { errEl.textContent='Password must be at least 6 characters'; errEl.style.display='block'; return; }
+    if (np !== cf) { errEl.textContent='Passwords do not match'; errEl.style.display='block'; return; }
+    errEl.style.display='none';
+    try {
+      showToast('🕉 Updating password…');
+      const user = await dbGetByField('users', 'email', em);
+      if (!user) { showToast('✗ User not found'); return; }
+      const hashed = await hashPassword(np);
+      await dbUpdate('users', { ...user, password: hashed, updatedAt: new Date().toISOString() });
+      overlay.remove();
+      showToast('✅ Password updated for ' + nm);
+    } catch(err) { showToast('✗ Error updating password'); console.error(err); }
+  };
+  document.body.appendChild(overlay);
+  setTimeout(() => document.getElementById('rp-new')?.focus(), 100);
+}
+
+async function approveRequest(reqId, email, name) {
+  const roleChoice = await showRolePickerModal(name, email);
+  if (!roleChoice) return;
+  try {
+    showToast('🕉 Approving…');
+    const req = await dbGetByField('inviteRequests','email',email);
+    const hashedPass = req?.hashedPassword || await hashPassword('satram123');
+    const existingUser = await dbGetByField('users','email',email);
+    if (existingUser) {
+      await dbUpdate('users', { ...existingUser, role: roleChoice, updatedAt: new Date().toISOString() });
+    } else {
+      await dbAdd('users', { email, password:hashedPass, name, role:roleChoice, createdAt:new Date().toISOString() });
+    }
+    await fsDb.collection('inviteRequests').doc(String(reqId)).update({ status:'approved', role:roleChoice, approvedAt:new Date().toISOString() });
+    showToast('✅ '+name+' approved as '+roleChoice+'!');
+    renderAdminPanel();
+  } catch(err) { showToast('✗ Error approving request'); console.error(err); }
+}
+
+function showRolePickerModal(name, email, currentRole) {
+  return new Promise(resolve => {
+    const overlay = document.createElement('div');
+    overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:900;display:flex;align-items:center;justify-content:center;padding:20px';
+    const isChange = !!currentRole;
+    overlay.innerHTML = `<div style="background:#fff;border-radius:18px;padding:24px;width:100%;max-width:340px;box-shadow:0 8px 32px rgba(0,0,0,.3)">
+      <div style="font-size:16px;font-weight:700;margin-bottom:4px">${isChange?'Change Role: ':'Approve: '}${name}</div>
+      <div style="font-size:12px;color:#888;margin-bottom:16px">${email}</div>
+      <div style="font-size:12px;font-weight:700;color:#555;margin-bottom:8px">Assign Role:</div>
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px">
+        <label style="display:flex;align-items:center;gap:10px;padding:10px;border:2px solid #E0E0E0;border-radius:10px;cursor:pointer">
+          <input type="radio" name="rolePick" value="readview" ${currentRole==='readview'?'checked':''} style="accent-color:#2E7D32"> <span>👁 <b>Read Only</b> — View all data without masking, no editing</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;padding:10px;border:2px solid #E0E0E0;border-radius:10px;cursor:pointer">
+          <input type="radio" name="rolePick" value="readonly" ${currentRole==='readonly'?'checked':''} style="accent-color:#7B1FA2"> <span>🔒 <b>Read & Data Mask</b> — View data with sensitive info masked</span>
+        </label>
+        <label style="display:flex;align-items:center;gap:10px;padding:10px;border:2px solid #E0E0E0;border-radius:10px;cursor:pointer">
+          <input type="radio" name="rolePick" value="readwrite" ${currentRole==='readwrite'?'checked':''} style="accent-color:#1565C0"> <span>✏️ <b>Read & Write</b> — Can add donations/expenses (pending approval)</span>
+        </label>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="this.closest('div[style*=fixed]').remove();window._rolePickResolve(null)" style="flex:1;padding:10px;border-radius:9px;border:1.5px solid #ddd;background:#f5f5f5;font-weight:700;cursor:pointer">Cancel</button>
+        <button onclick="const v=document.querySelector('input[name=rolePick]:checked')?.value;if(!v){alert('Please select a role');return;}this.closest('div[style*=fixed]').remove();window._rolePickResolve(v)" style="flex:2;padding:10px;border-radius:9px;border:none;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;font-weight:700;cursor:pointer">${isChange?'💾 Save Role':'✅ Approve'}</button>
+      </div>
+    </div>`;
+    window._rolePickResolve = resolve;
+    document.body.appendChild(overlay);
+  });
+}
+
+async function rejectRequest(reqId) {
+  if (!confirm('Reject this request? The person will not be able to login.')) return;
+  try {
+    await fsDb.collection('inviteRequests').doc(String(reqId)).update({ status:'rejected', rejectedAt:new Date().toISOString() });
+    showToast('✗ Request rejected');
+    renderAdminPanel();
+  } catch(err) { showToast('✗ Error rejecting request'); console.error(err); }
+}
+
+/* ─── HOME ─── */
+function renderHome() {
+  const { totalDon, recvDon, pendDon, totalExp, expPaid, expPending, balance, donCount, expCount } = totals();
+  return renderYearPicker() + `<div class="home-cards">
+    <div class="dash-card donation" onclick="gotoPage('donation')">
+      <div class="card-icon">🙏</div>
+      <div class="card-label">Total Donations <span class="card-year">${currentYear}</span></div>
+      <div class="card-amount">${fmt(totalDon)}</div>
+      <div class="card-chips">
+        <span class="chip green">✓ ${fmt(recvDon)}</span>
+        <span class="chip red">⏳ ${fmt(pendDon)}</span>
+        <span class="chip blue">${donCount} entries</span>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="dash-card expense" onclick="gotoPage('expense')">
+      <div class="card-icon">📋</div>
+      <div class="card-label">Total Expenses <span class="card-year">${currentYear}</span></div>
+      <div class="card-amount">${fmt(totalExp)}</div>
+      <div class="card-chips">
+        <span class="chip green">✓ Paid ${fmt(expPaid)}</span>
+        <span class="chip red">⏳ ${fmt(expPending)}</span>
+        <span class="chip blue">${expCount} entries</span>
+      </div>
+      <div class="card-arrow">›</div>
+    </div>
+    <div class="dash-card balance" onclick="gotoPage('balance')">
+      <div class="card-icon">📊</div>
+      <div class="card-label">Net Balance <span class="card-year">${currentYear}</span></div>
+      <div class="card-amount" style="color:${balance>=0?'var(--blue)':'var(--red)'}">${fmt(balance)}</div>
+      <div class="card-sub">Received − Total Expenses</div>
+      <div class="card-arrow">›</div>
+    </div>
+  </div>`;
+}
+
+/* ─── DONATION PAGE ─── */
+function sortedDonations() {
+  const list = yearDonations().slice();
+  switch(donSort) {
+    case 'amount-desc':    return list.sort((a,b)=>b.amount-a.amount);
+    case 'amount-asc':     return list.sort((a,b)=>a.amount-b.amount);
+    case 'serial-asc':     return list.sort((a,b)=>(a.serial||0)-(b.serial||0));
+    case 'pending-first':  return list.sort((a,b)=>{
+      const pa = a.received==='yes'?1:0, pb = b.received==='yes'?1:0;
+      return pa-pb || (b.serial||0)-(a.serial||0);
+    });
+    default:               return list.sort((a,b)=>(b.serial||0)-(a.serial||0)); // serial-desc
+  }
+}
+function renderDonation() {
+  const { totalDon, recvDon, pendDon, donCount } = totals();
+  const q = donSearch.trim().toLowerCase();
+  const yd = sortedDonations().filter(d => {
+    if (!q) return true;
+    return (d.name||'').toLowerCase().includes(q)
+      || (d.relname||'').toLowerCase().includes(q)
+      || (d.city||'').toLowerCase().includes(q)
+      || (d.state||'').toLowerCase().includes(q)
+      || (d.mobile||'').includes(q)
+      || String(d.serial||'').includes(q)
+      || String(d.amount||'').includes(q)
+      || (d.date||'').includes(q);
+  });
+  const list = yd.map(d => {
+    const isViewing = viewingDonId===d.id;
+    const isRecv = d.received==='yes';
+    const appStatus = d.approvalStatus || 'approved';
+    const isLocked = appStatus === 'approved' && !canAdmin();
+    const canEditThis = canAdmin() || (canWrite() && !isLocked);
+    const sendbackRemarks = appStatus === 'sendback' && d.adminRemarks ? `<div class="rbac-warn">↩ <b>Admin Remarks:</b> ${d.adminRemarks}</div>` : '';
+    const detail = isViewing ? `
+      <div class="don-detail">
+        ${sendbackRemarks}
+        <div class="don-detail-row"><span class="don-detail-lbl">📱 Mobile</span><span>${maskedField(d.mobile,'mobile',!isRecv)}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">👤 Relation</span><span>${d.relation&&d.relname?d.relation+' '+maskedField(d.relname,'text',!isRecv):'—'}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">🏠 Address</span><span>${maskedField(d.address,'text',!isRecv)}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">🏙 City</span><span>${maskedField(d.city,'text',!isRecv)}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">📍 State</span><span>${maskedField(d.state,'text',!isRecv)}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">💰 Amount</span><span>${maskedAmount(d.amount,appStatus)}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">📝 Words</span><span style="font-style:italic">${d.amountWords}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">🕒 Saved</span><span>${new Date(d.createdAt).toLocaleString('en-IN')}</span></div>
+        ${d.submittedByName&&canAdmin()?`<div class="don-detail-row"><span class="don-detail-lbl">👤 By</span><span>${d.submittedByName}</span></div>`:''}
+        ${d.receiptImage?`<div style="margin-top:8px"><div class="flabel" style="margin-bottom:5px">📎 Payment Receipt</div><img src="${d.receiptImage}" style="width:100%;border-radius:8px;max-height:180px;object-fit:contain;border:1px solid var(--border);cursor:pointer" onclick="viewReceiptFull('${d.id}',event,'don')"></div>`:''}
+        <div class="don-detail-actions">
+          ${canAdmin()&&!isRecv?`<button class="det-btn recv-btn" onclick="markReceived('${d.id}',event)">✅ Mark Received</button>`:''}
+          ${isRecv?`<button class="det-btn share-btn" onclick="openReceiptModal('${d.id}',event)">📤 Share</button>`:''}
+          ${canEditThis?`<button class="det-btn edit-btn" onclick="openEditDonForm('${d.id}',event)">✏️ Edit</button>`:''}
+          ${canAdmin()?`<button class="det-btn" style="background:linear-gradient(135deg,#C62828,#E53935);color:#fff;flex:0 0 auto;padding:9px 13px;box-shadow:0 3px 10px rgba(198,40,40,.45);border:1.5px solid rgba(255,120,120,.25)" onclick="deleteDonation('${d.id}',event)">🗑 Delete</button>`:''}
+        </div>
+      </div>` : '';
+    return `<div class="list-item don-item ${isViewing?'list-item-open':''}" onclick="toggleDonView('${d.id}')">
+      <div class="li-top">
+        <div>
+          <div class="li-serial">#${String(d.serial).padStart(3,'0')} · ${d.date}</div>
+          <div class="li-name">${maskedField(d.name,'text',!isRecv)}</div>
+          ${d.relation&&d.relname?`<div class="li-meta">${d.relation} ${maskedField(d.relname,'text',!isRecv)}</div>`:''}
+          <div class="li-meta">${d.city?'🏙 '+maskedField(d.city,'text',!isRecv):''}</div>
+        </div>
+        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="li-amount">${maskedAmount(d.amount,appStatus)}</div>
+          <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Received':'Pending'}</span>
+          ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
+          <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
+        </div>
+      </div>${detail}
+    </div>`;
+  }).join('');
+  const form     = showDonForm  ? donForm()     : '';
+  const editForm = editingDonId ? editDonForm() : '';
+  return `<div class="sec-hdr">
+    <div class="sec-hdr-left"><h2>Donations</h2><span class="count-pill">${donCount}</span></div>
+    <button class="add-btn" onclick="openDonForm()">+ New</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box orange"><div class="slabel">Total</div><div class="sval">${fmt(totalDon)}</div></div>
+    <div class="stat-box green"><div class="slabel">Received</div><div class="sval">${fmt(recvDon)}</div></div>
+    <div class="stat-box red"><div class="slabel">Pending</div><div class="sval">${fmt(pendDon)}</div></div>
+    <div class="stat-box"><div class="slabel">Entries</div><div class="sval">${donCount}</div></div>
+  </div>
+  <div class="sort-bar">
+    <span class="sort-bar-label">Sort:</span>
+    <span class="sort-chip ${donSort==='pending-first'?'active':''}" onclick="donSort='pending-first';render()">⏳ Pending</span>
+    <span class="sort-chip ${donSort==='amount-desc'?'active':''}" onclick="donSort='amount-desc';render()">💰 High–Low</span>
+    <span class="sort-chip ${donSort==='amount-asc'?'active':''}" onclick="donSort='amount-asc';render()">💰 Low–High</span>
+    <span class="sort-chip ${donSort==='serial-desc'?'active':''}" onclick="donSort='serial-desc';render()">🔢 Newest</span>
+    <span class="sort-chip ${donSort==='serial-asc'?'active':''}" onclick="donSort='serial-asc';render()">🔢 Oldest</span>
+  </div>
+  <div class="don-search-wrap">
+    <span class="search-icon">🔍</span>
+    <input id="don-search-input" type="text" autocomplete="off" placeholder="Search by name, city, mobile, amount…" value="${donSearch}" oninput="donSearchUpdate(this.value)">
+    ${donSearch?`<button class="search-clear" onclick="donSearchClear()">✕</button>`:''}
+  </div>
+  <div id="don-list-container">
+  ${q?`<div class="don-search-results">${yd.length} result${yd.length!==1?'s':''} for "${donSearch}"</div>`:''}
+  ${yd.length===0?(q?`<div class="empty">No donations match "<b>${donSearch}</b>"</div>`:'<div class="empty">No donations for '+currentYear+'.<br>Tap "+ New" to add one.</div>'):list}
+  </div>
+  ${form}${editForm}`;
+}
+
+function donSearchUpdate(val) {
+  donSearch = val;
+  viewingDonId = null;
+  const q = val.trim().toLowerCase();
+  const yd = sortedDonations().filter(d => {
+    if (!q) return true;
+    return (d.name||'').toLowerCase().includes(q)
+      || (d.relname||'').toLowerCase().includes(q)
+      || (d.city||'').toLowerCase().includes(q)
+      || (d.state||'').toLowerCase().includes(q)
+      || (d.mobile||'').includes(q)
+      || String(d.serial||'').includes(q)
+      || String(d.amount||'').includes(q)
+      || (d.date||'').includes(q);
+  });
+  const list = yd.map(d => {
+    const isRecv = d.received==='yes';
+    const appStatus = d.approvalStatus || 'approved';
+    return `<div class="list-item don-item" onclick="toggleDonView('${d.id}');donSearch=document.getElementById('don-search-input')?.value||donSearch">
+      <div class="li-top">
+        <div>
+          <div class="li-serial">#${String(d.serial).padStart(3,'0')} · ${d.date}</div>
+          <div class="li-name">${maskedField(d.name,'text',!isRecv)}</div>
+          ${d.relation&&d.relname?`<div class="li-meta">${d.relation} ${maskedField(d.relname,'text',!isRecv)}</div>`:''}
+          <div class="li-meta">${d.city?'🏙 '+maskedField(d.city,'text',!isRecv):''}</div>
+        </div>
+        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="li-amount">${fmt(d.amount)}</div>
+          <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Received':'Pending'}</span>
+          ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  const container = document.getElementById('don-list-container');
+  if (container) {
+    container.innerHTML = (q ? `<div class="don-search-results">${yd.length} result${yd.length!==1?'s':''} for "${val}"</div>` : '')
+      + (yd.length===0 ? (q ? `<div class="empty">No donations match "<b>${val}</b>"</div>` : '<div class="empty">No donations for '+currentYear+'.</div>') : list);
+  }
+  const clearBtn = document.querySelector('.don-search-wrap .search-clear');
+  if (val && !clearBtn) {
+    const wrap = document.querySelector('.don-search-wrap');
+    if (wrap) { const b=document.createElement('button'); b.className='search-clear'; b.textContent='✕'; b.onclick=donSearchClear; wrap.appendChild(b); }
+  } else if (!val && clearBtn) { clearBtn.remove(); }
+}
+function donSearchClear() {
+  donSearch=''; viewingDonId=null;
+  const inp = document.getElementById('don-search-input');
+  if (inp) inp.value='';
+  donSearchUpdate('');
+}
+
+/* ─── EXPENSE PAGE ─── */
+function sortedExpenses() {
+  const list = yearExpenses().slice();
+  switch(expSort) {
+    case 'amount-desc': return list.sort((a,b)=>b.amount-a.amount);
+    case 'amount-asc':  return list.sort((a,b)=>a.amount-b.amount);
+    case 'serial-asc':  return list.sort((a,b)=>(a.serial||0)-(b.serial||0));
+    default:            return list.sort((a,b)=>(b.serial||0)-(a.serial||0));
+  }
+}
+function renderExpense() {
+  const { totalExp, expPaid, expPending, expCount } = totals();
+  const ye = sortedExpenses();
+  const list = ye.map(e => {
+    const isViewing = viewingExpId===e.id;
+    const isPaid  = (parseFloat(e.paidAmount)||0) >= (parseFloat(e.amount)||0);
+    const isPart  = !isPaid && (parseFloat(e.paidAmount)||0) > 0;
+    const sl = isPaid?'Paid':isPart?'Partial':'Pending';
+    const sc = isPaid?'recv':isPart?'part':'pend';
+    const pend = Math.max(0,(parseFloat(e.amount)||0)-(parseFloat(e.paidAmount)||0));
+    const eAppStatus = e.approvalStatus || 'approved';
+    const eIsLocked = eAppStatus === 'approved' && !canAdmin();
+    const canEditExp = canAdmin() || (canWrite() && !eIsLocked);
+    const eSendbackRemarks = eAppStatus === 'sendback' && e.adminRemarks ? `<div class="rbac-warn">↩ <b>Admin Remarks:</b> ${e.adminRemarks}</div>` : '';
+    const detail = isViewing ? `
+      <div class="don-detail">
+        ${eSendbackRemarks}
+        <div class="don-detail-row"><span class="don-detail-lbl">🏪 Vendor</span><span>${maskedField(e.vendor,'text')}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">📝 Notes</span><span>${maskedField(e.notes,'text')}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">💰 Total</span><span style="font-weight:700">${maskedAmount(e.amount,eAppStatus)}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">✅ Paid</span><span style="font-weight:700;color:var(--green)">${fmt(e.paidAmount||0)}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">⏳ Pending</span><span style="font-weight:700;color:${pend>0?'var(--red)':'var(--green)'}">${fmt(pend)}</span></div>
+        <div class="don-detail-row"><span class="don-detail-lbl">🕒 Saved</span><span>${new Date(e.createdAt).toLocaleString('en-IN')}</span></div>
+        ${e.submittedByName&&canAdmin()?`<div class="don-detail-row"><span class="don-detail-lbl">👤 By</span><span>${e.submittedByName}</span></div>`:''}
+        ${e.receiptImage?`<div style="margin-top:8px"><div class="flabel" style="margin-bottom:5px">📎 Payment Receipt</div><img src="${e.receiptImage}" style="width:100%;border-radius:8px;max-height:180px;object-fit:contain;border:1px solid var(--border);cursor:pointer" onclick="viewReceiptFull('${e.id}',event,'exp')"></div>`:''}
+        <div class="don-detail-actions">
+          ${canEditExp?`<button class="det-btn edit-btn" onclick="openEditExpForm('${e.id}',event)">✏️ Edit Expense</button>`:''}
+          ${canAdmin()?`<button class="det-btn" style="background:linear-gradient(135deg,#C62828,#E53935);color:#fff;flex:0 0 auto;padding:9px 13px;box-shadow:0 3px 10px rgba(198,40,40,.45);border:1.5px solid rgba(255,120,120,.25)" onclick="deleteExpense('${e.id}',event)">🗑 Delete</button>`:''}
+        </div>
+      </div>` : '';
+    return `<div class="list-item exp-item ${isViewing?'list-item-open':''}" onclick="toggleExpView('${e.id}')">
+      <div class="li-top">
+        <div>
+          <div class="li-serial">#${String(e.serial).padStart(3,'0')} · ${e.date}</div>
+          <div class="li-name">${e.category||e.title}</div>
+          ${e.vendor?`<div class="li-meta">🏪 ${e.vendor}</div>`:''}
+        </div>
+        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          <div class="li-amount" style="color:var(--green)">${maskedAmount(e.amount,eAppStatus)}</div>
+          <span class="badge ${sc}">${sl}</span>
+          ${eAppStatus&&eAppStatus!=='approved'?approvalBadgeHtml(eAppStatus):''}
+          <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
+        </div>
+      </div>${detail}
+    </div>`;
+  }).join('');
+  const form     = showExpForm  ? expForm()     : '';
+  const editForm = editingExpId ? editExpForm() : '';
+  return `<div class="sec-hdr">
+    <div class="sec-hdr-left"><h2>Expenses</h2><span class="count-pill" style="background:linear-gradient(135deg,var(--green-dark),var(--green))">${expCount}</span></div>
+    <button class="add-btn" style="background:linear-gradient(135deg,var(--green-dark),var(--green));box-shadow:0 2px 8px rgba(46,125,50,.3)" onclick="openExpForm()">+ New</button>
+  </div>
+  <div class="stats-row">
+    <div class="stat-box green"><div class="slabel">Total Spent</div><div class="sval">${fmt(totalExp)}</div></div>
+    <div class="stat-box green"><div class="slabel">Paid</div><div class="sval">${fmt(expPaid)}</div></div>
+    <div class="stat-box red"><div class="slabel">Pending</div><div class="sval">${fmt(expPending)}</div></div>
+    <div class="stat-box"><div class="slabel">Entries</div><div class="sval">${expCount}</div></div>
+  </div>
+  <div class="sort-bar">
+    <span class="sort-bar-label">Sort:</span>
+    <span class="sort-chip ${expSort==='serial-desc'?'active green':''}" onclick="expSort='serial-desc';render()">🔢 Newest</span>
+    <span class="sort-chip ${expSort==='serial-asc'?'active green':''}" onclick="expSort='serial-asc';render()">🔢 Oldest</span>
+    <span class="sort-chip ${expSort==='amount-desc'?'active green':''}" onclick="expSort='amount-desc';render()">💰 High–Low</span>
+    <span class="sort-chip ${expSort==='amount-asc'?'active green':''}" onclick="expSort='amount-asc';render()">💰 Low–High</span>
+  </div>
+  ${ye.length===0?'<div class="empty">No expenses for '+currentYear+'.<br>Tap "+ New" to add one.</div>':list}
+  ${form}${editForm}`;
+}
+
+/* ─── BALANCE PAGE ─── */
+function renderBalance() {
+  const { totalDon, recvDon, pendDon, totalExp, expPaid, expPending, balance } = totals();
+  const yd = yearDonations().slice().reverse();
+  const ye = yearExpenses().slice().reverse();
+  const donList = yd.map(d=>{const _rv=d.received==='yes';return `<div class="list-item don-item"><div class="li-top"><div><div class="li-serial">#${String(d.serial).padStart(3,'0')} · ${d.date}</div><div class="li-name">${maskedField(d.name,'text',!_rv)}</div>${d.relation&&d.relname?`<div class="li-meta">${d.relation} ${maskedField(d.relname,'text',!_rv)}</div>`:''}</div><div style="text-align:right"><div class="li-amount">${fmt(d.amount)}</div><span class="badge ${_rv?'recv':'pend'}">${_rv?'Received':'Pending'}</span></div></div></div>`}).join('');
+  const expList = ye.map(e=>`<div class="list-item exp-item"><div class="li-top"><div><div class="li-serial">#${String(e.serial).padStart(3,'0')} · ${e.date}</div><div class="li-name">${e.category||e.title}</div></div><div class="li-amount" style="color:var(--green)">${fmt(e.amount)}</div></div></div>`).join('');
+  return `<div class="sec-hdr"><h2>Balance Sheet</h2><span style="font-size:12px;color:var(--text3);font-weight:700">${currentYear}</span></div>
+  <div class="balance-card">
+    <div class="bal-row"><span class="bal-label">Total Donations</span><span class="bal-val" style="color:var(--saffron-dark)">${fmt(totalDon)}</span></div>
+    <div class="bal-row"><span class="bal-label">↳ Received</span><span class="bal-val" style="color:var(--green)">${fmt(recvDon)}</span></div>
+    <div class="bal-row"><span class="bal-label">↳ Pending</span><span class="bal-val" style="color:var(--red)">${fmt(pendDon)}</span></div>
+    <div class="bal-row"><span class="bal-label">Total Expenses</span><span class="bal-val" style="color:var(--green)">−${fmt(totalExp)}</span></div>
+    <div class="bal-row"><span class="bal-label">↳ Paid</span><span class="bal-val" style="color:var(--green)">${fmt(expPaid)}</span></div>
+    <div class="bal-row"><span class="bal-label">↳ Pending</span><span class="bal-val" style="color:var(--red)">${fmt(expPending)}</span></div>
+    <div class="bal-total"><span class="bal-label">Net Balance</span><span class="bal-val" style="color:${balance>=0?'var(--blue)':'var(--red)'};font-size:22px">${fmt(balance)}</span></div>
+  </div>
+  <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--saffron-dark);margin:14px 0 8px">🙏 Donation Entries</div>
+  ${yd.length===0?'<div class="empty">No donations for '+currentYear+'.</div>':donList}
+  <div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin:14px 0 8px">📋 Expense Entries</div>
+  ${ye.length===0?'<div class="empty">No expenses for '+currentYear+'.</div>':expList}`;
+}
+
+/* ─── INDIA STATES ─── */
+function indiaStates(sel) {
+  const st=['Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa','Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala','Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland','Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura','Uttar Pradesh','Uttarakhand','West Bengal','Andaman & Nicobar Islands','Chandigarh','Dadra & Nagar Haveli','Delhi','Jammu & Kashmir','Ladakh','Lakshadweep','Puducherry','Others'];
+  return `<option value="">— Select State —</option>`+st.map(s=>`<option value="${s}" ${sel===s?'selected':''}>${s}</option>`).join('');
+}
+
+/* ─── EXPENSE CATEGORIES ─── */
+const DEFAULT_EXP_CATS = ['Milk','Buttermilk','Curd','Groceries','Payasam','Suppliers','Food Master','Food Suppliers','Plates + Glasses','Water Packets','Wine','Transport','Disel','Labour','Paints','Vanta Karralu','Forest DD','Pamplets','Auto + Pendrive + Disel','Voice Recording','Bharathnatyam','Bharathnatyam Speakers','Kolatam','Gas','Mellalu','Vegetables','Camera','Chakali','Crackers','Usttavam Poojari','Groceries Loading + Unloading','Groceries Extra Items','T-Shirts',"Flex's",'Badgets','Forest Cleaning Labour','Usttavam Godugu','Flower Decoration'];
+let EXP_CATS = [...DEFAULT_EXP_CATS];
+
+async function loadExpCats() {
+  try {
+    const doc = await fsDb.collection('config').doc('expenseCategories').get();
+    if (doc.exists && Array.isArray(doc.data().list) && doc.data().list.length > 0) {
+      EXP_CATS = doc.data().list;
+    } else {
+      await fsDb.collection('config').doc('expenseCategories').set({ list: DEFAULT_EXP_CATS });
+    }
+  } catch(e) { console.warn('loadExpCats error', e); }
+}
+
+async function saveExpCats() {
+  try { await fsDb.collection('config').doc('expenseCategories').set({ list: EXP_CATS }); } catch(e) { console.warn('saveExpCats error', e); }
+}
+
+function expCatOptions(sel='') {
+  return `<option value="">— Select Category —</option>`+EXP_CATS.map(c=>`<option value="${c}" ${sel===c?'selected':''}>${c}</option>`).join('');
+}
+
+/* ─── DON FORM ─── */
+function donForm() {
+  const serial = String(donSerial).padStart(3,'0');
+  const today  = new Date().toISOString().split('T')[0];
+  const yc='ropt'+(donReceived==='yes'?' sel-yes':'');
+  const nc='ropt'+(donReceived==='no'?' sel-no':'');
+  return `<div class="overlay" id="donOverlay"><div class="form-sheet">
+    <div class="form-title">New Donation <button class="close-btn" onclick="closeDonForm()">✕</button></div>
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:8px">
+      <div class="fgroup"><label class="flabel">Serial No</label><input class="finput" value="${serial}" readonly style="background:#f5f0e8"></div>
+      <div class="fgroup"><label class="flabel">Date</label><input class="finput" type="date" id="df-date" value="${today}"></div>
+    </div>
+    <div class="fgroup" style="position:relative">
+      <label class="flabel">Donor Full Name</label>
+      <input class="finput" id="df-name" placeholder="Enter full name" autocomplete="off" oninput="donorSuggest(this.value)">
+      <div id="df-suggest" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);z-index:200;max-height:180px;overflow-y:auto"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:80px 1fr;gap:8px">
+      <div class="fgroup"><label class="flabel">Relation</label><div class="sel-wrap"><select class="fselect" id="df-rel"><option value="">—</option><option>S/O</option><option>H/O</option><option>W/O</option><option>D/O</option></select></div></div>
+      <div class="fgroup"><label class="flabel">Father / Husband Name</label><input class="finput" id="df-relname" placeholder="Enter name"></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Address</label><textarea class="ftextarea" id="df-addr" rows="2" placeholder="House / Street / Area"></textarea></div>
+    <div class="fgroup"><label class="flabel">City</label><input class="finput" id="df-city" placeholder="City or Town"></div>
+    <div class="fgroup"><label class="flabel">State</label><div class="sel-wrap"><select class="fselect" id="df-state">${indiaStates('')}</select></div></div>
+    <div class="fgroup"><label class="flabel">Mobile Number</label><input class="finput" id="df-mobile" type="tel" placeholder="10-digit mobile" maxlength="10"></div>
+    <div class="amt-card">
+      <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="df-amt" placeholder="0" min="0" oninput="updDonWords()"></div>
+      <div class="divhr"></div>
+      <div class="flabel" style="margin-bottom:3px">Amount in Words</div>
+      <div class="words-box" id="df-words">—</div>
+    </div>
+    <div class="recv-row">
+      <label class="${yc}" id="don-yes" onclick="setRecv('yes')"><input type="radio" name="dr"><div class="rchk" id="ryc">${donReceived==='yes'?'✓':''}</div>Amount Received</label>
+      <label class="${nc}" id="don-no"  onclick="setRecv('no')"><input type="radio" name="dr"><div class="rchk" id="rnc">${donReceived==='no'?'✗':''}</div>Pending</label>
+    </div>
+    <div id="df-receipt-section" style="display:${donReceived==='yes'?'block':'none'}">
+      <div class="fgroup">
+        <label class="flabel">Payment Receipt (optional)</label>
+        <div class="upload-box" id="df-upload-box">
+          <div id="df-upload-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+            <span style="font-size:24px">📎</span>
+            <div style="font-size:12px;font-weight:700;color:var(--saffron-dark)">Upload Receipt</div>
+            <div style="display:flex;gap:8px;margin-top:2px">
+              <button type="button" onclick="document.getElementById('df-receipt-camera').click()" style="padding:6px 14px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">📷 Camera</button>
+              <button type="button" onclick="document.getElementById('df-receipt-file').click()" style="padding:6px 14px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">🖼 Gallery</button>
+            </div>
+          </div>
+          <img id="df-receipt-preview" style="display:none;max-width:100%;border-radius:6px;max-height:160px;object-fit:contain" />
+        </div>
+        <input type="file" id="df-receipt-file" accept="image/*" style="display:none" onchange="previewReceipt('df')">
+        <input type="file" id="df-receipt-camera" accept="image/*" capture="environment" style="display:none" onchange="previewReceipt('df')">
+        <div id="df-receipt-actions" style="display:none;margin-top:6px">
+          <button type="button" onclick="clearReceipt('df')" class="upload-act-btn" style="color:var(--red);width:100%">🗑 Remove Receipt</button>
+        </div>
+      </div>
+    </div>
+    <div class="fgroup"><label class="flabel">Signature</label><div class="sig-wrap"><canvas class="sig-cv" id="sigCanvas"></canvas><div class="sig-bar"><span class="sig-hint">Sign with finger or stylus</span><button class="sig-clr" onclick="clearSig()">Clear</button></div></div></div>
+    <button class="save-btn" onclick="saveDonation()">✦ Save Donation ✦</button>
+  </div></div>`;
+}
+
+/* ─── EDIT DON FORM ─── */
+function editDonForm() {
+  const d = donations.find(x=>x.id===editingDonId);
+  if (!d) return '';
+  const serial=String(d.serial).padStart(3,'0');
+  const yc='ropt'+(donReceived==='yes'?' sel-yes':'');
+  const nc='ropt'+(donReceived==='no'?' sel-no':'');
+  return `<div class="overlay" id="editOverlay"><div class="form-sheet">
+    <div class="form-title">Edit Donation <button class="close-btn" onclick="closeEditDonForm()">✕</button></div>
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:8px">
+      <div class="fgroup"><label class="flabel">Serial No</label><input class="finput" value="${serial}" readonly style="background:#f5f0e8"></div>
+      <div class="fgroup"><label class="flabel">Date</label><input class="finput" type="date" id="ef2-date" value="${d.date}"></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Donor Full Name</label><input class="finput" id="ef2-name" value="${d.name||''}"></div>
+    <div style="display:grid;grid-template-columns:80px 1fr;gap:8px">
+      <div class="fgroup"><label class="flabel">Relation</label><div class="sel-wrap"><select class="fselect" id="ef2-rel"><option value="">—</option><option ${d.relation==='S/O'?'selected':''}>S/O</option><option ${d.relation==='H/O'?'selected':''}>H/O</option><option ${d.relation==='W/O'?'selected':''}>W/O</option><option ${d.relation==='D/O'?'selected':''}>D/O</option></select></div></div>
+      <div class="fgroup"><label class="flabel">Father / Husband Name</label><input class="finput" id="ef2-relname" value="${d.relname||''}" placeholder="Enter name"></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Address</label><textarea class="ftextarea" id="ef2-addr" rows="2">${d.address||''}</textarea></div>
+    <div class="fgroup"><label class="flabel">City</label><input class="finput" id="ef2-city" value="${d.city||''}" placeholder="City or Town"></div>
+    <div class="fgroup"><label class="flabel">State</label><div class="sel-wrap"><select class="fselect" id="ef2-state">${indiaStates(d.state||'')}</select></div></div>
+    <div class="fgroup"><label class="flabel">Mobile Number</label><input class="finput" id="ef2-mobile" type="tel" value="${d.mobile||''}" maxlength="10"></div>
+    <div class="amt-card">
+      <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="ef2-amt" value="${d.amount}" min="0" oninput="updEditWords()"></div>
+      <div class="divhr"></div>
+      <div class="flabel" style="margin-bottom:3px">Amount in Words</div>
+      <div class="words-box" id="ef2-words">${d.amountWords}</div>
+    </div>
+    <div class="recv-row">
+      <label class="${yc}" id="edit-don-yes" onclick="setRecv('yes')"><input type="radio" name="er"><div class="rchk" id="eryc">${donReceived==='yes'?'✓':''}</div>Amount Received</label>
+      <label class="${nc}" id="edit-don-no"  onclick="setRecv('no')"><input type="radio" name="er"><div class="rchk" id="ernc">${donReceived==='no'?'✗':''}</div>Pending</label>
+    </div>
+    <div id="ef2-receipt-section" style="display:${donReceived==='yes'?'block':'none'}">
+      <div class="fgroup">
+        <label class="flabel">Payment Receipt (optional)</label>
+        <div class="upload-box" id="ef2-upload-box">
+          <div id="ef2-upload-placeholder" style="${d.receiptImage?'display:none':'display:flex;flex-direction:column;align-items:center;gap:6px'}">
+            <span style="font-size:24px">📎</span>
+            <div style="font-size:12px;font-weight:700;color:var(--saffron-dark)">Upload Receipt</div>
+            <div style="display:flex;gap:8px;margin-top:2px">
+              <button type="button" onclick="document.getElementById('ef2-receipt-camera').click()" style="padding:6px 14px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">📷 Camera</button>
+              <button type="button" onclick="document.getElementById('ef2-receipt-file').click()" style="padding:6px 14px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">🖼 Gallery</button>
+            </div>
+          </div>
+          <img id="ef2-receipt-preview" style="display:${d.receiptImage?'block':'none'};max-width:100%;border-radius:6px;max-height:160px;object-fit:contain" src="${d.receiptImage||''}" />
+        </div>
+        <input type="file" id="ef2-receipt-file" accept="image/*" style="display:none" onchange="previewReceipt('ef2')">
+        <input type="file" id="ef2-receipt-camera" accept="image/*" capture="environment" style="display:none" onchange="previewReceipt('ef2')">
+        <div id="ef2-receipt-actions" style="display:${d.receiptImage?'block':'none'};margin-top:6px">
+          <button type="button" onclick="clearReceipt('ef2')" class="upload-act-btn" style="color:var(--red);width:100%">🗑 Remove Receipt</button>
+        </div>
+      </div>
+    </div>
+    <div class="fgroup"><label class="flabel">Signature</label><div class="sig-wrap"><canvas class="sig-cv" id="sigCanvas"></canvas><div class="sig-bar"><span class="sig-hint">Sign with finger or stylus</span><button class="sig-clr" onclick="clearSig()">Clear</button></div></div></div>
+    <button class="save-btn" onclick="updateDonation()">✦ Update Donation ✦</button>
+  </div></div>`;
+}
+
+/* ─── EXP FORM ─── */
+function expForm() {
+  const serial=String(expSerial).padStart(3,'0');
+  const today=new Date().toISOString().split('T')[0];
+  return `<div class="overlay"><div class="form-sheet">
+    <div class="form-title">New Expense <button class="close-btn" onclick="closeExpForm()">✕</button></div>
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:8px">
+      <div class="fgroup"><label class="flabel">Serial No</label><input class="finput" value="${serial}" readonly style="background:#f5f0e8"></div>
+      <div class="fgroup"><label class="flabel">Date</label><input class="finput" type="date" id="ef-date" value="${today}"></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Category</label><div class="sel-wrap"><select class="fselect" id="ef-cat">${expCatOptions()}</select></div></div>
+    <div class="fgroup"><label class="flabel">Paid To / Vendor</label><input class="finput" id="ef-vendor" placeholder="Vendor or person name"></div>
+    <div class="fgroup"><label class="flabel">Notes</label><textarea class="ftextarea" id="ef-notes" rows="2" placeholder="Additional details"></textarea></div>
+    <div class="amt-card">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A4A1A;margin-bottom:6px">Total Amount</div>
+      <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="ef-amt" placeholder="0" min="0" oninput="updExpWords();updExpPending('ef')"></div>
+      <div class="divhr"></div>
+      <div class="flabel" style="margin-bottom:3px">Amount in Words</div>
+      <div class="words-box" id="ef-words">—</div>
+    </div>
+    <div class="amt-card" style="background:#E8F5E9;border-color:#A5D6A7">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2E7D32;margin-bottom:6px">Amount Paid</div>
+      <div class="amt-row"><span class="rsym" style="color:#2E7D32">₹</span><input class="amt-input" type="number" id="ef-paid" placeholder="0" min="0" style="border-bottom-color:#A5D6A7" oninput="updExpPending('ef')"></div>
+      <div class="divhr" style="background:linear-gradient(to right,transparent,#A5D6A7,transparent)"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+        <span style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#C62828">Pending Amount</span>
+        <span style="font-size:16px;font-weight:700;color:#C62828" id="ef-pending-display">—</span>
+      </div>
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Payment Receipt (optional)</label>
+      <div class="upload-box" id="ef-upload-box">
+        <div id="ef-upload-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+          <span style="font-size:24px">📎</span>
+          <div style="font-size:12px;font-weight:700;color:var(--saffron-dark)">Upload Receipt</div>
+          <div style="display:flex;gap:8px;margin-top:2px">
+            <button type="button" onclick="document.getElementById('ef-receipt-camera').click()" style="padding:6px 14px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">📷 Camera</button>
+            <button type="button" onclick="document.getElementById('ef-receipt-file').click()" style="padding:6px 14px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">🖼 Gallery</button>
+          </div>
+        </div>
+        <img id="ef-receipt-preview" style="display:none;max-width:100%;border-radius:6px;max-height:160px;object-fit:contain" />
+      </div>
+      <input type="file" id="ef-receipt-file" accept="image/*" style="display:none" onchange="previewReceipt('ef')">
+      <input type="file" id="ef-receipt-camera" accept="image/*" capture="environment" style="display:none" onchange="previewReceipt('ef')">
+      <div id="ef-receipt-actions" style="display:none;margin-top:6px">
+        <button type="button" onclick="clearReceipt('ef')" class="upload-act-btn" style="color:var(--red);width:100%">🗑 Remove Receipt</button>
+      </div>
+    </div>
+    <button class="save-btn" style="background:linear-gradient(135deg,var(--green-dark),var(--green));box-shadow:0 4px 16px rgba(46,125,50,.35)" onclick="saveExpense()">✦ Save Expense ✦</button>
+  </div></div>`;
+}
+
+/* ─── EDIT EXP FORM ─── */
+function editExpForm() {
+  const e=expenses.find(x=>x.id===editingExpId);
+  if (!e) return '';
+  const serial=String(e.serial).padStart(3,'0');
+  const pend=Math.max(0,(parseFloat(e.amount)||0)-(parseFloat(e.paidAmount)||0));
+  return `<div class="overlay" id="editExpOverlay"><div class="form-sheet">
+    <div class="form-title">Edit Expense <button class="close-btn" onclick="closeEditExpForm()">✕</button></div>
+    <div style="display:grid;grid-template-columns:90px 1fr;gap:8px">
+      <div class="fgroup"><label class="flabel">Serial No</label><input class="finput" value="${serial}" readonly style="background:#f5f0e8"></div>
+      <div class="fgroup"><label class="flabel">Date</label><input class="finput" type="date" id="eef-date" value="${e.date}"></div>
+    </div>
+    <div class="fgroup"><label class="flabel">Category</label><div class="sel-wrap"><select class="fselect" id="eef-cat">${expCatOptions(e.category||e.title||'')}</select></div></div>
+    <div class="fgroup"><label class="flabel">Paid To / Vendor</label><input class="finput" id="eef-vendor" value="${e.vendor||''}" placeholder="Vendor or person name"></div>
+    <div class="fgroup"><label class="flabel">Notes</label><textarea class="ftextarea" id="eef-notes" rows="2">${e.notes||''}</textarea></div>
+    <div class="amt-card">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#7A4A1A;margin-bottom:6px">Total Amount</div>
+      <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="eef-amt" value="${e.amount}" min="0" oninput="updExpEditWords();updExpPending('eef')"></div>
+      <div class="divhr"></div>
+      <div class="flabel" style="margin-bottom:3px">Amount in Words</div>
+      <div class="words-box" id="eef-words">${e.amountWords||amtWords(e.amount)}</div>
+    </div>
+    <div class="amt-card" style="background:#E8F5E9;border-color:#A5D6A7">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#2E7D32;margin-bottom:6px">Amount Paid</div>
+      <div class="amt-row"><span class="rsym" style="color:#2E7D32">₹</span><input class="amt-input" type="number" id="eef-paid" value="${e.paidAmount||0}" min="0" style="border-bottom-color:#A5D6A7" oninput="updExpPending('eef')"></div>
+      <div class="divhr" style="background:linear-gradient(to right,transparent,#A5D6A7,transparent)"></div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px">
+        <span style="font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:#C62828">Pending Amount</span>
+        <span style="font-size:16px;font-weight:700;color:#C62828" id="eef-pending-display">${fmt(pend)}</span>
+      </div>
+    </div>
+    <div class="fgroup">
+      <label class="flabel">Payment Receipt (optional)</label>
+      <div class="upload-box" id="eef-upload-box">
+        <div id="eef-upload-placeholder" style="${e.receiptImage?'display:none':'display:flex;flex-direction:column;align-items:center;gap:6px'}">
+          <span style="font-size:24px">📎</span>
+          <div style="font-size:12px;font-weight:700;color:var(--saffron-dark)">Upload Receipt</div>
+          <div style="display:flex;gap:8px;margin-top:2px">
+            <button type="button" onclick="document.getElementById('eef-receipt-camera').click()" style="padding:6px 14px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">📷 Camera</button>
+            <button type="button" onclick="document.getElementById('eef-receipt-file').click()" style="padding:6px 14px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">🖼 Gallery</button>
+          </div>
+        </div>
+        <img id="eef-receipt-preview" style="display:${e.receiptImage?'block':'none'};max-width:100%;border-radius:6px;max-height:160px;object-fit:contain" src="${e.receiptImage||''}" />
+      </div>
+      <input type="file" id="eef-receipt-file" accept="image/*" style="display:none" onchange="previewReceipt('eef')">
+      <input type="file" id="eef-receipt-camera" accept="image/*" capture="environment" style="display:none" onchange="previewReceipt('eef')">
+      <div id="eef-receipt-actions" style="display:${e.receiptImage?'block':'none'};margin-top:6px">
+        <button type="button" onclick="clearReceipt('eef')" class="upload-act-btn" style="color:var(--red);width:100%">🗑 Remove Receipt</button>
+      </div>
+    </div>
+    <button class="save-btn" style="background:linear-gradient(135deg,var(--green-dark),var(--green));box-shadow:0 4px 16px rgba(46,125,50,.35)" onclick="updateExpense()">✦ Update Expense ✦</button>
+  </div></div>`;
+}
+
+/* ─── GOOGLE TRANSLATE (English → Telugu) ─── */
+async function translateToTelugu(text) {
+  if (!text || !text.trim()) return text || '';
+  try {
+    const url = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=te&dt=t&q=' + encodeURIComponent(text);
+    const res = await fetch(url);
+    const data = await res.json();
+    return data[0].map(function(x){ return x[0]; }).join('');
+  } catch(e) { return text; }
+}
+
+async function transliterateToTelugu(text) {
+  if (!text || !text.trim()) return text || '';
+  const words = text.trim().split(/\s+/);
+  try {
+    const results = await Promise.all(words.map(async function(word) {
+      try {
+        const url = 'https://inputtools.google.com/request?text=' + encodeURIComponent(word) + '&itc=te-t-i0-und&num=1&cp=0&cs=1&ie=utf-8&oe=utf-8';
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data && data[0] === 'SUCCESS' && data[1] && data[1][0] && data[1][0][1] && data[1][0][1][0]) {
+          return data[1][0][1][0];
+        }
+        return word;
+      } catch(e) { return word; }
+    }));
+    return results.join(' ');
+  } catch(e) { return text; }
+}
+
+const TE_RELATION_MAP = { 'S/O': 'తండ్రి', 'H/O': 'భర్త', 'W/O': 'భార్య', 'D/O': 'తండ్రి' };
+
+async function prepareReceiptDisplayData(d, lang) {
+  if (lang !== 'te') {
+    return {
+      name:     d.name,
+      relation: (d.relation && d.relname) ? d.relation + ' ' + d.relname : null,
+      address:  d.address || '',
+      city:     d.city ? d.city + (d.state ? ', ' + d.state : '') : ''
+    };
+  }
+  const cityStr = d.city ? d.city + (d.state ? ', ' + d.state : '') : '';
+  const [name, relname, address, city] = await Promise.all([
+    d.nameTe   ? Promise.resolve(d.nameTe)    : transliterateToTelugu(d.name),
+    (d.relation && d.relname) ? transliterateToTelugu(d.relname) : Promise.resolve(null),
+    d.addressTe? Promise.resolve(d.addressTe) : translateToTelugu(d.address || ''),
+    d.cityTe   ? Promise.resolve(d.cityTe + (d.state ? ', ' + d.state : '')) : translateToTelugu(cityStr)
+  ]);
+  let relation = null;
+  if (d.relation && d.relname) {
+    const tePrefix = TE_RELATION_MAP[d.relation] || d.relation;
+    relation = tePrefix + ': ' + relname;
+  }
+  return { name, relation, address, city };
+}
+
+/* ─── RECEIPT MODAL ─── */
+let _rcptId=null, _rcptLang='te';
+function openReceiptModal(id,e){
+  if(e) e.stopPropagation();
+  _rcptId=id; _rcptLang='te'; _showReceiptModal(id,'te');
+}
+function rcptSetLang(lang){
+  _rcptLang=lang; _showReceiptModal(_rcptId,lang);
+}
+function _showReceiptModal(id, lang) {
+  const modal = document.getElementById('rcptModal');
+  if (!modal) return;
+  modal.innerHTML = `<div class="rcpt-overlay"><div class="rcpt-card" style="display:flex;align-items:center;justify-content:center;min-height:320px">
+    <div style="text-align:center;padding:24px">
+      <div class="om-loader"><div class="om-loader-icon">🕉</div><div class="om-progress-wrap"><div class="om-progress-bar"></div></div><div class="om-loader-label">${lang==='te'?'అనువదిస్తోంది…':'Loading…'}</div></div>
+    </div>
+  </div></div>`;
+  _renderReceiptModal(id, lang);
+}
+
+async function _renderReceiptModal(id, lang) {
+  const d = donations.find(x => String(x.id) === String(id));
+  if (!d) return;
+  const modal = document.getElementById('rcptModal');
+  if (!modal) return;
+  const s = RCPT_STRINGS[lang] || RCPT_STRINGS.te;
+  const isRecv = d.received === 'yes';
+  const dd = await prepareReceiptDisplayData(d, lang);
+  modal.innerHTML = `<div class="rcpt-overlay" onclick="closeReceiptModal(event)">
+    <div class="rcpt-card" onclick="event.stopPropagation()" style="position:relative">
+      <button onclick="document.getElementById('rcptModal').innerHTML=''"
+        style="position:absolute;top:10px;right:10px;z-index:20;width:30px;height:30px;border-radius:50%;border:none;background:rgba(255,255,255,.28);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+      <div class="rcpt-header">
+        <div class="rcpt-hdr-top">
+          <div class="rcpt-om">🕉</div>
+          <div class="rcpt-deco-line"><span></span>✦<span></span></div>
+          <div class="rcpt-blessing">${s.blessing}</div>
+          <div class="rcpt-village">${s.village}</div>
+          <div class="rcpt-sub1">${s.satram}</div>
+          <div class="rcpt-sub2">${s.location}</div>
+          <div class="rcpt-sub3">${s.receiptType}</div>
+        </div>
+        <div class="rcpt-hdr-bottom">
+          <div class="rcpt-status-badge">${isRecv?s.received:s.pending}</div>
+        </div>
+      </div>
+      <div class="rcpt-amount-band">
+        <div class="rcpt-serial-tag">🔖 ${s.receiptNo} #${String(d.serial).padStart(3,'0')}</div>
+        <div class="rcpt-amt-label">${s.amtLabel}</div>
+        <div class="rcpt-amt">${fmt(d.amount)}</div>
+        <div class="rcpt-amt-words">${lang==='te'?amtWordsTe(d.amount):d.amountWords}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:4px;letter-spacing:.5px">📅 ${d.date}</div>
+      </div>
+      <div class="rcpt-section-lbl">👤 ${s.donorSection}</div>
+      <div class="rcpt-body">
+        <div class="rcpt-row"><span class="rcpt-lbl">${s.fName}</span><span class="rcpt-val">${maskedField(dd.name,'text',!isRecv)}</span></div>
+        ${dd.relation?`<div class="rcpt-row"><span class="rcpt-lbl">${s.fRelation}</span><span class="rcpt-val">${dd.relation}</span></div>`:''}
+        ${d.mobile?`<div class="rcpt-row"><span class="rcpt-lbl">${s.fMobile}</span><span class="rcpt-val">${maskedField(d.mobile,'mobile',!isRecv)}</span></div>`:''}
+        ${dd.address?`<div class="rcpt-row"><span class="rcpt-lbl">${s.fAddress}</span><span class="rcpt-val">${maskedField(dd.address,'text',!isRecv)}</span></div>`:''}
+        ${dd.city?`<div class="rcpt-row"><span class="rcpt-lbl">${s.fCity}</span><span class="rcpt-val">${maskedField(dd.city,'text',!isRecv)}</span></div>`:''}
+      </div>
+      <div class="rcpt-footer" style="padding:8px 14px 12px">
+        <div class="rcpt-thank">${s.thankYou}</div>
+        <div class="rcpt-thank" style="margin-bottom:10px">${s.thankMsg}</div>
+        <div style="display:flex;gap:6px;margin-bottom:8px">
+          <button onclick="rcptSetLang('te')"
+            style="flex:1;padding:8px;border-radius:9px;border:2px solid ${lang==='te'?'var(--saffron)':'var(--border)'};background:${lang==='te'?'#FFF4E0':'#fff'};color:${lang==='te'?'var(--saffron-dark)':'var(--text2)'};font-size:12px;font-weight:700;cursor:pointer">
+            🇮🇳 తెలుగు
+          </button>
+          <button onclick="rcptSetLang('en')"
+            style="flex:1;padding:8px;border-radius:9px;border:2px solid ${lang==='en'?'var(--blue)':'var(--border)'};background:${lang==='en'?'var(--blue-light)':'#fff'};color:${lang==='en'?'var(--blue)':'var(--text2)'};font-size:12px;font-weight:700;cursor:pointer">
+            🇬🇧 English
+          </button>
+        </div>
+        <div id="rcpt-lang-row">
+          ${(getUserRole()==='readonly'||getUserRole()==='readview')
+            ? `<div style="background:#F3E5F5;border:1px solid #CE93D8;border-radius:10px;padding:10px;text-align:center;font-size:11px;color:#6A1B9A">👁 Read-only access — image sharing is disabled</div>`
+            : `<button class="rcpt-lang-btn ${lang==='te'?'rcpt-lang-te':'rcpt-lang-en'}" style="width:100%;padding:13px;font-size:13px" onclick="shareReceiptAsImage('${d.id}','${lang}')">
+            📸 ${lang==='te'?'తెలుగులో షేర్ చేయండి':'Share as Image'}
+          </button>`}
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function closeReceiptModal(e) {
+  if (e && e.target.classList.contains('rcpt-overlay'))
+    document.getElementById('rcptModal').innerHTML='';
+}
+
+function shareReceiptWA(id) {
+  const d = donations.find(x=>String(x.id)===String(id));
+  if (!d) return;
+  const msg =
+`🕉 *గట్టుపల్లె – గాజులపల్లె*
+*శ్రీ శ్రీ శ్రీ మల్లెం కొండేశ్వర స్వామి వారి దివ్య ఆశీస్సులతో*
+*అన్నదాన సత్రం*
+📍 మల్లెంకొండ క్రింద<
+━━━━━━━━━━━━━━━━━━━━
+       🙏 విరాళ చెల్లింపు రసీదు 🙏
+━━━━━━━━━━━━━━━━━━━━
+🔖 Receipt No  : #${String(d.serial).padStart(3,'0')}
+📅 Date        : ${d.date}
+━━━━━━━━━━━━━━━━━━━━
+👤 Donor       : ${d.name}${d.relation&&d.relname?'\n   Relation    : '+d.relation+' '+d.relname:''}${d.mobile?'\n📱 Mobile      : '+d.mobile:''}${d.city?'\n🏙 City        : '+d.city+(d.state?', '+d.state:''):''}${d.address?'\n🏠 Address     : '+d.address:''}
+━━━━━━━━━━━━━━━━━━━━
+💰 Amount      : ${fmt(d.amount)}
+📝 In Words    : ${d.amountWords}
+✅ Status      : ${d.received==='yes'?'✅ Payment Received':'⏳ Payment Pending'}
+━━━━━━━━━━━━━━━━━━━━
+జై శ్రీరామ్ 🙏 Thank you for your generous donation!`;
+  if (navigator.share) navigator.share({ title:'Donation Receipt', text:msg }).catch(()=>fallbackShare(msg));
+  else fallbackShare(msg);
+}
+
+function fallbackShare(msg) { window.open('https://wa.me/?text='+encodeURIComponent(msg), '_blank'); }
+
+/* ─── SHARE RECEIPT AS IMAGE (PhonePe style screenshot) ─── */
+function isIOS() {
+  return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+}
+
+/* ─── RECEIPT LANGUAGE STRINGS ─── */
+const RCPT_STRINGS = {
+  te: {
+    blessing:'శ్రీ శ్రీ శ్రీ మల్లెం కొండేశ్వర స్వామి వారి దివ్య ఆశీస్సులతో',
+    village:'గట్టుపల్లె – గాజులపల్లె', satram:'అన్నదాన సత్రం', location:'మల్లెంకొండ క్రింద',
+    receiptType:'విరాళ చెల్లింపు రసీదు', receiptNo:'రసీదు నం.',
+    amtLabel:'విరాళ మొత్తం', donorSection:'దాత వివరాలు',
+    fName:'పేరు', fRelation:'సంబంధం', fMobile:'మొబైల్', fAddress:'చిరునామా', fCity:'నగరం',
+    received:'✅ చెల్లింపు అందింది', pending:'⏳ చెల్లింపు పెండింగ్',
+    thankYou:'🙏 ఓం నమః శివాయ 🙏', thankMsg:'మీ విరాళానికి హృదయపూర్వక ధన్యవాదాలు!'
+  },
+  en: {
+    blessing:'With the Divine Blessings of Sri Sri Sri Mallem Kondeshwara Swami',
+    village:'Gattupalle – Gajulapalle', satram:'Annadana Satram', location:'Below Mallenkonda',
+    receiptType:'Donation Receipt', receiptNo:'Receipt No.',
+    amtLabel:'Donation Amount', donorSection:'Donor Details',
+    fName:'Name', fRelation:'Relation', fMobile:'Mobile', fAddress:'Address', fCity:'City',
+    received:'✅ PAYMENT RECEIVED', pending:'⏳ PAYMENT PENDING',
+    thankYou:'🙏 Om Namah Shivaya 🙏', thankMsg:'Thank you for your generous donation!'
+  }
+};
+
+/* ─── DRAW RECEIPT AS CANVAS (no html2canvas — works on all devices) ─── */
+function drawReceiptCanvas(d, lang, dd) {
+  const s = RCPT_STRINGS[lang] || RCPT_STRINGS.te;
+  const isRecv = d.received === 'yes';
+  const W = 720, PAD = 44;
+  const cv = document.createElement('canvas');
+  cv.width = W;
+  const ctx = cv.getContext('2d');
+
+  // collect donor rows — dd contains pre-translated display values
+  const rows = [];
+  const _notRecv = d.received !== 'yes';
+  rows.push({ lbl: s.fName, val: maskedField(dd.name,'text',_notRecv) });
+  if (dd.relation) rows.push({ lbl: s.fRelation, val: dd.relation });
+  if (d.mobile)    rows.push({ lbl: s.fMobile,   val: maskedField(d.mobile,'mobile',_notRecv) });
+  if (dd.address)  rows.push({ lbl: s.fAddress,  val: maskedField(dd.address,'text',_notRecv) });
+  if (dd.city)     rows.push({ lbl: s.fCity,     val: maskedField(dd.city,'text',_notRecv) });
+
+  // measure wrapped text height
+  function wrapText(text, font, maxW) {
+    ctx.font = font;
+    const words = text.split(' '); let cur = '', lines = [];
+    for (const w of words) {
+      const t = cur ? cur + ' ' + w : w;
+      if (ctx.measureText(t).width > maxW && cur) { lines.push(cur); cur = w; }
+      else cur = t;
+    }
+    if (cur) lines.push(cur);
+    return lines;
+  }
+  const VAL_FONT = 'bold 24px sans-serif', LBL_FONT = '22px sans-serif';
+  const VAL_MAX = W - PAD*2 - 190, ROW_LINE = 30, ROW_PAD = 22;
+  let rowsH = 0;
+  for (const r of rows) {
+    const lines = wrapText(r.val, VAL_FONT, VAL_MAX);
+    rowsH += Math.max(52, lines.length * ROW_LINE + ROW_PAD);
+  }
+  const HDR_H=295, AMT_H=215, SEC_H=48, FTR_H=110;
+  cv.height = HDR_H + AMT_H + SEC_H + rowsH + FTR_H + 24;
+  ctx.clearRect(0, 0, W, cv.height);
+
+  // ── HEADER background ──
+  const hGrad = ctx.createLinearGradient(0,0,W,HDR_H);
+  hGrad.addColorStop(0,'#7A1E00'); hGrad.addColorStop(0.4,'#B5460A');
+  hGrad.addColorStop(0.7,'#D4580C'); hGrad.addColorStop(1,'#E8740F');
+  ctx.fillStyle = hGrad;
+  ctx.beginPath(); ctx.roundRect(0,0,W,HDR_H+30,[28,28,0,0]); ctx.fill();
+
+  // subtle ring deco
+  ctx.strokeStyle='rgba(255,220,120,0.07)'; ctx.lineWidth=2;
+  for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(W-70,70,35+i*28,0,Math.PI*2);ctx.stroke();}
+
+  // white wave at bottom of header
+  ctx.fillStyle='#fff';
+  ctx.beginPath();
+  ctx.moveTo(0, HDR_H+26);
+  ctx.quadraticCurveTo(W/4, HDR_H-12, W/2, HDR_H+26);
+  ctx.quadraticCurveTo(3*W/4, HDR_H+64, W, HDR_H+26);
+  ctx.lineTo(W,cv.height); ctx.lineTo(0,cv.height); ctx.closePath(); ctx.fill();
+
+  ctx.textAlign='center';
+
+  // OM
+  ctx.font='52px serif'; ctx.fillStyle='#FFE9A0';
+  ctx.fillText('🕉', W/2, 66);
+
+  // deco line + diamond
+  ctx.strokeStyle='rgba(255,220,120,0.5)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(PAD,90); ctx.lineTo(W/2-30,90); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W/2+30,90); ctx.lineTo(W-PAD,90); ctx.stroke();
+  ctx.font='20px serif'; ctx.fillStyle='rgba(255,220,120,0.8)'; ctx.fillText('✦',W/2,97);
+
+  // blessing
+  ctx.font='21px sans-serif'; ctx.fillStyle='rgba(255,242,185,0.92)';
+  ctx.fillText(s.blessing, W/2, 124);
+
+  // village
+  ctx.font='bold 40px sans-serif'; ctx.fillStyle='#FFE9A0';
+  ctx.fillText(s.village, W/2, 168);
+
+  // satram
+  ctx.font='bold 30px sans-serif'; ctx.fillStyle='#FFD97A';
+  ctx.fillText(s.satram, W/2, 206);
+
+  // location
+  ctx.font='23px sans-serif'; ctx.fillStyle='rgba(255,230,172,0.86)';
+  ctx.fillText(s.location, W/2, 238);
+
+  // receipt type
+  ctx.font='bold 20px sans-serif'; ctx.fillStyle='rgba(255,242,192,0.82)';
+  ctx.fillText(s.receiptType, W/2, 268);
+
+  // status badge
+  const bTxt = isRecv ? s.received : s.pending;
+  ctx.font='bold 22px sans-serif';
+  const bW=ctx.measureText(bTxt).width+48;
+  const bX=(W-bW)/2, bY=HDR_H-20;
+  ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.strokeStyle='rgba(255,220,120,0.5)'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.roundRect(bX,bY,bW,36,18); ctx.fill(); ctx.stroke();
+  ctx.fillStyle='#FFE9A0'; ctx.fillText(bTxt, W/2, bY+25);
+
+  // ── AMOUNT BAND ──
+  const AY=HDR_H+24;
+  ctx.fillStyle='#FFF8E8'; ctx.fillRect(0,AY,W,AMT_H);
+  ctx.strokeStyle='#E8C97A'; ctx.lineWidth=1; ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(0,AY+AMT_H); ctx.lineTo(W,AY+AMT_H); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // serial pill
+  const sTag='🔖 '+s.receiptNo+' #'+String(d.serial).padStart(3,'0');
+  ctx.font='bold 21px sans-serif';
+  const sW=ctx.measureText(sTag).width+40, sX=(W-sW)/2;
+  const sGrad=ctx.createLinearGradient(sX,0,sX+sW,0);
+  sGrad.addColorStop(0,'#B5460A'); sGrad.addColorStop(1,'#D4580C');
+  ctx.fillStyle=sGrad; ctx.beginPath(); ctx.roundRect(sX,AY+16,sW,36,18); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.fillText(sTag,W/2,AY+40);
+
+  // amount label
+  ctx.font='bold 19px sans-serif'; ctx.fillStyle='#A07040';
+  ctx.fillText(s.amtLabel.toUpperCase(), W/2, AY+78);
+
+  // amount
+  ctx.font='bold 82px sans-serif'; ctx.fillStyle='#B5460A';
+  ctx.fillText(fmt(d.amount), W/2, AY+160);
+
+  // words
+  ctx.font='italic 22px sans-serif'; ctx.fillStyle='#5A3A10';
+  ctx.fillText(lang==='te'?amtWordsTe(d.amount):d.amountWords, W/2, AY+192);
+
+  // date
+  ctx.font='20px sans-serif'; ctx.fillStyle='#A07040';
+  ctx.fillText('📅 '+d.date, W/2, AY+214);
+
+  // ── SECTION LABEL ──
+  const SY=AY+AMT_H;
+  ctx.fillStyle='#FFFAF2'; ctx.fillRect(0,SY,W,SEC_H);
+  ctx.strokeStyle='#F0E0C0'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,SY); ctx.lineTo(W,SY); ctx.stroke();
+  ctx.textAlign='left'; ctx.font='bold 21px sans-serif'; ctx.fillStyle='#D4580C';
+  ctx.fillText('👤  '+s.donorSection.toUpperCase(), PAD, SY+32);
+  const lblW=ctx.measureText('👤  '+s.donorSection.toUpperCase()).width;
+  ctx.strokeStyle='#E8C97A';
+  ctx.beginPath(); ctx.moveTo(PAD+lblW+14,SY+25); ctx.lineTo(W-PAD,SY+25); ctx.stroke();
+
+  // ── DONOR ROWS ──
+  ctx.fillStyle='#fff'; ctx.fillRect(0,SY+SEC_H,W,rowsH+10);
+  let ry=SY+SEC_H+14;
+  for(let i=0;i<rows.length;i++){
+    const r=rows[i];
+    const lines=wrapText(r.val,VAL_FONT,VAL_MAX);
+    const rh=Math.max(52,lines.length*ROW_LINE+ROW_PAD);
+    if(i>0){
+      ctx.strokeStyle='#F5E8CC'; ctx.lineWidth=1; ctx.setLineDash([4,4]);
+      ctx.beginPath(); ctx.moveTo(PAD,ry-7); ctx.lineTo(W-PAD,ry-7); ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    ctx.font=LBL_FONT; ctx.fillStyle='#B09060'; ctx.textAlign='left';
+    ctx.fillText(r.lbl, PAD, ry+26);
+    ctx.font=VAL_FONT; ctx.fillStyle='#1A1A1A'; ctx.textAlign='right';
+    for(let li=0;li<lines.length;li++) ctx.fillText(lines[li], W-PAD, ry+26+li*ROW_LINE);
+    ry+=rh;
+  }
+
+  // ── FOOTER ──
+  const FY=SY+SEC_H+rowsH+16;
+  const fGrad=ctx.createLinearGradient(0,FY,0,FY+FTR_H);
+  fGrad.addColorStop(0,'#FFF4E0'); fGrad.addColorStop(1,'#FFF8EE');
+  ctx.fillStyle=fGrad;
+  ctx.beginPath(); ctx.roundRect(0,FY,W,FTR_H+24,[0,0,28,28]); ctx.fill();
+  ctx.strokeStyle='#F0E0C0'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(0,FY); ctx.lineTo(W,FY); ctx.stroke();
+  ctx.textAlign='center';
+  ctx.font='bold 25px sans-serif'; ctx.fillStyle='#7A4A1A';
+  ctx.fillText(s.thankYou, W/2, FY+46);
+  ctx.font='italic 22px sans-serif'; ctx.fillStyle='#A07040';
+  ctx.fillText(s.thankMsg, W/2, FY+82);
+
+  return cv;
+}
+
+async function shareReceiptAsImage(id, lang) {
+  if (!canWrite()) { showToast('🔒 Image sharing is not allowed for your role.'); return; }
+  if (!lang) lang = 'te';
+  const shareBtn = document.querySelector('#rcpt-lang-row button');
+  const origLabel = shareBtn ? shareBtn.innerHTML : '';
+  const reEnable = function() {
+    if (shareBtn) { shareBtn.disabled=false; shareBtn.style.opacity='1'; shareBtn.innerHTML=origLabel; }
+  };
+  if (shareBtn) { shareBtn.disabled=true; shareBtn.style.opacity='.6'; shareBtn.innerHTML='🕉 అనువదిస్తోంది…'; }
+
+  const d = donations.find(function(x){ return String(x.id)===String(id); });
+  if (!d) { reEnable(); showToast('✗ Donation not found'); return; }
+
+  // Step 1: pre-translate donor data then draw canvas
+  var canvas;
+  try {
+    const dd = await prepareReceiptDisplayData(d, lang);
+    canvas = drawReceiptCanvas(d, lang, dd);
+  } catch(drawErr) {
+    console.error('Canvas draw error:', drawErr);
+    showToast('✗ Draw error: ' + drawErr.message);
+    reEnable(); return;
+  }
+
+  // Step 2: get dataURL immediately (synchronous)
+  var dataUrl;
+  try {
+    dataUrl = canvas.toDataURL('image/png');
+  } catch(e) {
+    console.error('toDataURL error:', e);
+    showToast('✗ Image error: ' + e.message);
+    reEnable(); return;
+  }
+
+  var fname = 'receipt-' + String(d.serial).padStart(3,'0') + '-' + lang + '.png';
+  var title = lang==='te' ? 'విరాళ రసీదు – అన్నదాన సత్రం' : 'Donation Receipt';
+
+  // Step 3: try Web Share API with dataURL converted to blob
+  if (window.navigator && navigator.share) {
+    // fetch the dataUrl as blob to use with share API
+    fetch(dataUrl)
+      .then(function(r){ return r.blob(); })
+      .then(function(blob) {
+        var file = new File([blob], fname, { type:'image/png' });
+        if (navigator.canShare && navigator.canShare({ files:[file] })) {
+          return navigator.share({ files:[file], title: title });
+        }
+        throw new Error('canShare false');
+      })
+      .then(function(){ reEnable(); })
+      .catch(function(err) {
+        if (err && err.name === 'AbortError') { reEnable(); return; }
+        // Share API failed or not supported — show image inline
+        _showReceiptImage(dataUrl, fname, title, reEnable);
+      });
+    return;
+  }
+
+  // No share API — show image inline immediately
+  _showReceiptImage(dataUrl, fname, title, reEnable);
+}
+
+function _showReceiptImage(dataUrl, fname, title, reEnable) {
+  // Show image directly inside the modal overlay — no popup needed
+  var modal = document.getElementById('rcptModal');
+  if (!modal) { reEnable(); return; }
+  modal.innerHTML = `<div style="position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:600;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-y:auto" onclick="this.parentElement.innerHTML=''">` +
+    `<div style="position:relative;width:100%;max-width:400px" onclick="event.stopPropagation()">` +
+    `<button onclick="document.getElementById('rcptModal').innerHTML=''" style="position:absolute;top:-14px;right:-14px;width:34px;height:34px;border-radius:50%;border:none;background:#fff;color:#333;font-size:18px;font-weight:700;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center">✕</button>` +
+    `<img src="${dataUrl}" style="width:100%;border-radius:16px;box-shadow:0 8px 32px rgba(0,0,0,.6);display:block">` +
+    `<div style="background:#222;border-radius:0 0 16px 16px;padding:14px 16px;text-align:center">` +
+    `<div style="color:rgba(255,255,255,.8);font-size:13px;line-height:1.8;margin-bottom:10px">` +
+    `📱 <b style="color:#FFD97A">iPhone:</b> Long-press image → Save to Photos<br>` +
+    `📱 <b style="color:#FFD97A">Android:</b> Long-press image → Download<br>` +
+    `💻 <b style="color:#FFD97A">Desktop:</b> Right-click → Save image as` +
+    `</div>` +
+    `<a href="${dataUrl}" download="${fname}" style="display:inline-block;padding:11px 28px;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;text-decoration:none;border-radius:10px;font-weight:700;font-size:14px">⬇ Download Receipt</a>` +
+    `</div></div></div>`;
+  if (reEnable) reEnable();
+}
+
+/* ─── UTILITY ─── */
+const ONES=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
+const TENS=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
+function n2w(n) {
+  n=Math.floor(n); if(n<=0) return '';
+  let w='';
+  if(n>=10000000){w+=n2w(Math.floor(n/10000000))+' Crore ';n%=10000000;}
+  if(n>=100000){w+=n2w(Math.floor(n/100000))+' Lakh ';n%=100000;}
+  if(n>=1000){w+=n2w(Math.floor(n/1000))+' Thousand ';n%=1000;}
+  if(n>=100){w+=ONES[Math.floor(n/100)]+' Hundred ';n%=100;}
+  if(n>=20){w+=TENS[Math.floor(n/10)]+' ';n%=10;}
+  if(n>0){w+=ONES[n]+' ';}
+  return w.trim();
+}
+function amtWords(v) {
+  v=parseFloat(v); if(!v||isNaN(v)||v<=0) return '—';
+  const r=Math.floor(v), p=Math.round((v-r)*100);
+  let t=n2w(r)+' Rupees';
+  if(p>0) t+=' and '+n2w(p)+' Paise';
+  return t+' Only';
+}
+const TE_ONES=['','ఒకటి','రెండు','మూడు','నాలుగు','అయిదు','ఆరు','ఏడు','ఎనిమిది','తొమ్మిది','పది','పదకొండు','పన్నెండు','పదమూడు','పదనాలుగు','పదిహేను','పదహారు','పదిహేడు','పదెనిమిది','పందొమ్మిది'];
+const TE_TENS=['','','ఇరవై','ముప్పై','నలభై','యాభై','అరవై','డెబ్బై','ఎనభై','తొంభై'];
+function n2wTe(n) {
+  n=Math.floor(n); if(n<=0) return '';
+  let w='';
+  if(n>=10000000){const c=Math.floor(n/10000000);w+=n2wTe(c)+(c===1?' కోటి ':' కోట్లు ');n%=10000000;}
+  if(n>=100000){const l=Math.floor(n/100000);w+=n2wTe(l)+(l===1?' లక్ష ':' లక్షలు ');n%=100000;}
+  if(n>=1000){const t=Math.floor(n/1000);w+=n2wTe(t)+(t===1?' వెయ్యి ':' వేలు ');n%=1000;}
+  if(n>=100){const h=Math.floor(n/100);w+=(h===1?'నూరు ':n2wTe(h)+' వందలు ');n%=100;}
+  if(n>=20){w+=TE_TENS[Math.floor(n/10)]+' ';n%=10;}
+  if(n>0){w+=TE_ONES[n]+' ';}
+  return w.trim();
+}
+function amtWordsTe(v) {
+  v=parseFloat(v); if(!v||isNaN(v)||v<=0) return '—';
+  const r=Math.floor(v), p=Math.round((v-r)*100);
+  let t=n2wTe(r)+' రూపాయలు';
+  if(p>0) t+=' మరియు '+n2wTe(p)+' పైసలు';
+  return t+' మాత్రమే';
+}
+function fmt(v) { return '₹'+(parseFloat(v)||0).toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+
+function showToast(msg) {
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.style.display='block';
+  clearTimeout(t._tid); t._tid=setTimeout(()=>t.style.display='none',2200);
+}
+
+/* ─── FORM ACTIONS ─── */
+function openDonForm()  {
+  if (!canWrite()) {
+    showRbacAlert('🙏 Donations');
+    return;
+  }
+  showDonForm=true; donReceived=''; receiptDataUrl=null; render();
+}
+function closeDonForm() { showDonForm=false; render(); }
+function openExpForm()  {
+  if (!canWrite()) {
+    showRbacAlert('📋 Expenses');
+    return;
+  }
+  showExpForm=true; receiptDataUrl=null; render();
+}
+function closeExpForm() { showExpForm=false; receiptDataUrl=null; render(); }
+
+function setRecv(v) {
+  donReceived=v;
+  ['don-yes','edit-don-yes'].forEach(id=>{ const el=document.getElementById(id); if(el) el.className='ropt'+(v==='yes'?' sel-yes':''); });
+  ['don-no','edit-don-no'].forEach(id=>{ const el=document.getElementById(id); if(el) el.className='ropt'+(v==='no'?' sel-no':''); });
+  ['ryc','eryc'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=v==='yes'?'✓':''; });
+  ['rnc','ernc'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=v==='no'?'✗':''; });
+  ['df-receipt-section','ef2-receipt-section'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display=v==='yes'?'block':'none'; });
+}
+
+function updDonWords()  { const el=document.getElementById('df-words');  if(el) el.textContent=amtWords(document.getElementById('df-amt')?.value); }
+function updEditWords() { const el=document.getElementById('ef2-words'); if(el) el.textContent=amtWords(document.getElementById('ef2-amt')?.value); }
+function updExpWords()  { const el=document.getElementById('ef-words');  if(el) el.textContent=amtWords(document.getElementById('ef-amt')?.value); }
+function updExpEditWords(){ const el=document.getElementById('eef-words'); if(el) el.textContent=amtWords(document.getElementById('eef-amt')?.value); }
+
+function updExpPending(prefix) {
+  const total=parseFloat(document.getElementById(prefix+'-amt')?.value)||0;
+  const paid =parseFloat(document.getElementById(prefix+'-paid')?.value)||0;
+  const el=document.getElementById(prefix+'-pending-display');
+  if(el) el.textContent=total>0?fmt(Math.max(0,total-paid)):'—';
+}
+
+function previewReceipt(prefix) {
+  // check both gallery input and camera input
+  const file = (document.getElementById(prefix+'-receipt-file')?.files?.[0])
+             || (document.getElementById(prefix+'-receipt-camera')?.files?.[0]);
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    receiptDataUrl=e.target.result;
+    const preview=document.getElementById(prefix+'-receipt-preview');
+    const placeholder=document.getElementById(prefix+'-upload-placeholder');
+    const actions=document.getElementById(prefix+'-receipt-actions');
+    if(preview){preview.src=receiptDataUrl;preview.style.display='block';}
+    if(placeholder) placeholder.style.display='none';
+    if(actions) actions.style.display='block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function clearReceipt(prefix) {
+  receiptDataUrl='__REMOVED__'; // sentinel: user explicitly removed the attachment
+  const preview=document.getElementById(prefix+'-receipt-preview');
+  const placeholder=document.getElementById(prefix+'-upload-placeholder');
+  const fileInput=document.getElementById(prefix+'-receipt-file');
+  const cameraInput=document.getElementById(prefix+'-receipt-camera');
+  const actions=document.getElementById(prefix+'-receipt-actions');
+  if(preview){preview.src='';preview.style.display='none';}
+  if(placeholder) placeholder.style.display='flex';
+  if(fileInput)   fileInput.value='';
+  if(cameraInput) cameraInput.value='';
+  if(actions) actions.style.display='none';
+}
+
+/* ─── DONOR AUTO-SUGGEST ─── */
+function donorSuggest(q) {
+  const box = document.getElementById('df-suggest');
+  if (!box) return;
+  q = (q||'').trim().toLowerCase();
+  if (q.length < 2) { box.style.display='none'; return; }
+  // deduplicate by name — pick most recent record per unique donor name
+  const seen = new Map();
+  donations.slice().reverse().forEach(d => {
+    const key = (d.name||'').toLowerCase();
+    if (!seen.has(key)) seen.set(key, d);
+  });
+  const matches = [...seen.values()].filter(d => (d.name||'').toLowerCase().includes(q)).slice(0, 8);
+  if (!matches.length) { box.style.display='none'; return; }
+  box.style.display = 'block';
+  box.innerHTML = matches.map(d => {
+    const sub = [d.nameTe, d.city||d.cityTe].filter(Boolean).join(' · ');
+    return `<div onclick="donorFill('${d.id}')" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid #F5EAD8;display:flex;flex-direction:column;gap:2px" onmouseover="this.style.background='#FFF4E0'" onmouseout="this.style.background='#fff'">
+      <span style="font-size:13px;font-weight:700;color:var(--text)">${d.name}</span>
+      ${sub?`<span style="font-size:11px;color:var(--text3);font-family:'Tiro Telugu',serif">${sub}</span>`:''}
+    </div>`;
+  }).join('');
+}
+function donorFill(id) {
+  const d = donations.find(x => x.id === id);
+  if (!d) return;
+  const set = (elId, val) => { const el=document.getElementById(elId); if(el) el.value=val||''; };
+  const setTA = (elId, val) => { const el=document.getElementById(elId); if(el) el.value=val||''; };
+  set('df-name',     d.name);
+  set('df-name-te',  d.nameTe);
+  set('df-relname',  d.relname);
+  set('df-mobile',   d.mobile);
+  setTA('df-addr',    d.address);
+  setTA('df-addr-te', d.addressTe);
+  set('df-city',     d.city);
+  set('df-city-te',  d.cityTe);
+  // relation select
+  const rel = document.getElementById('df-rel');
+  if (rel && d.relation) rel.value = d.relation;
+  // state select
+  const st = document.getElementById('df-state');
+  if (st && d.state) st.value = d.state;
+  // hide suggestion box
+  const box = document.getElementById('df-suggest');
+  if (box) box.style.display = 'none';
+  showToast('✓ Donor details filled from previous record');
+}
+// close suggest box when clicking outside
+document.addEventListener('click', function(e) {
+  const box = document.getElementById('df-suggest');
+  if (box && !box.contains(e.target) && e.target.id !== 'df-name') box.style.display='none';
+});
+
+/* ─── SAVE DONATION ─── */
+async function saveDonation() {
+  const name=(document.getElementById('df-name')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('df-amt')?.value)||0;
+  if(!name){showToast('⚠ Please enter donor name');return;}
+  if(!amt){showToast('⚠ Please enter amount');return;}
+  const d={
+    serial:donSerial, year:currentYear,
+    date:document.getElementById('df-date')?.value||new Date().toISOString().split('T')[0],
+    name, nameTe:(document.getElementById('df-name-te')?.value||'').trim(),
+    relation:document.getElementById('df-rel')?.value||'',
+    relname:document.getElementById('df-relname')?.value||'',
+    address:document.getElementById('df-addr')?.value||'',
+    addressTe:(document.getElementById('df-addr-te')?.value||'').trim(),
+    city:document.getElementById('df-city')?.value||'',
+    cityTe:(document.getElementById('df-city-te')?.value||'').trim(),
+    state:document.getElementById('df-state')?.value||'',
+    mobile:document.getElementById('df-mobile')?.value||'',
+    amount:amt, amountWords:amtWords(amt),
+    received:donReceived||'no',
+    receiptImage:donReceived==='yes'?(receiptDataUrl||null):null,
+    userId:currentUser.id, submittedBy:currentUser.id, submittedByName:currentUser.name,
+    approvalStatus: canAdmin() ? 'approved' : 'pending_approval',
+    createdAt:new Date().toISOString()
+  };
+  try {
+    const id=await dbAdd('donations', d); d.id=id;
+    donSerial++;
+    await saveToDB(); receiptDataUrl=null; showDonForm=false; render();
+    const msg = canAdmin() ? '✓ Donation #'+String(d.serial).padStart(3,'0')+' saved!' : '✓ Donation submitted for admin approval!';
+    showToast(msg);
+  } catch(err){showToast('✗ Error saving donation');console.error(err);}
+}
+
+/* ─── UPDATE DONATION ─── */
+async function updateDonation() {
+  const name=(document.getElementById('ef2-name')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('ef2-amt')?.value)||0;
+  if(!name){showToast('⚠ Please enter donor name');return;}
+  if(!amt){showToast('⚠ Please enter amount');return;}
+  const don=donations.find(d=>d.id===editingDonId);
+  if(!don) return;
+  don.date=document.getElementById('ef2-date')?.value||don.date;
+  don.name=name;
+  don.nameTe=(document.getElementById('ef2-name-te')?.value||'').trim();
+  don.relation=document.getElementById('ef2-rel')?.value||'';
+  don.relname=document.getElementById('ef2-relname')?.value||'';
+  don.address=document.getElementById('ef2-addr')?.value||'';
+  don.addressTe=(document.getElementById('ef2-addr-te')?.value||'').trim();
+  don.city=document.getElementById('ef2-city')?.value||'';
+  don.cityTe=(document.getElementById('ef2-city-te')?.value||'').trim();
+  don.state=document.getElementById('ef2-state')?.value||'';
+  don.mobile=document.getElementById('ef2-mobile')?.value||'';
+  don.amount=amt; don.amountWords=amtWords(amt);
+  don.received=donReceived||don.received;
+  // receiptDataUrl: null=no change, '__REMOVED__'=user cleared it, else=new image
+  if (receiptDataUrl === '__REMOVED__') {
+    don.receiptImage = null;
+  } else if (receiptDataUrl) {
+    don.receiptImage = receiptDataUrl;
+  }
+  // else: keep don.receiptImage unchanged
+  don.updatedAt=new Date().toISOString();
+  if (!canAdmin() && don.approvalStatus === 'sendback') don.approvalStatus = 'pending_approval';
+  try {
+    await dbUpdate('donations', don);
+    editingDonId=null; receiptDataUrl=null; render();
+    const msg = !canAdmin() && don.approvalStatus==='pending_approval' ? '✓ Donation resubmitted for approval!' : '✓ Donation #'+String(don.serial).padStart(3,'0')+' updated!';
+    showToast(msg);
+  } catch(err){showToast('✗ Error updating donation');console.error(err);}
+}
+
+/* ─── SAVE EXPENSE ─── */
+async function saveExpense() {
+  const cat=(document.getElementById('ef-cat')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('ef-amt')?.value)||0;
+  if(!cat){showToast('⚠ Please select a category');return;}
+  if(!amt){showToast('⚠ Please enter amount');return;}
+  const paid=parseFloat(document.getElementById('ef-paid')?.value)||0;
+  const e={
+    serial:expSerial, year:currentYear,
+    date:document.getElementById('ef-date')?.value||new Date().toISOString().split('T')[0],
+    title:cat, category:cat,
+    vendor:document.getElementById('ef-vendor')?.value||'',
+    notes:document.getElementById('ef-notes')?.value||'',
+    amount:amt, paidAmount:paid, pendingAmount:Math.max(0,amt-paid),
+    amountWords:amtWords(amt),
+    receiptImage:receiptDataUrl||null,
+    userId:currentUser.id, submittedBy:currentUser.id, submittedByName:currentUser.name,
+    approvalStatus: canAdmin() ? 'approved' : 'pending_approval',
+    createdAt:new Date().toISOString()
+  };
+  try {
+    const id=await dbAdd('expenses', e); e.id=id;
+    expSerial++;
+    await saveToDB(); receiptDataUrl=null; showExpForm=false; render();
+    const msg = canAdmin() ? '✓ Expense #'+String(e.serial).padStart(3,'0')+' saved!' : '✓ Expense submitted for admin approval!';
+    showToast(msg);
+  } catch(err){showToast('✗ Error saving expense');console.error(err);}
+}
+
+/* ─── UPDATE EXPENSE ─── */
+async function updateExpense() {
+  const cat=(document.getElementById('eef-cat')?.value||'').trim();
+  const amt=parseFloat(document.getElementById('eef-amt')?.value)||0;
+  if(!cat){showToast('⚠ Please select a category');return;}
+  if(!amt){showToast('⚠ Please enter amount');return;}
+  const paid=parseFloat(document.getElementById('eef-paid')?.value)||0;
+  const exp=expenses.find(x=>x.id===editingExpId);
+  if(!exp) return;
+  exp.date=document.getElementById('eef-date')?.value||exp.date;
+  exp.title=cat; exp.category=cat;
+  exp.vendor=document.getElementById('eef-vendor')?.value||'';
+  exp.notes=document.getElementById('eef-notes')?.value||'';
+  exp.amount=amt; exp.paidAmount=paid; exp.pendingAmount=Math.max(0,amt-paid);
+  exp.amountWords=amtWords(amt);
+  if (receiptDataUrl === '__REMOVED__') {
+    exp.receiptImage = null;
+  } else if (receiptDataUrl) {
+    exp.receiptImage = receiptDataUrl;
+  }
+  exp.updatedAt=new Date().toISOString();
+  if (!canAdmin() && exp.approvalStatus === 'sendback') exp.approvalStatus = 'pending_approval';
+  try {
+    await dbUpdate('expenses', exp);
+    editingExpId=null; receiptDataUrl=null; render();
+    const msg = !canAdmin() && exp.approvalStatus==='pending_approval' ? '✓ Expense resubmitted for approval!' : '✓ Expense #'+String(exp.serial).padStart(3,'0')+' updated!';
+    showToast(msg);
+  } catch(err){showToast('✗ Error updating expense');console.error(err);}
+}
+
+/* ─── VIEW TOGGLES ─── */
+function toggleDonView(id){ viewingDonId=(viewingDonId===id)?null:id; render(); }
+function toggleExpView(id){ viewingExpId=(viewingExpId===id)?null:id; render(); }
+
+function openEditDonForm(id,e){ if(e) e.stopPropagation(); editingDonId=id; const don=donations.find(d=>d.id===id); donReceived=don?.received||'no'; receiptDataUrl=null; render(); }
+function closeEditDonForm(){ editingDonId=null; render(); }
+function openEditExpForm(id,e){ if(e) e.stopPropagation(); editingExpId=id; receiptDataUrl=null; render(); }
+function closeEditExpForm(){ editingExpId=null; receiptDataUrl=null; render(); }
+
+async function markReceived(id,e){
+  if(e) e.stopPropagation();
+  const don=donations.find(d=>String(d.id)===String(id));
+  if(!don) return;
+  don.received='yes';
+  try{ await dbUpdate('donations', don); render(); showToast('✅ Marked as Received!'); }
+  catch(err){ showToast('✗ Error updating'); }
+}
+
+async function deleteDonation(id, e) {
+  if(e) e.stopPropagation();
+  const don = donations.find(d => String(d.id) === String(id));
+  if (!don) return;
+  if (!confirm(`Delete donation #${String(don.serial).padStart(3,'0')} from ${don.name}?\n\nThis cannot be undone.`)) return;
+  try {
+    await dbDelete('donations', id);
+    donations = donations.filter(d => d.id !== id);
+    viewingDonId = null;
+    render();
+    showToast('🗑 Donation deleted');
+  } catch(err) { showToast('✗ Error deleting'); console.error(err); }
+}
+
+async function deleteExpense(id, e) {
+  if(e) e.stopPropagation();
+  const exp = expenses.find(x => String(x.id) === String(id));
+  if (!exp) return;
+  if (!confirm(`Delete expense #${String(exp.serial).padStart(3,'0')} — ${exp.category||exp.title}?\n\nThis cannot be undone.`)) return;
+  try {
+    await dbDelete('expenses', id);
+    expenses = expenses.filter(x => x.id !== id);
+    viewingExpId = null;
+    render();
+    showToast('🗑 Expense deleted');
+  } catch(err) { showToast('✗ Error deleting'); console.error(err); }
+}
+
+/* ─── RECEIPT FULL VIEW ─── */
+function viewReceiptFull(id, e, type) {
+  if(e) e.stopPropagation();
+  const rec = type==='don' ? donations.find(d=>String(d.id)===String(id)) : expenses.find(x=>String(x.id)===String(id));
+  if(!rec?.receiptImage) return;
+  const w=window.open(); w.document.write(`<img src="${rec.receiptImage}" style="max-width:100%;height:auto">`);
+}
+
+/* ─── SIGNATURE ─── */
+function initSig(id) {
+  const cv=document.getElementById(id);
+  if(!cv) return;
+  const ratio=window.devicePixelRatio||1;
+  const rect=cv.getBoundingClientRect();
+  cv.width=rect.width*ratio; cv.height=rect.height*ratio;
+  sigCtx=cv.getContext('2d');
+  sigCtx.scale(ratio,ratio);
+  sigCtx.strokeStyle='#2C1A00'; sigCtx.lineWidth=2; sigCtx.lineCap='round'; sigCtx.lineJoin='round';
+  function pos(e){ const r=cv.getBoundingClientRect(); if(e.touches) return{x:e.touches[0].clientX-r.left,y:e.touches[0].clientY-r.top}; return{x:e.clientX-r.left,y:e.clientY-r.top}; }
+  cv.onmousedown=e=>{sigDrawing=true;const p=pos(e);sigLX=p.x;sigLY=p.y;};
+  cv.onmousemove=e=>{if(!sigDrawing)return;const p=pos(e);sigCtx.beginPath();sigCtx.moveTo(sigLX,sigLY);sigCtx.lineTo(p.x,p.y);sigCtx.stroke();sigLX=p.x;sigLY=p.y;};
+  cv.onmouseup=()=>sigDrawing=false; cv.onmouseleave=()=>sigDrawing=false;
+  cv.ontouchstart=e=>{e.preventDefault();sigDrawing=true;const p=pos(e);sigLX=p.x;sigLY=p.y;};
+  cv.ontouchmove=e=>{e.preventDefault();if(!sigDrawing)return;const p=pos(e);sigCtx.beginPath();sigCtx.moveTo(sigLX,sigLY);sigCtx.lineTo(p.x,p.y);sigCtx.stroke();sigLX=p.x;sigLY=p.y;};
+  cv.ontouchend=()=>sigDrawing=false;
+}
+function clearSig(){ if(sigCtx){const cv=document.getElementById('sigCanvas');const r=cv.getBoundingClientRect();sigCtx.clearRect(0,0,r.width,r.height);} }
+
+/* ─── INIT ─── */
+function showInitError(msg) {
+  const sc = document.getElementById('screen');
+  sc.innerHTML = `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:70vh;gap:14px;padding:24px;text-align:center">
+    <div style="font-size:40px">⚠️</div>
+    <div style="font-size:14px;font-weight:700;color:var(--red)">${msg}</div>
+    <div style="font-size:12px;color:var(--text3)">Check your internet connection and try again.</div>
+    <button onclick="location.reload()" style="padding:12px 28px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(212,88,12,.35)">🔄 Reload App</button>
+  </div>`;
+}
+
+async function start() {
+  try {
+    await loadAppConfig();
+    await initFirebase();
+    if (!fbConfigured) { showInitError('Could not connect to database.'); return; }
+    let user = null;
+    try { const s = localStorage.getItem('satram_session'); if (s) user = JSON.parse(s); } catch(e) {}
+    // Restore persisted year state before any render
+    _loadPersistedYears();
+    if (user && user.email) {
+      currentUser = user;
+      if (!currentUser.role) currentUser.role = 'readonly';
+      isLoggedIn = true;
+      await loadDataFromDB();
+      trackActiveSession();
+    }
+    render();
+  } catch(err) {
+    console.error('Init error', err);
+    showInitError('Failed to initialize: ' + err.message);
+  }
+}
+/* wait up to 8 s for Firebase SDK scripts to finish loading, then start */
+(function waitForFirebase(attempt) {
+  if (typeof firebase !== 'undefined' && firebase.auth && firebase.firestore) {
+    start();
+  } else if (window._fbLoadErr || attempt >= 80) {
+    document.getElementById('screen').innerHTML =
+      `<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:70vh;gap:14px;padding:24px;text-align:center">
+        <div style="font-size:40px">📡</div>
+        <div style="font-size:14px;font-weight:700;color:var(--red)">Could not load Firebase SDK</div>
+        <div style="font-size:12px;color:var(--text3);line-height:1.6">
+          Please check your internet connection.<br>
+          Firebase scripts must load from <b>gstatic.com</b>.<br>
+          If you are on a restricted network, try a different connection.
+        </div>
+        <button onclick="location.reload()" style="padding:12px 28px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(212,88,12,.35)">🔄 Retry</button>
+      </div>`;
+  } else {
+    setTimeout(function(){ waitForFirebase(attempt + 1); }, 100);
+  }
+})(0);
+</script>
+</body>
+</html>
