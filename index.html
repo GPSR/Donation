@@ -538,7 +538,7 @@ async function loadAppConfig() {
   }
   APP_CONFIG = window.APP_CONFIG;
   FIREBASE_CONFIG = window.APP_CONFIG.firebase;
-  ADMIN_API_URL = window.APP_CONFIG.adminApiUrl || "";
+  ADMIN_API_URL = window.APP_CONFIG.adminApiUrl || `https://us-central1-${window.APP_CONFIG.firebase.projectId}.cloudfunctions.net/adminLogin`;
 }
 
 function normalizeEmail(email) {
@@ -613,6 +613,7 @@ function stripUndefined(obj) {
 }
 
 async function tryAdminLogin(email, password) {
+  if (!ADMIN_API_URL) return null;
   try {
     const res = await fetch(ADMIN_API_URL, {
       method: 'POST',
