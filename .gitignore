@@ -1,5 +1,8 @@
 functions/node_modules/
 
+# ── Generated at deploy time from GitHub Secrets ──
+config.js
+
 # ── OS / editor noise ──
 .DS_Store
 Thumbs.db

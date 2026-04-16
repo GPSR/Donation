@@ -25,6 +25,23 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4.2.2
 
+      - name: Generate config.js from secrets
+        run: |
+          cat > config.js << 'SCRIPT'
+          window.APP_CONFIG = {
+            firebase: {
+              apiKey: "${{ secrets.FIREBASE_API_KEY }}",
+              authDomain: "${{ secrets.FIREBASE_AUTH_DOMAIN }}",
+              projectId: "${{ secrets.FIREBASE_PROJECT_ID }}",
+              storageBucket: "${{ secrets.FIREBASE_STORAGE_BUCKET }}",
+              messagingSenderId: "${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}",
+              appId: "${{ secrets.FIREBASE_APP_ID }}",
+              measurementId: "${{ secrets.FIREBASE_MEASUREMENT_ID }}"
+            },
+            adminApiUrl: "${{ secrets.ADMIN_API_URL }}"
+          };
+          SCRIPT
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
 

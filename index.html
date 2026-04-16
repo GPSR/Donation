@@ -524,6 +524,8 @@ body{
 <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"
   onerror="window._fbLoadErr=true"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<!-- Runtime config (generated at deploy time from GitHub Secrets; not in source control) -->
+<script src="config.js"></script>
 
 <script>
 let APP_CONFIG = null;
@@ -531,16 +533,12 @@ let FIREBASE_CONFIG = null;
 let ADMIN_API_URL = "";
 
 async function loadAppConfig() {
-  const fallbackApiUrl = "https://us-central1-gattupalli-gajulapalli.cloudfunctions.net/appConfig";
-  const res = await fetch(fallbackApiUrl, { method: "GET", credentials: "omit", cache: "no-store" });
-  if (!res.ok) throw new Error("Could not load app configuration");
-  const payload = await res.json();
-  if (!payload || !payload.firebase || !payload.firebase.projectId) {
-    throw new Error("Invalid app configuration received");
+  if (!window.APP_CONFIG || !window.APP_CONFIG.firebase || !window.APP_CONFIG.firebase.projectId) {
+    throw new Error("App configuration not found. Make sure config.js is present and contains valid Firebase credentials. See config.sample.js for the expected format.");
   }
-  APP_CONFIG = payload;
-  FIREBASE_CONFIG = payload.firebase;
-  ADMIN_API_URL = payload.adminApiUrl || `https://us-central1-${payload.firebase.projectId}.cloudfunctions.net/adminLogin`;
+  APP_CONFIG = window.APP_CONFIG;
+  FIREBASE_CONFIG = window.APP_CONFIG.firebase;
+  ADMIN_API_URL = window.APP_CONFIG.adminApiUrl || `https://us-central1-${window.APP_CONFIG.firebase.projectId}.cloudfunctions.net/adminLogin`;
 }
 
 function normalizeEmail(email) {
@@ -615,6 +613,7 @@ function stripUndefined(obj) {
 }
 
 async function tryAdminLogin(email, password) {
+  if (!ADMIN_API_URL) return null;
   try {
     const res = await fetch(ADMIN_API_URL, {
       method: 'POST',
