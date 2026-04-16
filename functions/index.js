@@ -1,4 +1,5 @@
 const crypto = require("node:crypto");
+const bcrypt = require("bcryptjs");
 const admin = require("firebase-admin");
 const { onRequest } = require("firebase-functions/v2/https");
 
@@ -10,8 +11,14 @@ function normalizeEmail(email) {
   return String(email || "").trim().toLowerCase();
 }
 
-function hashPassword(password) {
+function hashPasswordSha256(password) {
   return crypto.createHash("sha256").update(String(password || ""), "utf8").digest("hex");
+}
+
+const BCRYPT_ROUNDS = 10;
+
+async function hashPasswordBcrypt(password) {
+  return bcrypt.hash(String(password || ""), BCRYPT_ROUNDS);
 }
 
 function hashValue(value) {
@@ -142,12 +149,21 @@ exports.adminLogin = onRequest({ region: "us-central1" }, async (req, res) => {
 
   const body = req.body || {};
   const email = normalizeEmail(body.email);
-  const passwordHash = hashPassword(body.password);
+  const password = String(body.password || "");
 
   const emailMatches = email === configuredEmail;
-  const hashMatches =
-    configuredHash.length === passwordHash.length &&
-    crypto.timingSafeEqual(Buffer.from(configuredHash), Buffer.from(passwordHash));
+
+  // Support both bcrypt hashes ($2a$/$2b$ prefix) and legacy SHA-256 hashes
+  let hashMatches = false;
+  if (configuredHash.startsWith("$2a$") || configuredHash.startsWith("$2b$")) {
+    hashMatches = await bcrypt.compare(password, configuredHash);
+  } else {
+    // Legacy SHA-256 comparison (timing-safe)
+    const sha256Hash = hashPasswordSha256(password);
+    hashMatches =
+      configuredHash.length === sha256Hash.length &&
+      crypto.timingSafeEqual(Buffer.from(configuredHash), Buffer.from(sha256Hash));
+  }
 
   const auth = admin.auth();
   const firestore = admin.firestore();

@@ -547,6 +547,17 @@ function normalizeEmail(email) {
   return String(email || '').trim().toLowerCase();
 }
 
+/* ── HTML ESCAPING (prevent XSS in innerHTML) ── */
+function escapeHtml(str) {
+  if (str == null) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 /* ── PASSWORD HASHING (SHA-256 via Web Crypto) ── */
 async function hashPassword(password) {
   const encoder = new TextEncoder();
@@ -724,11 +735,9 @@ async function login(email, password) {
   const user = await dbGetByField('users', 'email', email);
   const hashedInput = await hashPassword(password);
 
-  // Support both legacy plaintext passwords and new hashed passwords
   const isHashMatch = user && user.password === hashedInput;
-  const isPlainMatch = user && user.password === password; // legacy fallback
 
-  if (!user || (!isHashMatch && !isPlainMatch)) {
+  if (!user || !isHashMatch) {
     // Check if they have a pending/rejected invite request
     if (!user) {
       const req = await dbGetByField('inviteRequests','email',email).catch(()=>null);
@@ -756,10 +765,6 @@ async function login(email, password) {
     role: user.role || 'readonly'
   };
   isLoggedIn = true;
-  // Auto-upgrade plaintext password to hash silently
-  if (isPlainMatch && !isHashMatch) {
-    try { await dbUpdate('users', { ...user, password: hashedInput }); } catch(e) {}
-  }
   try { localStorage.setItem('satram_session', JSON.stringify(currentUser)); } catch(e) {}
   await loadDataFromDB();
   trackActiveSession();
@@ -775,17 +780,17 @@ function showMyProfile() {
     <div style="background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:480px;box-shadow:0 -8px 40px rgba(0,0,0,.2)">
       <div style="padding:14px 0 0;display:flex;justify-content:center"><div style="width:40px;height:4px;background:#E0D8D0;border-radius:4px"></div></div>
       <div style="padding:18px 22px 0;display:flex;align-items:center;gap:14px">
-        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0">${(currentUser?.name||'?')[0].toUpperCase()}</div>
+        <div style="width:52px;height:52px;border-radius:50%;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0">${escapeHtml((currentUser?.name||'?')[0].toUpperCase())}</div>
         <div>
-          <div style="font-size:16px;font-weight:800">${currentUser?.name||'—'}</div>
-          <div style="font-size:12px;color:#888;margin-top:2px">📧 ${currentUser?.email||'—'}</div>
+          <div style="font-size:16px;font-weight:800">${escapeHtml(currentUser?.name||'—')}</div>
+          <div style="font-size:12px;color:#888;margin-top:2px">📧 ${escapeHtml(currentUser?.email||'—')}</div>
           <div style="margin-top:4px">${roleBadgeHtml(getUserRole())}</div>
         </div>
       </div>
       <div style="padding:18px 22px;display:flex;flex-direction:column;gap:12px">
         <div>
           <label style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">Display Name</label>
-          <input id="prof-name" class="finput" value="${currentUser?.name||''}" placeholder="Your name" style="width:100%;padding:10px 12px;font-size:14px">
+          <input id="prof-name" class="finput" value="${escapeHtml(currentUser?.name||'')}" placeholder="Your name" style="width:100%;padding:10px 12px;font-size:14px">
         </div>
         ${canWrite()?`<div>
           <label style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:5px">New Password</label>
@@ -967,7 +972,7 @@ function showActiveUsersModal() {
     : groups.map(g => {
         const s = g.info;
         const count = g.sessions.length;
-        const avatar = (s.name||'?')[0].toUpperCase();
+        const avatar = escapeHtml((s.name||'?')[0].toUpperCase());
         const sessionRows = g.sessions.map((ss, i) => {
           const sLogin = ss.loginTime ? new Date(ss.loginTime).toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}) : '—';
           const sLast  = timeAgo(ss.lastSeen);
@@ -981,8 +986,8 @@ function showActiveUsersModal() {
           <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
             <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,#B5460A,#D4580C);color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;flex-shrink:0">${avatar}</div>
             <div style="flex:1;min-width:0">
-              <div style="font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.name||'Unknown'}</div>
-              <div style="font-size:10px;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">📧 ${s.email||'—'}</div>
+              <div style="font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${escapeHtml(s.name||'Unknown')}</div>
+              <div style="font-size:10px;color:#999;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">📧 ${escapeHtml(s.email||'—')}</div>
             </div>
             <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0">
               ${roleBadgeHtml(s.role||'readonly')}
@@ -1252,7 +1257,7 @@ function render() {
         <span class="hdr-compact-title">${m.title}</span>
       </div>
       <span class="hdr-compact-yr">${currentYear}</span>
-      <div onclick="showMyProfile()" title="My Profile" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);color:#FFE9A0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer;flex-shrink:0;border:1.5px solid rgba(255,220,120,.4)">${(currentUser?.name||'?')[0].toUpperCase()}</div>
+      <div onclick="showMyProfile()" title="My Profile" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);color:#FFE9A0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer;flex-shrink:0;border:1.5px solid rgba(255,220,120,.4)">${escapeHtml((currentUser?.name||'?')[0].toUpperCase())}</div>
       <div class="hdr-compact-om" onclick="gotoPage('home')" title="Go Home">🕉</div>
     </div>`;
   }
@@ -1428,43 +1433,43 @@ async function renderAdminPanel() {
     const mkUserCard = (r, type) => `
       <div class="admin-req-card">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-          <div class="admin-req-name">${r.name}</div>
+          <div class="admin-req-name">${escapeHtml(r.name)}</div>
           ${type==='approved'?roleBadgeHtml(r.role||'readonly'):''}
         </div>
-        <div class="admin-req-meta">📧 ${r.email}${r.mobile?' · 📱 '+r.mobile:''}</div>
-        ${r.reason?`<div class="admin-req-meta" style="margin-top:4px;font-style:italic">"${r.reason}"</div>`:''}
+        <div class="admin-req-meta">📧 ${escapeHtml(r.email)}${r.mobile?' · 📱 '+escapeHtml(r.mobile):''}</div>
+        ${r.reason?`<div class="admin-req-meta" style="margin-top:4px;font-style:italic">"${escapeHtml(r.reason)}"</div>`:''}
         <div class="admin-req-meta" style="margin-top:4px">🕒 ${new Date(r.createdAt).toLocaleString('en-IN')}</div>
         <div class="admin-req-actions">
           ${type==='pending'?`
-            <button class="approve-btn" onclick="approveRequest('${r.id}','${r.email}','${r.name}')">✅ Approve</button>
-            <button class="reject-btn"  onclick="rejectRequest('${r.id}')">✗ Reject</button>
+            <button class="approve-btn" onclick="approveRequest('${escapeHtml(r.id)}','${escapeHtml(r.email)}','${escapeHtml(r.name)}')">✅ Approve</button>
+            <button class="reject-btn"  onclick="rejectRequest('${escapeHtml(r.id)}')">✗ Reject</button>
           `:''}
           ${type==='approved'?`
-            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#4A148C,#7B1FA2);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="changeUserRole('${r.id}','${r.email}','${r.name}','${r.role||'readonly'}')">✏️ Role</button>
-            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="resetUserPassword('${r.email}','${r.name}')">🔑 Password</button>
-            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="deleteUser('${r.id}','${r.email}','${r.name}')">🗑 Delete</button>
+            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#4A148C,#7B1FA2);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="changeUserRole('${escapeHtml(r.id)}','${escapeHtml(r.email)}','${escapeHtml(r.name)}','${escapeHtml(r.role||'readonly')}')">✏️ Role</button>
+            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="resetUserPassword('${escapeHtml(r.email)}','${escapeHtml(r.name)}')">🔑 Password</button>
+            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="deleteUser('${escapeHtml(r.id)}','${escapeHtml(r.email)}','${escapeHtml(r.name)}')">🗑 Delete</button>
           `:''}
           ${type==='rejected'?`
-            <button class="approve-btn" onclick="approveRequest('${r.id}','${r.email}','${r.name}')">✅ Approve</button>
-            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="deleteUser('${r.id}','${r.email}','${r.name}')">🗑 Delete</button>
+            <button class="approve-btn" onclick="approveRequest('${escapeHtml(r.id)}','${escapeHtml(r.email)}','${escapeHtml(r.name)}')">✅ Approve</button>
+            <button style="flex:1;padding:10px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer" onclick="deleteUser('${escapeHtml(r.id)}','${escapeHtml(r.email)}','${escapeHtml(r.name)}')">🗑 Delete</button>
           `:''}
         </div>
       </div>`;
 
     const mkRecordCard = (rec, type) => {
       const isSendback = rec.approvalStatus === 'sendback';
-      const title = type==='don' ? `#${String(rec.serial).padStart(3,'0')} · ${rec.name} · ₹${rec.amount}` : `#${String(rec.serial).padStart(3,'0')} · ${rec.description||rec.category} · ₹${rec.amount}`;
-      const meta = type==='don' ? `${rec.date}${rec.city?' · 🏙 '+rec.city:''}` : `${rec.date}${rec.category?' · '+rec.category:''}`;
+      const title = type==='don' ? `#${String(rec.serial).padStart(3,'0')} · ${escapeHtml(rec.name)} · ₹${rec.amount}` : `#${String(rec.serial).padStart(3,'0')} · ${escapeHtml(rec.description||rec.category)} · ₹${rec.amount}`;
+      const meta = type==='don' ? `${rec.date}${rec.city?' · 🏙 '+escapeHtml(rec.city):''}` : `${rec.date}${rec.category?' · '+escapeHtml(rec.category):''}`;
       return `<div class="record-approve-card pending-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
           <div>
             <div style="font-size:13px;font-weight:700">${title}</div>
             <div style="font-size:11px;color:var(--text3);margin-top:2px">${meta}</div>
-            ${rec.submittedByName?`<div style="font-size:10px;color:var(--text3)">By: ${rec.submittedByName}</div>`:''}
+            ${rec.submittedByName?`<div style="font-size:10px;color:var(--text3)">By: ${escapeHtml(rec.submittedByName)}</div>`:''}
           </div>
           ${approvalBadgeHtml(rec.approvalStatus)}
         </div>
-        ${isSendback&&rec.adminRemarks?`<div class="rbac-warn" style="margin-bottom:8px">↩ <b>Sent Back:</b> ${rec.adminRemarks}</div>`:''}
+        ${isSendback&&rec.adminRemarks?`<div class="rbac-warn" style="margin-bottom:8px">↩ <b>Sent Back:</b> ${escapeHtml(rec.adminRemarks)}</div>`:''}
         ${rec.receiptImage?`<img src="${rec.receiptImage}" style="width:100%;max-height:120px;object-fit:contain;border-radius:8px;border:1px solid var(--border);margin-bottom:8px">`:''}
         <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button onclick="adminApproveRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#2E7D32,#388E3C);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✅ Approve</button>
@@ -1533,7 +1538,7 @@ async function renderAdminPanel() {
 function renderCategoriesTab() {
   const rows = EXP_CATS.map((c, i) => `
     <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #F5EDE0">
-      <div style="flex:1;font-size:13px;font-weight:600">${c}</div>
+      <div style="flex:1;font-size:13px;font-weight:600">${escapeHtml(c)}</div>
       <button onclick="editCategory(${i})" style="padding:6px 10px;background:#EDE7F6;color:#4A148C;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer">✏️ Edit</button>
       <button onclick="deleteCategory(${i})" style="padding:6px 10px;background:#FFEBEE;color:#B71C1C;border:none;border-radius:7px;font-size:11px;font-weight:700;cursor:pointer">🗑</button>
     </div>`).join('');
@@ -1954,8 +1959,8 @@ function donSearchUpdate(val) {
   }).join('');
   const container = document.getElementById('don-list-container');
   if (container) {
-    container.innerHTML = (q ? `<div class="don-search-results">${yd.length} result${yd.length!==1?'s':''} for "${val}"</div>` : '')
-      + (yd.length===0 ? (q ? `<div class="empty">No donations match "<b>${val}</b>"</div>` : '<div class="empty">No donations for '+currentYear+'.</div>') : list);
+    container.innerHTML = (q ? `<div class="don-search-results">${yd.length} result${yd.length!==1?'s':''} for "${escapeHtml(val)}"</div>` : '')
+      + (yd.length===0 ? (q ? `<div class="empty">No donations match "<b>${escapeHtml(val)}</b>"</div>` : '<div class="empty">No donations for '+currentYear+'.</div>') : list);
   }
   const clearBtn = document.querySelector('.don-search-wrap .search-clear');
   if (val && !clearBtn) {
@@ -2925,9 +2930,9 @@ function donorSuggest(q) {
   box.style.display = 'block';
   box.innerHTML = matches.map(d => {
     const sub = [d.nameTe, d.city||d.cityTe].filter(Boolean).join(' · ');
-    return `<div onclick="donorFill('${d.id}')" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid #F5EAD8;display:flex;flex-direction:column;gap:2px" onmouseover="this.style.background='#FFF4E0'" onmouseout="this.style.background='#fff'">
-      <span style="font-size:13px;font-weight:700;color:var(--text)">${d.name}</span>
-      ${sub?`<span style="font-size:11px;color:var(--text3);font-family:'Tiro Telugu',serif">${sub}</span>`:''}
+    return `<div onclick="donorFill('${escapeHtml(d.id)}')" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid #F5EAD8;display:flex;flex-direction:column;gap:2px" onmouseover="this.style.background='#FFF4E0'" onmouseout="this.style.background='#fff'">
+      <span style="font-size:13px;font-weight:700;color:var(--text)">${escapeHtml(d.name)}</span>
+      ${sub?`<span style="font-size:11px;color:var(--text3);font-family:'Tiro Telugu',serif">${escapeHtml(sub)}</span>`:''}
     </div>`;
   }).join('');
 }
@@ -3143,7 +3148,13 @@ function viewReceiptFull(id, e, type) {
   if(e) e.stopPropagation();
   const rec = type==='don' ? donations.find(d=>String(d.id)===String(id)) : expenses.find(x=>String(x.id)===String(id));
   if(!rec?.receiptImage) return;
-  const w=window.open(); w.document.write(`<img src="${rec.receiptImage}" style="max-width:100%;height:auto">`);
+  // Only allow safe data: or https: URLs to prevent XSS via javascript: or other schemes
+  const img = String(rec.receiptImage);
+  if (!img.startsWith('data:image/') && !img.startsWith('https://')) return;
+  const w=window.open();
+  if(!w) return;
+  w.document.write(`<!DOCTYPE html><html><body style="margin:0;display:flex;justify-content:center;background:#222"><img src="${escapeHtml(img)}" style="max-width:100%;height:auto"></body></html>`);
+  w.document.close();
 }
 
 /* ─── SIGNATURE ─── */
