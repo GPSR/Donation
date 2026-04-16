@@ -153,18 +153,6 @@ exports.adminLogin = onRequest({ region: "us-central1" }, async (req, res) => {
 
   const emailMatches = email === configuredEmail;
 
-  // Support both bcrypt hashes ($2a$/$2b$ prefix) and legacy SHA-256 hashes
-  let hashMatches = false;
-  if (configuredHash.startsWith("$2a$") || configuredHash.startsWith("$2b$")) {
-    hashMatches = await bcrypt.compare(password, configuredHash);
-  } else {
-    // Legacy SHA-256 comparison (timing-safe)
-    const sha256Hash = hashPasswordSha256(password);
-    hashMatches =
-      configuredHash.length === sha256Hash.length &&
-      crypto.timingSafeEqual(Buffer.from(configuredHash), Buffer.from(sha256Hash));
-  }
-
   const auth = admin.auth();
   const firestore = admin.firestore();
   const adminUid = "admin-root";
@@ -178,6 +166,18 @@ exports.adminLogin = onRequest({ region: "us-central1" }, async (req, res) => {
     if (!rate.allowed) {
       sendJson(res, 429, { error: "too-many-attempts" });
       return;
+    }
+
+    // Perform expensive password comparison AFTER rate-limit check to prevent CPU-based DoS
+    let hashMatches = false;
+    if (configuredHash.startsWith("$2a$") || configuredHash.startsWith("$2b$")) {
+      hashMatches = await bcrypt.compare(password, configuredHash);
+    } else {
+      // Legacy SHA-256 comparison (timing-safe)
+      const sha256Hash = hashPasswordSha256(password);
+      hashMatches =
+        configuredHash.length === sha256Hash.length &&
+        crypto.timingSafeEqual(Buffer.from(configuredHash), Buffer.from(sha256Hash));
     }
 
     if (!emailMatches || !hashMatches) {
