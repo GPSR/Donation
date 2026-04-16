@@ -1470,11 +1470,11 @@ async function renderAdminPanel() {
           ${approvalBadgeHtml(rec.approvalStatus)}
         </div>
         ${isSendback&&rec.adminRemarks?`<div class="rbac-warn" style="margin-bottom:8px">↩ <b>Sent Back:</b> ${escapeHtml(rec.adminRemarks)}</div>`:''}
-        ${rec.receiptImage?`<img src="${rec.receiptImage}" style="width:100%;max-height:120px;object-fit:contain;border-radius:8px;border:1px solid var(--border);margin-bottom:8px">`:''}
+        ${rec.receiptImage&&(String(rec.receiptImage).startsWith('data:image/')||String(rec.receiptImage).startsWith('https://'))?`<img src="${escapeHtml(rec.receiptImage)}" style="width:100%;max-height:120px;object-fit:contain;border-radius:8px;border:1px solid var(--border);margin-bottom:8px">`:''}
         <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button onclick="adminApproveRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#2E7D32,#388E3C);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✅ Approve</button>
-          <button onclick="adminSendBackRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#E65100,#F57C00);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">↩ Send Back</button>
-          <button onclick="adminRejectRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✗ Reject</button>
+          <button onclick="adminApproveRecord('${escapeHtml(type)}','${escapeHtml(rec.id)}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#2E7D32,#388E3C);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✅ Approve</button>
+          <button onclick="adminSendBackRecord('${escapeHtml(type)}','${escapeHtml(rec.id)}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#E65100,#F57C00);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">↩ Send Back</button>
+          <button onclick="adminRejectRecord('${escapeHtml(type)}','${escapeHtml(rec.id)}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✗ Reject</button>
         </div>
       </div>`;
     };
@@ -3151,10 +3151,17 @@ function viewReceiptFull(id, e, type) {
   // Only allow safe data: or https: URLs to prevent XSS via javascript: or other schemes
   const img = String(rec.receiptImage);
   if (!img.startsWith('data:image/') && !img.startsWith('https://')) return;
-  const w=window.open();
+  const w=window.open('','_blank');
   if(!w) return;
-  w.document.write(`<!DOCTYPE html><html><body style="margin:0;display:flex;justify-content:center;background:#222"><img src="${escapeHtml(img)}" style="max-width:100%;height:auto"></body></html>`);
-  w.document.close();
+  // Use safe DOM APIs instead of document.write to avoid CodeQL taint warnings
+  const doc = w.document;
+  doc.title = 'Receipt';
+  const body = doc.body;
+  body.style.cssText = 'margin:0;display:flex;justify-content:center;background:#222';
+  const imgEl = doc.createElement('img');
+  imgEl.src = img;
+  imgEl.style.cssText = 'max-width:100%;height:auto';
+  body.appendChild(imgEl);
 }
 
 /* ─── SIGNATURE ─── */
