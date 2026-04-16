@@ -541,8 +541,13 @@ async function loadAppConfig() {
   }
   // Fallback: fetch from Cloud Function
   const fallbackApiUrl = "https://us-central1-gattupalli-gajulapalli.cloudfunctions.net/appConfig";
-  const res = await fetch(fallbackApiUrl, { method: "GET", credentials: "omit", cache: "no-store" });
-  if (!res.ok) throw new Error("Could not load app configuration");
+  let res;
+  try {
+    res = await fetch(fallbackApiUrl, { method: "GET", credentials: "omit", cache: "no-store" });
+  } catch (fetchErr) {
+    throw new Error("Could not load app configuration. If Cloud Functions are not deployed, create a config.js file from config.sample.js with your Firebase credentials.");
+  }
+  if (!res.ok) throw new Error("Could not load app configuration (HTTP " + res.status + "). If Cloud Functions are not deployed, create a config.js file from config.sample.js with your Firebase credentials.");
   const payload = await res.json();
   if (!payload || !payload.firebase || !payload.firebase.projectId) {
     throw new Error("Invalid app configuration received");
