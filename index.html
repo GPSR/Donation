@@ -1109,12 +1109,12 @@ function startRealtimeSync() {
   if (!fsDb) return;
   if (_donUnsub) _donUnsub();
   if (_expUnsub) _expUnsub();
-  _donUnsub = fsDb.collection('donations').onSnapshot(snap => {
+  _donUnsub = fsDb.collection('donations').onSnapshot({ includeMetadataChanges: true }, snap => {
     donations = snap.docs.map(d => ({ id: d.id, ...d.data(), _pendingWrites: !!d.metadata?.hasPendingWrites }));
     donations.sort((a,b) => (a.serial||0) - (b.serial||0));
     render();
   }, err => console.warn('donations sync error', err));
-  _expUnsub = fsDb.collection('expenses').onSnapshot(snap => {
+  _expUnsub = fsDb.collection('expenses').onSnapshot({ includeMetadataChanges: true }, snap => {
     expenses = snap.docs.map(d => ({ id: d.id, ...d.data(), _pendingWrites: !!d.metadata?.hasPendingWrites }));
     expenses.sort((a,b) => (a.serial||0) - (b.serial||0));
     render();
