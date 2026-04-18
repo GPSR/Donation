@@ -3352,17 +3352,24 @@ function clearReceipt(prefix) {
 }
 
 /* ─── SWIPE TO DELETE (Admin) ─── */
-let _swipeRow=null, _swipeStartX=0, _swipeDx=0, _swipeActive=false;
+let _swipeRow=null, _swipeStartX=0, _swipeDx=0, _swipeActive=false, _swipeMoved=false;
 function swipeCloseAll() {
   document.querySelectorAll('.swipe-row.swiped').forEach(r => r.classList.remove('swiped'));
 }
 function swipeStart(e, row) {
   if (!canAdmin()) return;
   if (!row) return;
+  // If the row is already open and the user taps the content area, close it instead of blocking clicks.
+  const isDeleteBtn = e.target && (e.target.classList?.contains('swipe-del-btn') || e.target.closest?.('.swipe-del-btn'));
+  if (row.classList.contains('swiped') && !isDeleteBtn) {
+    row.classList.remove('swiped');
+    return;
+  }
   _swipeRow = row;
   _swipeStartX = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
   _swipeDx = 0;
   _swipeActive = true;
+  _swipeMoved = false;
   // close others
   document.querySelectorAll('.swipe-row.swiped').forEach(r => { if (r !== row) r.classList.remove('swiped'); });
   row.classList.add('swiping');
@@ -3374,6 +3381,7 @@ function swipeMove(e, row) {
   _swipeDx = x - _swipeStartX;
   // We only care about left swipe; clamp to [-92, 0]
   const dx = Math.max(-92, Math.min(0, _swipeDx));
+  if (Math.abs(dx) > 10) _swipeMoved = true;
   const content = row.querySelector('.swipe-content');
   if (content) content.style.transform = `translateX(${dx}px)`;
   // Prevent scrolling while swiping horizontally (mostly for touch).
@@ -3383,6 +3391,18 @@ function swipeEnd(e, row) {
   if (!_swipeActive || row !== _swipeRow) return;
   _swipeActive = false;
   row.classList.remove('swiping');
+  // If it was a tap (not a swipe), let the underlying row click handler run.
+  if (!_swipeMoved) {
+    const li = row.querySelector('.list-item');
+    // Defer so we don't fight pointer handlers.
+    setTimeout(() => { try { li?.click(); } catch(_) {} }, 0);
+    const content = row.querySelector('.swipe-content');
+    if (content) content.style.transform = '';
+    _swipeRow = null;
+    _swipeDx = 0;
+    _swipeMoved = false;
+    return;
+  }
   const open = (_swipeDx < -40);
   const content = row.querySelector('.swipe-content');
   if (content) content.style.transform = '';
@@ -3390,6 +3410,7 @@ function swipeEnd(e, row) {
   else row.classList.remove('swiped');
   _swipeRow = null;
   _swipeDx = 0;
+  _swipeMoved = false;
 }
 
 /* ─── DONOR AUTO-SUGGEST ─── */
