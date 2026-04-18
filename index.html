@@ -3291,6 +3291,12 @@ function openPreviewModal(title, rowsHtml, onConfirm) {
         showToast('📴 No internet. Saved locally and will sync automatically when you’re back online.');
         return;
       }
+      // Offline fallback: never show a scary failure toast. The write may still be queued locally.
+      if (!navigator.onLine) {
+        overlay.remove();
+        showToast('📴 No internet. Saved locally and will sync automatically when you’re back online.');
+        return;
+      }
       btn.disabled=false;
       btn.textContent='✅ Confirm';
       showToast('✗ Failed to save');
