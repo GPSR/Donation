@@ -688,7 +688,7 @@ function approvalBadgeHtml(status) {
 /* ─── STATE ─── */
 let donations=[], expenses=[], donSerial=1, expSerial=1;
 let currentPage='home', showDonForm=false, showExpForm=false;
-let donReceived='', receiptDataUrl=null;
+let donReceived='', donType='money', receiptDataUrl=null;
 let sigCtx, sigDrawing=false, sigLX=0, sigLY=0;
 let currentUser=null, isLoggedIn=false;
 let liveActiveSessions=[], _sessionId=null, _activeSessionsUnsub=null, _heartbeatInterval=null, _inactivityInterval=null, _lastActivityTime=Date.now();
@@ -1841,49 +1841,55 @@ function renderDonation() {
       || String(d.amount||'').includes(q)
       || (d.date||'').includes(q);
   });
+  const donTypeOf = (d) => (d && d.donationType === 'other') ? 'other' : 'money';
+  const donAmountHtml = (d, appStatus) => {
+    if (donTypeOf(d) !== 'money') return `<span style="font-weight:900;color:var(--text3);letter-spacing:.2px">OTHER</span>`;
+    return maskedAmount(d.amount, appStatus);
+  };
   const list = yd.map(d => {
     const isViewing = viewingDonId===d.id;
     const isRecv = d.received==='yes';
     const appStatus = d.approvalStatus || 'approved';
     const isLocked = appStatus === 'approved' && !canAdmin();
     const canEditThis = canAdmin() || (canWrite() && !isLocked);
-    const sendbackRemarks = appStatus === 'sendback' && d.adminRemarks ? `<div class="rbac-warn">↩ <b>Admin Remarks:</b> ${d.adminRemarks}</div>` : '';
-    const detail = isViewing ? `
-      <div class="don-detail">
-        ${sendbackRemarks}
-        <div class="don-detail-row"><span class="don-detail-lbl">📱 Mobile</span><span>${maskedField(d.mobile,'mobile',!isRecv)}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">👤 Relation</span><span>${d.relation&&d.relname?d.relation+' '+maskedField(d.relname,'text',!isRecv):'—'}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">🏠 Address</span><span>${maskedField(d.address,'text',!isRecv)}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">🏙 City</span><span>${maskedField(d.city,'text',!isRecv)}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">📍 State</span><span>${maskedField(d.state,'text',!isRecv)}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">💰 Amount</span><span>${maskedAmount(d.amount,appStatus)}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">📝 Words</span><span style="font-style:italic">${d.amountWords}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">🕒 Saved</span><span>${new Date(d.createdAt).toLocaleString('en-IN')}</span></div>
-        ${d.submittedByName&&canAdmin()?`<div class="don-detail-row"><span class="don-detail-lbl">👤 By</span><span>${d.submittedByName}</span></div>`:''}
-        ${d.receiptImage?`<div style="margin-top:8px"><div class="flabel" style="margin-bottom:5px">📎 Payment Receipt</div><img src="${d.receiptImage}" style="width:100%;border-radius:8px;max-height:180px;object-fit:contain;border:1px solid var(--border);cursor:pointer" onclick="viewReceiptFull('${d.id}',event,'don')"></div>`:''}
-        <div class="don-detail-actions">
-          ${canAdmin()&&!isRecv?`<button class="det-btn recv-btn" onclick="markReceived('${d.id}',event)">✅ Mark Received</button>`:''}
-          ${isRecv?`<button class="det-btn share-btn" onclick="openReceiptModal('${d.id}',event)">📤 Share</button>`:''}
-          ${canEditThis?`<button class="det-btn edit-btn" onclick="openEditDonForm('${d.id}',event)">✏️ Edit</button>`:''}
+	    const sendbackRemarks = appStatus === 'sendback' && d.adminRemarks ? `<div class="rbac-warn">↩ <b>Admin Remarks:</b> ${d.adminRemarks}</div>` : '';
+	    const detail = isViewing ? `
+	      <div class="don-detail">
+	        ${sendbackRemarks}
+	        <div class="don-detail-row"><span class="don-detail-lbl">📱 Mobile</span><span>${maskedField(d.mobile,'mobile',!isRecv)}</span></div>
+	        <div class="don-detail-row"><span class="don-detail-lbl">👤 Relation</span><span>${d.relation&&d.relname?d.relation+' '+maskedField(d.relname,'text',!isRecv):'—'}</span></div>
+	        <div class="don-detail-row"><span class="don-detail-lbl">🏠 Address</span><span>${maskedField(d.address,'text',!isRecv)}</span></div>
+	        <div class="don-detail-row"><span class="don-detail-lbl">🏙 City</span><span>${maskedField(d.city,'text',!isRecv)}</span></div>
+	        <div class="don-detail-row"><span class="don-detail-lbl">📍 State</span><span>${maskedField(d.state,'text',!isRecv)}</span></div>
+	        <div class="don-detail-row"><span class="don-detail-lbl">🎁 Donation Type</span><span style="font-weight:800">${donTypeOf(d)==='money'?'Money':'Other'}</span></div>
+	        ${donTypeOf(d)==='money'?`<div class="don-detail-row"><span class="don-detail-lbl">💰 Amount</span><span>${maskedAmount(d.amount,appStatus)}</span></div>`:''}
+	        ${donTypeOf(d)==='money'?`<div class="don-detail-row"><span class="don-detail-lbl">📝 Words</span><span style="font-style:italic">${d.amountWords||'—'}</span></div>`:''}
+	        <div class="don-detail-row"><span class="don-detail-lbl">🕒 Saved</span><span>${new Date(d.createdAt).toLocaleString('en-IN')}</span></div>
+	        ${d.submittedByName&&canAdmin()?`<div class="don-detail-row"><span class="don-detail-lbl">👤 By</span><span>${d.submittedByName}</span></div>`:''}
+	        ${(donTypeOf(d)==='money' && d.receiptImage)?`<div style="margin-top:8px"><div class="flabel" style="margin-bottom:5px">📎 Payment Receipt</div><img src="${d.receiptImage}" style="width:100%;border-radius:8px;max-height:180px;object-fit:contain;border:1px solid var(--border);cursor:pointer" onclick="viewReceiptFull('${d.id}',event,'don')"></div>`:''}
+	        <div class="don-detail-actions">
+	          ${canAdmin()&&!isRecv?`<button class="det-btn recv-btn" onclick="markReceived('${d.id}',event)">✅ Mark Received</button>`:''}
+	          ${isRecv?`<button class="det-btn share-btn" onclick="openReceiptModal('${d.id}',event)">📤 Share</button>`:''}
+	          ${canEditThis?`<button class="det-btn edit-btn" onclick="openEditDonForm('${d.id}',event)">✏️ Edit</button>`:''}
           ${canAdmin()?`<button class="det-btn" style="background:linear-gradient(135deg,#C62828,#E53935);color:#fff;flex:0 0 auto;padding:9px 13px;box-shadow:0 3px 10px rgba(198,40,40,.45);border:1.5px solid rgba(255,120,120,.25)" onclick="deleteDonation('${d.id}',event)">🗑 Delete</button>`:''}
-        </div>
-      </div>` : '';
-    return `<div class="list-item don-item ${isViewing?'list-item-open':''}" onclick="toggleDonView('${d.id}')">
-      <div class="li-top">
-        <div>
+	        </div>
+	      </div>` : '';
+	    return `<div class="list-item don-item ${isViewing?'list-item-open':''}" onclick="toggleDonView('${d.id}')">
+	      <div class="li-top">
+	        <div>
           <div class="li-serial">#${String(d.serial).padStart(3,'0')} · ${d.date}</div>
           <div class="li-name">${maskedField(d.name,'text',!isRecv)}</div>
           ${d.relation&&d.relname?`<div class="li-meta">${d.relation} ${maskedField(d.relname,'text',!isRecv)}</div>`:''}
           <div class="li-meta">${d.city?'🏙 '+maskedField(d.city,'text',!isRecv):''}</div>
-        </div>
-        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          <div class="li-amount">${maskedAmount(d.amount,appStatus)}</div>
-          <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Received':'Pending'}</span>
-          ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
-          <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
-        </div>
-      </div>${detail}
-    </div>`;
+	        </div>
+	        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+	          <div class="li-amount">${donAmountHtml(d,appStatus)}</div>
+	          <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Received':'Pending'}</span>
+	          ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
+	          <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
+	        </div>
+	      </div>${detail}
+	    </div>`;
   }).join('');
   const form     = showDonForm  ? donForm()     : '';
   const editForm = editingDonId ? editDonForm() : '';
@@ -2125,34 +2131,44 @@ function donForm() {
     <div class="fgroup"><label class="flabel">City</label><input class="finput" id="df-city" placeholder="City or Town"></div>
     <div class="fgroup"><label class="flabel">State</label><div class="sel-wrap"><select class="fselect" id="df-state">${indiaStates('')}</select></div></div>
     <div class="fgroup"><label class="flabel">Mobile Number</label><input class="finput" id="df-mobile" type="tel" placeholder="10-digit mobile" maxlength="10"></div>
-    <div class="amt-card">
-      <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="df-amt" placeholder="0" min="0" oninput="updDonWords()"></div>
-      <div class="divhr"></div>
-      <div class="flabel" style="margin-bottom:3px">Amount in Words</div>
-      <div class="words-box" id="df-words">—</div>
+    <div class="fgroup"><label class="flabel">Donation Type</label>
+      <div class="sel-wrap">
+        <select class="fselect" id="df-type" onchange="setDonType(this.value,'df')">
+          <option value="money" ${donType==='money'?'selected':''}>Money</option>
+          <option value="other" ${donType==='other'?'selected':''}>Other</option>
+        </select>
+      </div>
     </div>
-    <div class="recv-row">
-      <label class="${yc}" id="don-yes" onclick="setRecv('yes')"><input type="radio" name="dr"><div class="rchk" id="ryc">${donReceived==='yes'?'✓':''}</div>Amount Received</label>
-      <label class="${nc}" id="don-no"  onclick="setRecv('no')"><input type="radio" name="dr"><div class="rchk" id="rnc">${donReceived==='no'?'✗':''}</div>Pending</label>
-    </div>
-    <div id="df-receipt-section" style="display:${donReceived==='yes'?'block':'none'}">
-      <div class="fgroup">
-        <label class="flabel">Payment Receipt (optional)</label>
-        <div class="upload-box" id="df-upload-box">
-          <div id="df-upload-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:6px">
-            <span style="font-size:24px">📎</span>
-            <div style="font-size:12px;font-weight:700;color:var(--saffron-dark)">Upload Receipt</div>
-            <div style="display:flex;gap:8px;margin-top:2px">
-              <button type="button" onclick="document.getElementById('df-receipt-camera').click()" style="padding:6px 14px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">📷 Camera</button>
-              <button type="button" onclick="document.getElementById('df-receipt-file').click()" style="padding:6px 14px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">🖼 Gallery</button>
+    <div id="df-money-fields" style="display:${donType==='money'?'block':'none'}">
+      <div class="amt-card">
+        <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="df-amt" placeholder="0" min="0" oninput="updDonWords()"></div>
+        <div class="divhr"></div>
+        <div class="flabel" style="margin-bottom:3px">Amount in Words</div>
+        <div class="words-box" id="df-words">—</div>
+      </div>
+      <div class="recv-row">
+        <label class="${yc}" id="don-yes" onclick="setRecv('yes')"><input type="radio" name="dr"><div class="rchk" id="ryc">${donReceived==='yes'?'✓':''}</div>Amount Received</label>
+        <label class="${nc}" id="don-no"  onclick="setRecv('no')"><input type="radio" name="dr"><div class="rchk" id="rnc">${donReceived==='no'?'✗':''}</div>Amount Pending</label>
+      </div>
+      <div id="df-receipt-section" style="display:${donReceived==='yes'?'block':'none'}">
+        <div class="fgroup">
+          <label class="flabel">Payment Receipt (optional)</label>
+          <div class="upload-box" id="df-upload-box">
+            <div id="df-upload-placeholder" style="display:flex;flex-direction:column;align-items:center;gap:6px">
+              <span style="font-size:24px">📎</span>
+              <div style="font-size:12px;font-weight:700;color:var(--saffron-dark)">Upload Receipt</div>
+              <div style="display:flex;gap:8px;margin-top:2px">
+                <button type="button" onclick="document.getElementById('df-receipt-camera').click()" style="padding:6px 14px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">📷 Camera</button>
+                <button type="button" onclick="document.getElementById('df-receipt-file').click()" style="padding:6px 14px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">🖼 Gallery</button>
+              </div>
             </div>
+            <img id="df-receipt-preview" style="display:none;max-width:100%;border-radius:6px;max-height:160px;object-fit:contain" />
           </div>
-          <img id="df-receipt-preview" style="display:none;max-width:100%;border-radius:6px;max-height:160px;object-fit:contain" />
-        </div>
-        <input type="file" id="df-receipt-file" accept="image/*" style="display:none" onchange="previewReceipt('df')">
-        <input type="file" id="df-receipt-camera" accept="image/*" capture="environment" style="display:none" onchange="previewReceipt('df')">
-        <div id="df-receipt-actions" style="display:none;margin-top:6px">
-          <button type="button" onclick="clearReceipt('df')" class="upload-act-btn" style="color:var(--red);width:100%">🗑 Remove Receipt</button>
+          <input type="file" id="df-receipt-file" accept="image/*" style="display:none" onchange="previewReceipt('df')">
+          <input type="file" id="df-receipt-camera" accept="image/*" capture="environment" style="display:none" onchange="previewReceipt('df')">
+          <div id="df-receipt-actions" style="display:none;margin-top:6px">
+            <button type="button" onclick="clearReceipt('df')" class="upload-act-btn" style="color:var(--red);width:100%">🗑 Remove Receipt</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2183,34 +2199,44 @@ function editDonForm() {
     <div class="fgroup"><label class="flabel">City</label><input class="finput" id="ef2-city" value="${d.city||''}" placeholder="City or Town"></div>
     <div class="fgroup"><label class="flabel">State</label><div class="sel-wrap"><select class="fselect" id="ef2-state">${indiaStates(d.state||'')}</select></div></div>
     <div class="fgroup"><label class="flabel">Mobile Number</label><input class="finput" id="ef2-mobile" type="tel" value="${d.mobile||''}" maxlength="10"></div>
-    <div class="amt-card">
-      <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="ef2-amt" value="${d.amount}" min="0" oninput="updEditWords()"></div>
-      <div class="divhr"></div>
-      <div class="flabel" style="margin-bottom:3px">Amount in Words</div>
-      <div class="words-box" id="ef2-words">${d.amountWords}</div>
+    <div class="fgroup"><label class="flabel">Donation Type</label>
+      <div class="sel-wrap">
+        <select class="fselect" id="ef2-type" onchange="setDonType(this.value,'ef2')">
+          <option value="money" ${donType==='money'?'selected':''}>Money</option>
+          <option value="other" ${donType==='other'?'selected':''}>Other</option>
+        </select>
+      </div>
     </div>
-    <div class="recv-row">
-      <label class="${yc}" id="edit-don-yes" onclick="setRecv('yes')"><input type="radio" name="er"><div class="rchk" id="eryc">${donReceived==='yes'?'✓':''}</div>Amount Received</label>
-      <label class="${nc}" id="edit-don-no"  onclick="setRecv('no')"><input type="radio" name="er"><div class="rchk" id="ernc">${donReceived==='no'?'✗':''}</div>Pending</label>
-    </div>
-    <div id="ef2-receipt-section" style="display:${donReceived==='yes'?'block':'none'}">
-      <div class="fgroup">
-        <label class="flabel">Payment Receipt (optional)</label>
-        <div class="upload-box" id="ef2-upload-box">
-          <div id="ef2-upload-placeholder" style="${d.receiptImage?'display:none':'display:flex;flex-direction:column;align-items:center;gap:6px'}">
-            <span style="font-size:24px">📎</span>
-            <div style="font-size:12px;font-weight:700;color:var(--saffron-dark)">Upload Receipt</div>
-            <div style="display:flex;gap:8px;margin-top:2px">
-              <button type="button" onclick="document.getElementById('ef2-receipt-camera').click()" style="padding:6px 14px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">📷 Camera</button>
-              <button type="button" onclick="document.getElementById('ef2-receipt-file').click()" style="padding:6px 14px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">🖼 Gallery</button>
+    <div id="ef2-money-fields" style="display:${donType==='money'?'block':'none'}">
+      <div class="amt-card">
+        <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="ef2-amt" value="${d.amount||''}" min="0" oninput="updEditWords()"></div>
+        <div class="divhr"></div>
+        <div class="flabel" style="margin-bottom:3px">Amount in Words</div>
+        <div class="words-box" id="ef2-words">${d.amountWords||'—'}</div>
+      </div>
+      <div class="recv-row">
+        <label class="${yc}" id="edit-don-yes" onclick="setRecv('yes')"><input type="radio" name="er"><div class="rchk" id="eryc">${donReceived==='yes'?'✓':''}</div>Amount Received</label>
+        <label class="${nc}" id="edit-don-no"  onclick="setRecv('no')"><input type="radio" name="er"><div class="rchk" id="ernc">${donReceived==='no'?'✗':''}</div>Amount Pending</label>
+      </div>
+      <div id="ef2-receipt-section" style="display:${donReceived==='yes'?'block':'none'}">
+        <div class="fgroup">
+          <label class="flabel">Payment Receipt (optional)</label>
+          <div class="upload-box" id="ef2-upload-box">
+            <div id="ef2-upload-placeholder" style="${d.receiptImage?'display:none':'display:flex;flex-direction:column;align-items:center;gap:6px'}">
+              <span style="font-size:24px">📎</span>
+              <div style="font-size:12px;font-weight:700;color:var(--saffron-dark)">Upload Receipt</div>
+              <div style="display:flex;gap:8px;margin-top:2px">
+                <button type="button" onclick="document.getElementById('ef2-receipt-camera').click()" style="padding:6px 14px;background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">📷 Camera</button>
+                <button type="button" onclick="document.getElementById('ef2-receipt-file').click()" style="padding:6px 14px;background:linear-gradient(135deg,#1565C0,#1976D2);color:#fff;border:none;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer">🖼 Gallery</button>
+              </div>
             </div>
+            <img id="ef2-receipt-preview" style="display:${d.receiptImage?'block':'none'};max-width:100%;border-radius:6px;max-height:160px;object-fit:contain" src="${d.receiptImage||''}" />
           </div>
-          <img id="ef2-receipt-preview" style="display:${d.receiptImage?'block':'none'};max-width:100%;border-radius:6px;max-height:160px;object-fit:contain" src="${d.receiptImage||''}" />
-        </div>
-        <input type="file" id="ef2-receipt-file" accept="image/*" style="display:none" onchange="previewReceipt('ef2')">
-        <input type="file" id="ef2-receipt-camera" accept="image/*" capture="environment" style="display:none" onchange="previewReceipt('ef2')">
-        <div id="ef2-receipt-actions" style="display:${d.receiptImage?'block':'none'};margin-top:6px">
-          <button type="button" onclick="clearReceipt('ef2')" class="upload-act-btn" style="color:var(--red);width:100%">🗑 Remove Receipt</button>
+          <input type="file" id="ef2-receipt-file" accept="image/*" style="display:none" onchange="previewReceipt('ef2')">
+          <input type="file" id="ef2-receipt-camera" accept="image/*" capture="environment" style="display:none" onchange="previewReceipt('ef2')">
+          <div id="ef2-receipt-actions" style="display:${d.receiptImage?'block':'none'};margin-top:6px">
+            <button type="button" onclick="clearReceipt('ef2')" class="upload-act-btn" style="color:var(--red);width:100%">🗑 Remove Receipt</button>
+          </div>
         </div>
       </div>
     </div>
@@ -2842,7 +2868,7 @@ function openDonForm()  {
     showRbacAlert('🙏 Donations');
     return;
   }
-  showDonForm=true; donReceived=''; receiptDataUrl=null; render();
+  showDonForm=true; donReceived=''; donType='money'; receiptDataUrl=null; render();
 }
 function closeDonForm() { showDonForm=false; render(); }
 function openExpForm()  {
@@ -2861,6 +2887,21 @@ function setRecv(v) {
   ['ryc','eryc'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=v==='yes'?'✓':''; });
   ['rnc','ernc'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=v==='no'?'✗':''; });
   ['df-receipt-section','ef2-receipt-section'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display=v==='yes'?'block':'none'; });
+}
+
+function setDonType(v, prefix) {
+  donType = (v === 'other') ? 'other' : 'money';
+  const wrap = document.getElementById(prefix + '-money-fields');
+  if (wrap) wrap.style.display = (donType === 'money') ? 'block' : 'none';
+  if (donType !== 'money') {
+    // Reset money-only state to avoid saving stale amount/receipt info.
+    setRecv('no');
+    receiptDataUrl = null;
+    const amt = document.getElementById(prefix + '-amt');
+    if (amt) amt.value = '';
+    const words = document.getElementById(prefix + '-words');
+    if (words) words.textContent = '—';
+  }
 }
 
 function updDonWords()  { const el=document.getElementById('df-words');  if(el) el.textContent=amtWords(document.getElementById('df-amt')?.value); }
@@ -2963,9 +3004,10 @@ document.addEventListener('click', function(e) {
 /* ─── SAVE DONATION ─── */
 async function saveDonation() {
   const name=(document.getElementById('df-name')?.value||'').trim();
+  const dtype=(document.getElementById('df-type')?.value||donType||'money');
   const amt=parseFloat(document.getElementById('df-amt')?.value)||0;
   if(!name){showToast('⚠ Please enter donor name');return;}
-  if(!amt){showToast('⚠ Please enter amount');return;}
+  if(dtype==='money' && !amt){showToast('⚠ Please enter amount');return;}
   const d={
     serial:donSerial, year:currentYear,
     date:document.getElementById('df-date')?.value||new Date().toISOString().split('T')[0],
@@ -2978,9 +3020,11 @@ async function saveDonation() {
     cityTe:(document.getElementById('df-city-te')?.value||'').trim(),
     state:document.getElementById('df-state')?.value||'',
     mobile:document.getElementById('df-mobile')?.value||'',
-    amount:amt, amountWords:amtWords(amt),
-    received:donReceived||'no',
-    receiptImage:donReceived==='yes'?(receiptDataUrl||null):null,
+    donationType: dtype==='other'?'other':'money',
+    amount: dtype==='money'?amt:null,
+    amountWords: dtype==='money'?amtWords(amt):'',
+    received: dtype==='money'?(donReceived||'no'):'no',
+    receiptImage: (dtype==='money' && donReceived==='yes')?(receiptDataUrl||null):null,
     userId:currentUser.id, submittedBy:currentUser.id, submittedByName:currentUser.name,
     approvalStatus: canAdmin() ? 'approved' : 'pending_approval',
     createdAt:new Date().toISOString()
@@ -2997,9 +3041,10 @@ async function saveDonation() {
 /* ─── UPDATE DONATION ─── */
 async function updateDonation() {
   const name=(document.getElementById('ef2-name')?.value||'').trim();
+  const dtype=(document.getElementById('ef2-type')?.value||donType||'money');
   const amt=parseFloat(document.getElementById('ef2-amt')?.value)||0;
   if(!name){showToast('⚠ Please enter donor name');return;}
-  if(!amt){showToast('⚠ Please enter amount');return;}
+  if(dtype==='money' && !amt){showToast('⚠ Please enter amount');return;}
   const don=donations.find(d=>d.id===editingDonId);
   if(!don) return;
   don.date=document.getElementById('ef2-date')?.value||don.date;
@@ -3013,15 +3058,23 @@ async function updateDonation() {
   don.cityTe=(document.getElementById('ef2-city-te')?.value||'').trim();
   don.state=document.getElementById('ef2-state')?.value||'';
   don.mobile=document.getElementById('ef2-mobile')?.value||'';
-  don.amount=amt; don.amountWords=amtWords(amt);
-  don.received=donReceived||don.received;
-  // receiptDataUrl: null=no change, '__REMOVED__'=user cleared it, else=new image
-  if (receiptDataUrl === '__REMOVED__') {
+  don.donationType = dtype==='other'?'other':'money';
+  if (don.donationType === 'money') {
+    don.amount=amt; don.amountWords=amtWords(amt);
+    don.received=donReceived||don.received||'no';
+    // receiptDataUrl: null=no change, '__REMOVED__'=user cleared it, else=new image
+    if (receiptDataUrl === '__REMOVED__') {
+      don.receiptImage = null;
+    } else if (receiptDataUrl) {
+      don.receiptImage = receiptDataUrl;
+    }
+    // else: keep don.receiptImage unchanged
+  } else {
+    don.amount = null;
+    don.amountWords = '';
+    don.received = 'no';
     don.receiptImage = null;
-  } else if (receiptDataUrl) {
-    don.receiptImage = receiptDataUrl;
   }
-  // else: keep don.receiptImage unchanged
   don.updatedAt=new Date().toISOString();
   if (!canAdmin() && don.approvalStatus === 'sendback') don.approvalStatus = 'pending_approval';
   try {
@@ -3095,7 +3148,15 @@ async function updateExpense() {
 function toggleDonView(id){ viewingDonId=(viewingDonId===id)?null:id; render(); }
 function toggleExpView(id){ viewingExpId=(viewingExpId===id)?null:id; render(); }
 
-function openEditDonForm(id,e){ if(e) e.stopPropagation(); editingDonId=id; const don=donations.find(d=>d.id===id); donReceived=don?.received||'no'; receiptDataUrl=null; render(); }
+function openEditDonForm(id,e){
+  if(e) e.stopPropagation();
+  editingDonId=id;
+  const don=donations.find(d=>d.id===id);
+  donReceived=don?.received||'no';
+  donType=(don?.donationType==='other')?'other':'money';
+  receiptDataUrl=null;
+  render();
+}
 function closeEditDonForm(){ editingDonId=null; render(); }
 function openEditExpForm(id,e){ if(e) e.stopPropagation(); editingExpId=id; receiptDataUrl=null; render(); }
 function closeEditExpForm(){ editingExpId=null; receiptDataUrl=null; render(); }
