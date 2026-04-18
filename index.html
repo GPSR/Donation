@@ -1447,6 +1447,8 @@ async function submitInviteRequest() {
 
 /* ─── ADMIN PANEL ─── */
 let adminTab = 'dashboard';
+let adminRecordsFilter = 'all'; // all | don | exp
+let adminRecordsSort = 'newest'; // newest | oldest
 
 async function renderAdminPanel() {
   const panel = document.getElementById('adminPanel');
@@ -1492,11 +1494,15 @@ async function renderAdminPanel() {
         </div>
       </div>`;
 
-    const mkRecordCard = (rec, type) => {
-      const isSendback = rec.approvalStatus === 'sendback';
-      const title = type==='don' ? `#${String(rec.serial).padStart(3,'0')} · ${rec.name} · ₹${rec.amount}` : `#${String(rec.serial).padStart(3,'0')} · ${rec.description||rec.category} · ₹${rec.amount}`;
-      const meta = type==='don' ? `${rec.date}${rec.city?' · 🏙 '+rec.city:''}` : `${rec.date}${rec.category?' · '+rec.category:''}`;
-      return `<div class="record-approve-card pending-card">
+	    const mkRecordCard = (rec, type) => {
+	      const isSendback = rec.approvalStatus === 'sendback';
+	      const isOtherDon = type==='don' && rec.donationType === 'other';
+	      const amtTxt = isOtherDon ? 'OTHER' : ('₹'+(parseFloat(rec.amount)||0));
+	      const title = type==='don'
+	        ? `#${String(rec.serial).padStart(3,'0')} · ${rec.name} · ${amtTxt}`
+	        : `#${String(rec.serial).padStart(3,'0')} · ${rec.description||rec.category} · ₹${rec.amount}`;
+	      const meta = type==='don' ? `${rec.date}${rec.city?' · 🏙 '+rec.city:''}` : `${rec.date}${rec.category?' · '+rec.category:''}`;
+	      return `<div class="record-approve-card pending-card">
         <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
           <div>
             <div style="font-size:13px;font-weight:700">${title}</div>
@@ -1504,14 +1510,15 @@ async function renderAdminPanel() {
             ${rec.submittedByName?`<div style="font-size:10px;color:var(--text3)">By: ${rec.submittedByName}</div>`:''}
           </div>
           ${approvalBadgeHtml(rec.approvalStatus)}
-        </div>
-        ${isSendback&&rec.adminRemarks?`<div class="rbac-warn" style="margin-bottom:8px">↩ <b>Sent Back:</b> ${rec.adminRemarks}</div>`:''}
-        ${rec.receiptImage?`<img src="${rec.receiptImage}" style="width:100%;max-height:120px;object-fit:contain;border-radius:8px;border:1px solid var(--border);margin-bottom:8px">`:''}
-        <div style="display:flex;gap:6px;flex-wrap:wrap">
-          <button onclick="adminApproveRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#2E7D32,#388E3C);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✅ Approve</button>
-          <button onclick="adminSendBackRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#E65100,#F57C00);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">↩ Send Back</button>
-          <button onclick="adminRejectRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✗ Reject</button>
-        </div>
+	        </div>
+	        ${isSendback&&rec.adminRemarks?`<div class="rbac-warn" style="margin-bottom:8px">↩ <b>Sent Back:</b> ${rec.adminRemarks}</div>`:''}
+	        ${isOtherDon&&rec.notes?`<div class="admin-req-meta" style="margin:6px 0 8px;font-style:italic">📝 ${rec.notes}</div>`:''}
+	        ${(!isOtherDon && rec.receiptImage)?`<img src="${rec.receiptImage}" style="width:100%;max-height:120px;object-fit:contain;border-radius:8px;border:1px solid var(--border);margin-bottom:8px">`:''}
+	        <div style="display:flex;gap:6px;flex-wrap:wrap">
+	          <button onclick="adminApproveRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#2E7D32,#388E3C);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✅ Approve</button>
+	          <button onclick="adminSendBackRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#E65100,#F57C00);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">↩ Send Back</button>
+	          <button onclick="adminRejectRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✗ Reject</button>
+	        </div>
       </div>`;
     };
 
@@ -1549,11 +1556,34 @@ async function renderAdminPanel() {
       ${approvedReqs.length>0?`<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);margin:14px 0 8px">✅ Approved <span class="count-pill" style="background:var(--green)">${approvedReqs.length}</span></div>${approvedReqs.map(r=>mkUserCard(r,'approved')).join('')}`:''}
       ${rejectedReqs.length>0?`<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--red);margin:14px 0 8px">✗ Rejected <span class="count-pill" style="background:var(--red)">${rejectedReqs.length}</span></div>${rejectedReqs.map(r=>mkUserCard(r,'rejected')).join('')}`:''}`;
 
-    const recordsHtml = totalPendingRecords === 0
-      ? '<div class="empty">No records pending approval.</div>'
-      : [
-          pendingDons.length > 0 ? `<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--saffron-dark);margin-bottom:8px">🙏 Donations <span class="count-pill">${pendingDons.length}</span></div>${pendingDons.map(d=>mkRecordCard(d,'don')).join('')}` : '',
-          pendingExps.length > 0 ? `<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin:14px 0 8px">📋 Expenses <span class="count-pill">${pendingExps.length}</span></div>${pendingExps.map(e=>mkRecordCard(e,'exp')).join('')}` : ''
+    const sortByDate = (a,b) => {
+      const ad = new Date(a.createdAt || a.date || 0).getTime();
+      const bd = new Date(b.createdAt || b.date || 0).getTime();
+      return adminRecordsSort === 'oldest' ? (ad - bd) : (bd - ad);
+    };
+    const filteredDons = (adminRecordsFilter === 'all' || adminRecordsFilter === 'don') ? pendingDons.slice().sort(sortByDate) : [];
+    const filteredExps = (adminRecordsFilter === 'all' || adminRecordsFilter === 'exp') ? pendingExps.slice().sort(sortByDate) : [];
+    const filteredCount = filteredDons.length + filteredExps.length;
+
+    const recordsToolbar = `
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px">
+        <div style="display:flex;gap:6px;flex:1;min-width:220px">
+          <button class="admin-tab ${adminRecordsFilter==='all'?'active':''}" style="flex:1;min-width:74px" onclick="adminRecordsFilter='all';renderAdminPanel()">All</button>
+          <button class="admin-tab ${adminRecordsFilter==='don'?'active':''}" style="flex:1;min-width:86px" onclick="adminRecordsFilter='don';renderAdminPanel()">Donations</button>
+          <button class="admin-tab ${adminRecordsFilter==='exp'?'active':''}" style="flex:1;min-width:80px" onclick="adminRecordsFilter='exp';renderAdminPanel()">Expenses</button>
+        </div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <button class="admin-tab ${adminRecordsSort==='newest'?'active':''}" style="min-width:74px" onclick="adminRecordsSort='newest';renderAdminPanel()">Newest</button>
+          <button class="admin-tab ${adminRecordsSort==='oldest'?'active':''}" style="min-width:74px" onclick="adminRecordsSort='oldest';renderAdminPanel()">Oldest</button>
+        </div>
+        <button class="approve-btn" style="flex:1;min-width:160px" onclick="adminApproveAllPending()">✅ Approve All (${filteredCount})</button>
+      </div>`;
+
+    const recordsHtml = filteredCount === 0
+      ? recordsToolbar + '<div class="empty">No records pending approval.</div>'
+      : recordsToolbar + [
+          filteredDons.length > 0 ? `<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--saffron-dark);margin-bottom:8px">🙏 Donations <span class="count-pill">${filteredDons.length}</span></div>${filteredDons.map(d=>mkRecordCard(d,'don')).join('')}` : '',
+          filteredExps.length > 0 ? `<div style="font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);margin:14px 0 8px">📋 Expenses <span class="count-pill">${filteredExps.length}</span></div>${filteredExps.map(e=>mkRecordCard(e,'exp')).join('')}` : ''
         ].join('');
 
     const catsHtml = renderCategoriesTab();
@@ -1569,6 +1599,31 @@ async function renderAdminPanel() {
 	      </div>
       ${tabContent}`;
   } catch(err) { const panel=document.getElementById('adminPanel'); if(panel) panel.innerHTML='<div class="empty">Error loading admin panel.</div>'; console.error(err); }
+}
+
+async function adminApproveAllPending() {
+  if (!canAdmin()) { showToast('⚠ Admin only'); return; }
+  try {
+    const pendingDons = donations.filter(d=>(d.approvalStatus||'approved')==='pending_approval'||(d.approvalStatus||'approved')==='sendback');
+    const pendingExps = expenses.filter(e=>(e.approvalStatus||'approved')==='pending_approval'||(e.approvalStatus||'approved')==='sendback');
+    const filteredDons = (adminRecordsFilter === 'all' || adminRecordsFilter === 'don') ? pendingDons : [];
+    const filteredExps = (adminRecordsFilter === 'all' || adminRecordsFilter === 'exp') ? pendingExps : [];
+    const total = filteredDons.length + filteredExps.length;
+    if (!total) { showToast('✓ Nothing to approve'); return; }
+    if (!confirm(`Approve all pending records (${total})?`)) return;
+
+    showToast('🕉 Approving…');
+    const now = new Date().toISOString();
+    const updates = [];
+    filteredDons.forEach(rec => updates.push(dbUpdate('donations', { ...rec, approvalStatus:'approved', approvedAt:now, approvedBy:currentUser.name })));
+    filteredExps.forEach(rec => updates.push(dbUpdate('expenses', { ...rec, approvalStatus:'approved', approvedAt:now, approvedBy:currentUser.name })));
+    await Promise.all(updates);
+    showToast(`✅ Approved ${total} record${total>1?'s':''}!`);
+    renderAdminPanel();
+  } catch(err) {
+    showToast('✗ Error approving records');
+    console.error(err);
+  }
 }
 
 function renderCategoriesTab() {
@@ -1888,6 +1943,13 @@ function renderDonation() {
     if (donTypeOf(d) !== 'money') return `<span style="font-weight:900;color:var(--text3);letter-spacing:.2px">OTHER</span>`;
     return maskedAmount(d.amount, appStatus);
   };
+  const donNotesSnippetHtml = (d, shouldMask) => {
+    if (donTypeOf(d) !== 'other') return '';
+    const raw = (d.notes || '').trim();
+    if (!raw) return '';
+    const sn = raw.length > 42 ? raw.slice(0, 42) + '…' : raw;
+    return `<div class="li-meta">📝 ${maskedField(sn,'text',shouldMask)}</div>`;
+  };
   const list = yd.map(d => {
     const isViewing = viewingDonId===d.id;
     const isRecv = d.received==='yes';
@@ -1920,14 +1982,15 @@ function renderDonation() {
 	    return `<div class="list-item don-item ${isViewing?'list-item-open':''}" onclick="toggleDonView('${d.id}')">
 	      <div class="li-top">
 	        <div>
-          <div class="li-serial">#${String(d.serial).padStart(3,'0')} · ${d.date}</div>
-          <div class="li-name">${maskedField(d.name,'text',!isRecv)}</div>
-          ${d.relation&&d.relname?`<div class="li-meta">${d.relation} ${maskedField(d.relname,'text',!isRecv)}</div>`:''}
-          <div class="li-meta">${d.city?'🏙 '+maskedField(d.city,'text',!isRecv):''}</div>
+	          <div class="li-serial">#${String(d.serial).padStart(3,'0')} · ${d.date}</div>
+	          <div class="li-name">${maskedField(d.name,'text',!isRecv)}</div>
+	          ${d.relation&&d.relname?`<div class="li-meta">${d.relation} ${maskedField(d.relname,'text',!isRecv)}</div>`:''}
+	          <div class="li-meta">${d.city?'🏙 '+maskedField(d.city,'text',!isRecv):''}</div>
+	          ${donNotesSnippetHtml(d, !isRecv)}
 	        </div>
 	        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
 	          <div class="li-amount">${donAmountHtml(d,appStatus)}</div>
-	          <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Received':'Pending'}</span>
+	          <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Payment Received':'Payment Pending'}</span>
 	          ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
 	          <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
 	        </div>
@@ -2176,7 +2239,7 @@ function donForm() {
     <div class="fgroup"><label class="flabel">Mobile Number</label><input class="finput" id="df-mobile" type="tel" placeholder="10-digit mobile" maxlength="10"></div>
 	    <div class="fgroup"><label class="flabel">Donation Type</label>
 	      <div class="sel-wrap">
-	        <select class="fselect" id="df-type" onchange="setDonType(this.value,'df')">
+	        <select class="fselect" id="df-type" onchange="setDonType(this.value,'df',this)">
 	          <option value="money" ${donType==='money'?'selected':''}>Money</option>
 	          <option value="other" ${donType==='other'?'selected':''}>Other</option>
 	        </select>
@@ -2247,7 +2310,7 @@ function editDonForm() {
     <div class="fgroup"><label class="flabel">Mobile Number</label><input class="finput" id="ef2-mobile" type="tel" value="${d.mobile||''}" maxlength="10"></div>
 	    <div class="fgroup"><label class="flabel">Donation Type</label>
 	      <div class="sel-wrap">
-	        <select class="fselect" id="ef2-type" onchange="setDonType(this.value,'ef2')">
+	        <select class="fselect" id="ef2-type" onchange="setDonType(this.value,'ef2',this)">
 	          <option value="money" ${donType==='money'?'selected':''}>Money</option>
 	          <option value="other" ${donType==='other'?'selected':''}>Other</option>
 	        </select>
@@ -2483,7 +2546,49 @@ async function _renderReceiptModal(id, lang) {
   if (!modal) return;
   const s = RCPT_STRINGS[lang] || RCPT_STRINGS.te;
   const isRecv = d.received === 'yes';
+  const isOther = d.donationType === 'other';
   const dd = await prepareReceiptDisplayData(d, lang);
+  if (isOther) {
+    modal.innerHTML = `<div class="rcpt-overlay" onclick="closeReceiptModal(event)">
+      <div class="rcpt-card" onclick="event.stopPropagation()" style="position:relative">
+        <button onclick="document.getElementById('rcptModal').innerHTML=''"
+          style="position:absolute;top:10px;right:10px;z-index:20;width:30px;height:30px;border-radius:50%;border:none;background:rgba(255,255,255,.28);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center">✕</button>
+        <div class="rcpt-header">
+          <div class="rcpt-hdr-top">
+            <div class="rcpt-om">🕉</div>
+            <div class="rcpt-deco-line"><span></span>✦<span></span></div>
+            <div class="rcpt-blessing">${s.blessing}</div>
+            <div class="rcpt-village">${s.village}</div>
+            <div class="rcpt-sub1">${s.satram}</div>
+            <div class="rcpt-sub2">${s.location}</div>
+            <div class="rcpt-sub3">Other Donation</div>
+          </div>
+          <div class="rcpt-hdr-bottom">
+            <div class="rcpt-status-badge">Approval: ${approvalBadgeHtml(d.approvalStatus||'approved')}</div>
+          </div>
+        </div>
+        <div class="rcpt-amount-band" style="padding:16px 18px 14px">
+          <div class="rcpt-serial-tag">🔖 ${s.receiptNo} #${String(d.serial).padStart(3,'0')}</div>
+          <div class="rcpt-amt-label" style="margin-top:8px">Details</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.6;background:rgba(255,255,255,.75);border:1px dashed #E8C97A;border-radius:10px;padding:10px 12px">${(d.notes||'—').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+          <div style="font-size:10px;color:var(--text3);margin-top:6px;letter-spacing:.5px">📅 ${d.date}</div>
+        </div>
+        <div class="rcpt-section-lbl">👤 ${s.donorSection}</div>
+        <div class="rcpt-body">
+          <div class="rcpt-row"><span class="rcpt-lbl">${s.fName}</span><span class="rcpt-val">${maskedField(dd.name,'text',!isRecv)}</span></div>
+          ${dd.relation?`<div class="rcpt-row"><span class="rcpt-lbl">${s.fRelation}</span><span class="rcpt-val">${dd.relation}</span></div>`:''}
+          ${d.mobile?`<div class="rcpt-row"><span class="rcpt-lbl">${s.fMobile}</span><span class="rcpt-val">${maskedField(d.mobile,'mobile',!isRecv)}</span></div>`:''}
+          ${dd.address?`<div class="rcpt-row"><span class="rcpt-lbl">${s.fAddress}</span><span class="rcpt-val">${maskedField(dd.address,'text',!isRecv)}</span></div>`:''}
+          ${dd.city?`<div class="rcpt-row"><span class="rcpt-lbl">${s.fCity}</span><span class="rcpt-val">${maskedField(dd.city,'text',!isRecv)}</span></div>`:''}
+        </div>
+        <div class="rcpt-footer" style="padding:10px 14px 12px">
+          <div class="rcpt-thank">${s.thankYou}</div>
+          <div class="rcpt-thank" style="margin-bottom:0">${s.thankMsg}</div>
+        </div>
+      </div>
+    </div>`;
+    return;
+  }
   modal.innerHTML = `<div class="rcpt-overlay" onclick="closeReceiptModal(event)">
     <div class="rcpt-card" onclick="event.stopPropagation()" style="position:relative">
       <button onclick="document.getElementById('rcptModal').innerHTML=''"
@@ -2550,6 +2655,7 @@ function closeReceiptModal(e) {
 function shareReceiptWA(id) {
   const d = donations.find(x=>String(x.id)===String(id));
   if (!d) return;
+  if (d.donationType === 'other') { showToast('⚠ Receipt share is only for money donations'); return; }
   const msg =
 `🕉 *గట్టుపల్లె – గాజులపల్లె*
 *శ్రీ శ్రీ శ్రీ మల్లెం కొండేశ్వర స్వామి వారి దివ్య ఆశీస్సులతో*
@@ -2565,7 +2671,7 @@ function shareReceiptWA(id) {
 ━━━━━━━━━━━━━━━━━━━━
 💰 Amount      : ${fmt(d.amount)}
 📝 In Words    : ${d.amountWords}
-✅ Status      : ${d.received==='yes'?'✅ Payment Received':'⏳ Payment Pending'}
+✅ Payment     : ${d.received==='yes'?'✅ Payment Received':'⏳ Payment Pending'}
 ━━━━━━━━━━━━━━━━━━━━
 జై శ్రీరామ్ 🙏 Thank you for your generous donation!`;
   if (navigator.share) navigator.share({ title:'Donation Receipt', text:msg }).catch(()=>fallbackShare(msg));
@@ -2938,8 +3044,22 @@ function setRecv(v) {
   ['df-receipt-section','ef2-receipt-section'].forEach(id=>{ const el=document.getElementById(id); if(el) el.style.display=v==='yes'?'block':'none'; });
 }
 
-function setDonType(v, prefix) {
-  donType = (v === 'other') ? 'other' : 'money';
+function setDonType(v, prefix, selEl) {
+  const prevType = donType;
+  const nextType = (v === 'other') ? 'other' : 'money';
+  if (prevType === 'money' && nextType === 'other') {
+    const hasAmt = (parseFloat(document.getElementById(prefix + '-amt')?.value)||0) > 0;
+    const hasReceipt = !!receiptDataUrl || (document.getElementById(prefix + '-receipt-preview')?.style?.display === 'block');
+    const hasRecvYes = donReceived === 'yes';
+    if (hasAmt || hasReceipt || hasRecvYes) {
+      const ok = confirm('Switching to "Other" will clear amount, payment status, and any uploaded receipt. Continue?');
+      if (!ok) {
+        if (selEl) selEl.value = prevType;
+        return;
+      }
+    }
+  }
+  donType = nextType;
   const wrap = document.getElementById(prefix + '-money-fields');
   const otherWrap = document.getElementById(prefix + '-other-fields');
   if (wrap) wrap.style.display = (donType === 'money') ? 'block' : 'none';
@@ -2952,6 +3072,7 @@ function setDonType(v, prefix) {
     if (amt) amt.value = '';
     const words = document.getElementById(prefix + '-words');
     if (words) words.textContent = '—';
+    // Keep notes (other donation details) intact when switching to other.
   }
 }
 
@@ -3011,7 +3132,20 @@ function donorSuggest(q) {
     const key = (d.name||'').toLowerCase();
     if (!seen.has(key)) seen.set(key, d);
   });
-  const matches = [...seen.values()].filter(d => (d.name||'').toLowerCase().includes(q)).slice(0, 8);
+  const score = (txt) => {
+    const t = (txt||'').toLowerCase();
+    if (!t) return -1;
+    if (t === q) return 300;
+    if (t.startsWith(q)) return 200;
+    const i = t.indexOf(q);
+    return i >= 0 ? (100 - i) : -1;
+  };
+  const matches = [...seen.values()]
+    .map(d => ({ d, s: score(d.name) }))
+    .filter(x => x.s >= 0)
+    .sort((a,b) => b.s - a.s)
+    .slice(0, 8)
+    .map(x => x.d);
   if (!matches.length) { box.style.display='none'; return; }
   box.style.display = 'block';
   box.innerHTML = matches.map(d => {
@@ -3058,7 +3192,20 @@ function donFieldSuggest(q, prefix, field) {
     const key = v.toLowerCase();
     if (!seen.has(key)) seen.set(key, d);
   });
-  const matches = [...seen.values()].filter(d => (getVal(d)||'').toLowerCase().includes(q)).slice(0, 8);
+  const score = (txt) => {
+    const t = (txt||'').toLowerCase();
+    if (!t) return -1;
+    if (t === q) return 300;
+    if (t.startsWith(q)) return 200;
+    const i = t.indexOf(q);
+    return i >= 0 ? (100 - i) : -1;
+  };
+  const matches = [...seen.values()]
+    .map(d => ({ d, s: score(getVal(d)) }))
+    .filter(x => x.s >= 0)
+    .sort((a,b) => b.s - a.s)
+    .slice(0, 8)
+    .map(x => x.d);
   if (!matches.length) { box.style.display='none'; return; }
 
   box.style.display = 'block';
@@ -3132,6 +3279,7 @@ async function saveDonation() {
   const notes=(document.getElementById('df-notes')?.value||'').trim();
   const amt=parseFloat(document.getElementById('df-amt')?.value)||0;
   if(!name){showToast('⚠ Please enter donor name');return;}
+  if(dtype==='other' && !notes){showToast('⚠ Please add notes for "Other" donation');return;}
   if(dtype==='money' && !amt){showToast('⚠ Please enter amount');return;}
   const d={
     serial:donSerial, year:currentYear,
@@ -3171,6 +3319,7 @@ async function updateDonation() {
   const notes=(document.getElementById('ef2-notes')?.value||'').trim();
   const amt=parseFloat(document.getElementById('ef2-amt')?.value)||0;
   if(!name){showToast('⚠ Please enter donor name');return;}
+  if(dtype==='other' && !notes){showToast('⚠ Please add notes for "Other" donation');return;}
   if(dtype==='money' && !amt){showToast('⚠ Please enter amount');return;}
   const don=donations.find(d=>d.id===editingDonId);
   if(!don) return;
