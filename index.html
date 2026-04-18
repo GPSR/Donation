@@ -329,6 +329,24 @@ body{
 .badge.part{background:#FFF3E0;color:#E65100}
 .li-serial{font-size:10px;color:var(--text3);font-weight:700;margin-bottom:2px}
 
+/* ─── SWIPE TO DELETE (Admin) ─── */
+.swipe-row{position:relative;overflow:hidden;border-radius:12px}
+.swipe-actions{
+  position:absolute;top:0;right:0;bottom:0;
+  width:92px;
+  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,#C62828,#E53935);
+}
+.swipe-del-btn{
+  border:none;background:rgba(255,255,255,.15);
+  color:#fff;font-weight:800;font-size:12px;
+  padding:10px 10px;border-radius:10px;
+  cursor:pointer;
+}
+.swipe-content{position:relative;z-index:1;transform:translateX(0);transition:transform .18s ease}
+.swipe-row.swiped .swipe-content{transform:translateX(-92px)}
+.swipe-row.swiping .swipe-content{transition:none}
+
 /* ─── OVERLAY / BOTTOM SHEET FORM ─── */
 .overlay{position:fixed;inset:0;background:rgba(30,15,0,.5);z-index:100;display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(2px);padding-top:var(--hdr-h,90px)}
 .form-sheet{
@@ -1284,19 +1302,23 @@ function render() {
       <div class="hdr-title">గట్టుపల్లె – గాజులపల్లె</div>
       <div class="hdr-sub">అన్నదాన సత్రం</div>
       <div class="hdr-tag">మల్లెంకొండ క్రింద</div>`;
-  } else {
-    const m = PAGE_META[currentPage] || { icon:'📄', title:'Page' };
-    hdr.className = 'hdr';
-    hdr.innerHTML = `<div class="hdr-compact">
-      <div class="hdr-compact-left">
-        <span class="hdr-compact-icon">${m.icon}</span>
-        <span class="hdr-compact-title">${m.title}</span>
-      </div>
-      <span class="hdr-compact-yr">${currentYear}</span>
-      <div onclick="showMyProfile()" title="My Profile" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);color:#FFE9A0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer;flex-shrink:0;border:1.5px solid rgba(255,220,120,.4)">${(currentUser?.name||'?')[0].toUpperCase()}</div>
-      <div class="hdr-compact-om" onclick="gotoPage('home')" title="Go Home">🕉</div>
-    </div>`;
-  }
+	  } else {
+	    const m = PAGE_META[currentPage] || { icon:'📄', title:'Page' };
+	    hdr.className = 'hdr';
+	    const adminBackBtn = (canAdmin() && _adminReturn && (currentPage==='donation' || currentPage==='expense'))
+	      ? `<button onclick="adminBackToPanel()" style="border:none;background:rgba(255,255,255,.18);color:#FFE9A0;border:1.5px solid rgba(255,220,120,.35);width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;cursor:pointer;flex-shrink:0" title="Back to Admin">←</button>`
+	      : '';
+	    hdr.innerHTML = `<div class="hdr-compact">
+	      <div class="hdr-compact-left">
+	        ${adminBackBtn}
+	        <span class="hdr-compact-icon">${m.icon}</span>
+	        <span class="hdr-compact-title">${m.title}</span>
+	      </div>
+	      <span class="hdr-compact-yr">${currentYear}</span>
+	      <div onclick="showMyProfile()" title="My Profile" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);color:#FFE9A0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer;flex-shrink:0;border:1.5px solid rgba(255,220,120,.4)">${(currentUser?.name||'?')[0].toUpperCase()}</div>
+	      <div class="hdr-compact-om" onclick="gotoPage('home')" title="Go Home">🕉</div>
+	    </div>`;
+	  }
   // Re-measure header height after content update
   requestAnimationFrame(() => {
     if (hdr.offsetHeight) document.documentElement.style.setProperty('--hdr-h', hdr.offsetHeight + 'px');
@@ -1502,25 +1524,26 @@ async function renderAdminPanel() {
 	        ? `#${String(rec.serial).padStart(3,'0')} · ${rec.name} · ${amtTxt}`
 	        : `#${String(rec.serial).padStart(3,'0')} · ${rec.description||rec.category} · ₹${rec.amount}`;
 	      const meta = type==='don' ? `${rec.date}${rec.city?' · 🏙 '+rec.city:''}` : `${rec.date}${rec.category?' · '+rec.category:''}`;
-	      return `<div class="record-approve-card pending-card">
-        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
-          <div>
-            <div style="font-size:13px;font-weight:700">${title}</div>
-            <div style="font-size:11px;color:var(--text3);margin-top:2px">${meta}</div>
-            ${rec.submittedByName?`<div style="font-size:10px;color:var(--text3)">By: ${rec.submittedByName}</div>`:''}
-          </div>
-          ${approvalBadgeHtml(rec.approvalStatus)}
+	      return `<div class="record-approve-card pending-card" style="cursor:pointer" onclick="adminOpenPendingRecord('${type}','${rec.id}')">
+	        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:6px">
+	          <div>
+	            <div style="font-size:13px;font-weight:700">${title}</div>
+	            <div style="font-size:11px;color:var(--text3);margin-top:2px">${meta}</div>
+	            ${rec.submittedByName?`<div style="font-size:10px;color:var(--text3)">By: ${rec.submittedByName}</div>`:''}
+	          </div>
+	          ${approvalBadgeHtml(rec.approvalStatus)}
 	        </div>
 	        ${isSendback&&rec.adminRemarks?`<div class="rbac-warn" style="margin-bottom:8px">↩ <b>Sent Back:</b> ${rec.adminRemarks}</div>`:''}
 	        ${isOtherDon&&rec.notes?`<div class="admin-req-meta" style="margin:6px 0 8px;font-style:italic">📝 ${rec.notes}</div>`:''}
 	        ${(!isOtherDon && rec.receiptImage)?`<img src="${rec.receiptImage}" style="width:100%;max-height:120px;object-fit:contain;border-radius:8px;border:1px solid var(--border);margin-bottom:8px">`:''}
 	        <div style="display:flex;gap:6px;flex-wrap:wrap">
-	          <button onclick="adminApproveRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#2E7D32,#388E3C);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✅ Approve</button>
-	          <button onclick="adminSendBackRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#E65100,#F57C00);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">↩ Send Back</button>
-	          <button onclick="adminRejectRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✗ Reject</button>
+	          <button onclick="event.stopPropagation();adminApproveRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#2E7D32,#388E3C);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✅ Approve</button>
+	          <button onclick="event.stopPropagation();adminSendBackRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#E65100,#F57C00);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">↩ Send Back</button>
+	          <button onclick="event.stopPropagation();adminRejectRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer">✗ Reject</button>
+	          <button onclick="event.stopPropagation();adminDeleteRecord('${type}','${rec.id}')" style="flex:1;min-width:80px;padding:9px;background:linear-gradient(135deg,#6D1B1B,#C62828);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:800;cursor:pointer">🗑 Delete</button>
 	        </div>
-      </div>`;
-    };
+	      </div>`;
+	    };
 
     const dashHtml = `
       <div class="dash-stats-grid">
@@ -1706,6 +1729,54 @@ async function adminApproveRecord(type, id) {
     showToast('✅ Record approved!');
     renderAdminPanel();
   } catch(err) { showToast('✗ Error approving record'); console.error(err); }
+}
+
+async function adminDeleteRecord(type, id) {
+  if (!canAdmin()) { showToast('⚠ Admin only'); return; }
+  if (!confirm('Delete this record? This cannot be undone.')) return;
+  try {
+    const col = type==='don'?'donations':'expenses';
+    await dbDelete(col, id);
+    if (type==='don') donations = donations.filter(d => String(d.id) !== String(id));
+    else expenses = expenses.filter(e => String(e.id) !== String(id));
+    showToast('🗑 Record deleted');
+    renderAdminPanel();
+  } catch(err) { showToast('✗ Error deleting record'); console.error(err); }
+}
+
+let _adminReturn = null; // { tab: 'records'|'users'|'dashboard'|'categories', focus: {type,id} }
+function adminOpenPendingRecord(type, id) {
+  if (!canAdmin()) return;
+  _adminReturn = { tab: adminTab || 'dashboard', focus: { type, id } };
+  if (type === 'don') {
+    gotoPage('donation');
+    viewingDonId = String(id);
+  } else {
+    gotoPage('expense');
+    viewingExpId = String(id);
+  }
+  render();
+  // Close any swipe-open rows when navigating.
+  swipeCloseAll();
+  // Auto-open details view.
+  setTimeout(() => {
+    if (type === 'don') viewingDonId = String(id);
+    else viewingExpId = String(id);
+    render();
+    const el = document.querySelector(`[onclick*="toggle${type==='don'?'Don':'Exp'}View('${id}')"]`);
+    if (el && el.scrollIntoView) el.scrollIntoView({ block:'center', behavior:'smooth' });
+  }, 50);
+}
+function adminBackToPanel() {
+  if (!_adminReturn) return;
+  adminTab = _adminReturn.tab || 'records';
+  const f = _adminReturn.focus;
+  _adminReturn = null;
+  gotoPage('admin');
+  // Ensure we land on approvals tab for records workflows.
+  if (adminTab === 'records') adminTab = 'records';
+  render();
+  // Optionally could scroll; keeping simple.
 }
 
 async function adminRejectRecord(type, id) {
@@ -1954,9 +2025,10 @@ function renderDonation() {
     const isViewing = viewingDonId===d.id;
     const isRecv = d.received==='yes';
     const appStatus = d.approvalStatus || 'approved';
-    const isLocked = appStatus === 'approved' && !canAdmin();
-    const canEditThis = canAdmin() || (canWrite() && !isLocked);
-	    const sendbackRemarks = appStatus === 'sendback' && d.adminRemarks ? `<div class="rbac-warn">↩ <b>Admin Remarks:</b> ${d.adminRemarks}</div>` : '';
+    const isOwn = (canWrite() && currentUser && d.submittedBy && String(d.submittedBy) === String(currentUser.id));
+    // Admin can always edit. Read & Write can edit only their own records.
+    const canEditThis = canAdmin() || (canWrite() && isOwn);
+    const sendbackRemarks = appStatus === 'sendback' && d.adminRemarks ? `<div class="rbac-warn">↩ <b>Admin Remarks:</b> ${d.adminRemarks}</div>` : '';
 	    const detail = isViewing ? `
 	      <div class="don-detail">
 	        ${sendbackRemarks}
@@ -1976,27 +2048,32 @@ function renderDonation() {
 	          ${canAdmin()&&!isRecv?`<button class="det-btn recv-btn" onclick="markReceived('${d.id}',event)">✅ Mark Received</button>`:''}
 	          ${isRecv?`<button class="det-btn share-btn" onclick="openReceiptModal('${d.id}',event)">📤 Share</button>`:''}
 	          ${canEditThis?`<button class="det-btn edit-btn" onclick="openEditDonForm('${d.id}',event)">✏️ Edit</button>`:''}
-          ${canAdmin()?`<button class="det-btn" style="background:linear-gradient(135deg,#C62828,#E53935);color:#fff;flex:0 0 auto;padding:9px 13px;box-shadow:0 3px 10px rgba(198,40,40,.45);border:1.5px solid rgba(255,120,120,.25)" onclick="deleteDonation('${d.id}',event)">🗑 Delete</button>`:''}
 	        </div>
 	      </div>` : '';
-	    return `<div class="list-item don-item ${isViewing?'list-item-open':''}" onclick="toggleDonView('${d.id}')">
-	      <div class="li-top">
-	        <div>
-	          <div class="li-serial">#${String(d.serial).padStart(3,'0')} · ${d.date}</div>
-	          <div class="li-name">${maskedField(d.name,'text',!isRecv)}</div>
-	          ${d.relation&&d.relname?`<div class="li-meta">${d.relation} ${maskedField(d.relname,'text',!isRecv)}</div>`:''}
-	          <div class="li-meta">${d.city?'🏙 '+maskedField(d.city,'text',!isRecv):''}</div>
-	          ${donNotesSnippetHtml(d, !isRecv)}
-	        </div>
-	        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-	          <div class="li-amount">${donAmountHtml(d,appStatus)}</div>
-	          <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Payment Received':'Payment Pending'}</span>
-	          ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
-	          <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
-	        </div>
-	      </div>${detail}
-	    </div>`;
-  }).join('');
+	    const itemInner = `<div class="li-top">
+	      <div>
+	        <div class="li-serial">#${String(d.serial).padStart(3,'0')} · ${d.date}</div>
+	        <div class="li-name">${maskedField(d.name,'text',!isRecv)}</div>
+	        ${d.relation&&d.relname?`<div class="li-meta">${d.relation} ${maskedField(d.relname,'text',!isRecv)}</div>`:''}
+	        <div class="li-meta">${d.city?'🏙 '+maskedField(d.city,'text',!isRecv):''}</div>
+	        ${donNotesSnippetHtml(d, !isRecv)}
+	      </div>
+	      <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+	        <div class="li-amount">${donAmountHtml(d,appStatus)}</div>
+	        <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Payment Received':'Payment Pending'}</span>
+	        ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
+	        <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
+	      </div>
+	    </div>${detail}`;
+	    const delWrap = canAdmin()
+	      ? `<div class="swipe-row ${isViewing?'list-item-open':''}" data-swipe-open="0"
+	           onpointerdown="swipeStart(event,this)" onpointermove="swipeMove(event,this)" onpointerup="swipeEnd(event,this)" onpointercancel="swipeEnd(event,this)">
+	          <div class="swipe-actions"><button class="swipe-del-btn" onclick="deleteDonation('${d.id}',event)">Delete</button></div>
+	          <div class="swipe-content"><div class="list-item don-item ${isViewing?'list-item-open':''}" onclick="toggleDonView('${d.id}')">${itemInner}</div></div>
+	        </div>`
+	      : `<div class="list-item don-item ${isViewing?'list-item-open':''}" onclick="toggleDonView('${d.id}')">${itemInner}</div>`;
+	    return delWrap;
+	  }).join('');
   const form     = showDonForm  ? donForm()     : '';
   const editForm = editingDonId ? editDonForm() : '';
   return `<div class="sec-hdr">
@@ -2100,43 +2177,48 @@ function renderExpense() {
     const isPart  = !isPaid && (parseFloat(e.paidAmount)||0) > 0;
     const sl = isPaid?'Paid':isPart?'Partial':'Pending';
     const sc = isPaid?'recv':isPart?'part':'pend';
-    const pend = Math.max(0,(parseFloat(e.amount)||0)-(parseFloat(e.paidAmount)||0));
-    const eAppStatus = e.approvalStatus || 'approved';
-    const eIsLocked = eAppStatus === 'approved' && !canAdmin();
-    const canEditExp = canAdmin() || (canWrite() && !eIsLocked);
-    const eSendbackRemarks = eAppStatus === 'sendback' && e.adminRemarks ? `<div class="rbac-warn">↩ <b>Admin Remarks:</b> ${e.adminRemarks}</div>` : '';
-    const detail = isViewing ? `
-      <div class="don-detail">
-        ${eSendbackRemarks}
-        <div class="don-detail-row"><span class="don-detail-lbl">🏪 Vendor</span><span>${maskedField(e.vendor,'text')}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">📝 Notes</span><span>${maskedField(e.notes,'text')}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">💰 Total</span><span style="font-weight:700">${maskedAmount(e.amount,eAppStatus)}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">✅ Paid</span><span style="font-weight:700;color:var(--green)">${fmt(e.paidAmount||0)}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">⏳ Pending</span><span style="font-weight:700;color:${pend>0?'var(--red)':'var(--green)'}">${fmt(pend)}</span></div>
-        <div class="don-detail-row"><span class="don-detail-lbl">🕒 Saved</span><span>${new Date(e.createdAt).toLocaleString('en-IN')}</span></div>
-        ${e.submittedByName&&canAdmin()?`<div class="don-detail-row"><span class="don-detail-lbl">👤 By</span><span>${e.submittedByName}</span></div>`:''}
-        ${e.receiptImage?`<div style="margin-top:8px"><div class="flabel" style="margin-bottom:5px">📎 Payment Receipt</div><img src="${e.receiptImage}" style="width:100%;border-radius:8px;max-height:180px;object-fit:contain;border:1px solid var(--border);cursor:pointer" onclick="viewReceiptFull('${e.id}',event,'exp')"></div>`:''}
-        <div class="don-detail-actions">
-          ${canEditExp?`<button class="det-btn edit-btn" onclick="openEditExpForm('${e.id}',event)">✏️ Edit Expense</button>`:''}
-          ${canAdmin()?`<button class="det-btn" style="background:linear-gradient(135deg,#C62828,#E53935);color:#fff;flex:0 0 auto;padding:9px 13px;box-shadow:0 3px 10px rgba(198,40,40,.45);border:1.5px solid rgba(255,120,120,.25)" onclick="deleteExpense('${e.id}',event)">🗑 Delete</button>`:''}
-        </div>
-      </div>` : '';
-    return `<div class="list-item exp-item ${isViewing?'list-item-open':''}" onclick="toggleExpView('${e.id}')">
-      <div class="li-top">
-        <div>
-          <div class="li-serial">#${String(e.serial).padStart(3,'0')} · ${e.date}</div>
-          <div class="li-name">${e.category||e.title}</div>
-          ${e.vendor?`<div class="li-meta">🏪 ${e.vendor}</div>`:''}
-        </div>
-        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          <div class="li-amount" style="color:var(--green)">${maskedAmount(e.amount,eAppStatus)}</div>
-          <span class="badge ${sc}">${sl}</span>
-          ${eAppStatus&&eAppStatus!=='approved'?approvalBadgeHtml(eAppStatus):''}
-          <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
-        </div>
-      </div>${detail}
-    </div>`;
-  }).join('');
+	    const pend = Math.max(0,(parseFloat(e.amount)||0)-(parseFloat(e.paidAmount)||0));
+	    const eAppStatus = e.approvalStatus || 'approved';
+	    const eIsOwn = (canWrite() && currentUser && e.submittedBy && String(e.submittedBy) === String(currentUser.id));
+	    const canEditExp = canAdmin() || (canWrite() && eIsOwn);
+	    const eSendbackRemarks = eAppStatus === 'sendback' && e.adminRemarks ? `<div class="rbac-warn">↩ <b>Admin Remarks:</b> ${e.adminRemarks}</div>` : '';
+	    const detail = isViewing ? `
+	      <div class="don-detail">
+	        ${eSendbackRemarks}
+	        <div class="don-detail-row"><span class="don-detail-lbl">🏪 Vendor</span><span>${maskedField(e.vendor,'text')}</span></div>
+	        <div class="don-detail-row"><span class="don-detail-lbl">📝 Notes</span><span>${maskedField(e.notes,'text')}</span></div>
+	        <div class="don-detail-row"><span class="don-detail-lbl">💰 Total</span><span style="font-weight:700">${maskedAmount(e.amount,eAppStatus)}</span></div>
+	        <div class="don-detail-row"><span class="don-detail-lbl">✅ Paid</span><span style="font-weight:700;color:var(--green)">${fmt(e.paidAmount||0)}</span></div>
+	        <div class="don-detail-row"><span class="don-detail-lbl">⏳ Pending</span><span style="font-weight:700;color:${pend>0?'var(--red)':'var(--green)'}">${fmt(pend)}</span></div>
+	        <div class="don-detail-row"><span class="don-detail-lbl">🕒 Saved</span><span>${new Date(e.createdAt).toLocaleString('en-IN')}</span></div>
+	        ${e.submittedByName&&canAdmin()?`<div class="don-detail-row"><span class="don-detail-lbl">👤 By</span><span>${e.submittedByName}</span></div>`:''}
+	        ${e.receiptImage?`<div style="margin-top:8px"><div class="flabel" style="margin-bottom:5px">📎 Payment Receipt</div><img src="${e.receiptImage}" style="width:100%;border-radius:8px;max-height:180px;object-fit:contain;border:1px solid var(--border);cursor:pointer" onclick="viewReceiptFull('${e.id}',event,'exp')"></div>`:''}
+	        <div class="don-detail-actions">
+	          ${canEditExp?`<button class="det-btn edit-btn" onclick="openEditExpForm('${e.id}',event)">✏️ Edit Expense</button>`:''}
+	        </div>
+	      </div>` : '';
+	    const itemInner = `<div class="li-top">
+	      <div>
+	        <div class="li-serial">#${String(e.serial).padStart(3,'0')} · ${e.date}</div>
+	        <div class="li-name">${e.category||e.title}</div>
+	        ${e.vendor?`<div class="li-meta">🏪 ${e.vendor}</div>`:''}
+	      </div>
+	      <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+	        <div class="li-amount" style="color:var(--green)">${maskedAmount(e.amount,eAppStatus)}</div>
+	        <span class="badge ${sc}">${sl}</span>
+	        ${eAppStatus&&eAppStatus!=='approved'?approvalBadgeHtml(eAppStatus):''}
+	        <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
+	      </div>
+	    </div>${detail}`;
+	    const delWrap = canAdmin()
+	      ? `<div class="swipe-row ${isViewing?'list-item-open':''}" data-swipe-open="0"
+	           onpointerdown="swipeStart(event,this)" onpointermove="swipeMove(event,this)" onpointerup="swipeEnd(event,this)" onpointercancel="swipeEnd(event,this)">
+	          <div class="swipe-actions"><button class="swipe-del-btn" onclick="deleteExpense('${e.id}',event)">Delete</button></div>
+	          <div class="swipe-content"><div class="list-item exp-item ${isViewing?'list-item-open':''}" onclick="toggleExpView('${e.id}')">${itemInner}</div></div>
+	        </div>`
+	      : `<div class="list-item exp-item ${isViewing?'list-item-open':''}" onclick="toggleExpView('${e.id}')">${itemInner}</div>`;
+	    return delWrap;
+	  }).join('');
   const form     = showExpForm  ? expForm()     : '';
   const editForm = editingExpId ? editExpForm() : '';
   return `<div class="sec-hdr">
@@ -3120,6 +3202,47 @@ function clearReceipt(prefix) {
   if(actions) actions.style.display='none';
 }
 
+/* ─── SWIPE TO DELETE (Admin) ─── */
+let _swipeRow=null, _swipeStartX=0, _swipeDx=0, _swipeActive=false;
+function swipeCloseAll() {
+  document.querySelectorAll('.swipe-row.swiped').forEach(r => r.classList.remove('swiped'));
+}
+function swipeStart(e, row) {
+  if (!canAdmin()) return;
+  if (!row) return;
+  _swipeRow = row;
+  _swipeStartX = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
+  _swipeDx = 0;
+  _swipeActive = true;
+  // close others
+  document.querySelectorAll('.swipe-row.swiped').forEach(r => { if (r !== row) r.classList.remove('swiped'); });
+  row.classList.add('swiping');
+  try { row.setPointerCapture(e.pointerId); } catch(_) {}
+}
+function swipeMove(e, row) {
+  if (!_swipeActive || row !== _swipeRow) return;
+  const x = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || 0;
+  _swipeDx = x - _swipeStartX;
+  // We only care about left swipe; clamp to [-92, 0]
+  const dx = Math.max(-92, Math.min(0, _swipeDx));
+  const content = row.querySelector('.swipe-content');
+  if (content) content.style.transform = `translateX(${dx}px)`;
+  // Prevent scrolling while swiping horizontally.
+  if (Math.abs(dx) > 6) e.preventDefault?.();
+}
+function swipeEnd(e, row) {
+  if (!_swipeActive || row !== _swipeRow) return;
+  _swipeActive = false;
+  row.classList.remove('swiping');
+  const open = (_swipeDx < -40);
+  const content = row.querySelector('.swipe-content');
+  if (content) content.style.transform = '';
+  if (open) row.classList.add('swiped');
+  else row.classList.remove('swiped');
+  _swipeRow = null;
+  _swipeDx = 0;
+}
+
 /* ─── DONOR AUTO-SUGGEST ─── */
 function donorSuggest(q) {
   const box = document.getElementById('df-suggest');
@@ -3354,8 +3477,8 @@ async function updateDonation() {
     don.receiptImage = null;
   }
   don.updatedAt=new Date().toISOString();
-  // If a non-admin edits a previously sent-back or rejected record, it should go for approval again.
-  if (!canAdmin() && (don.approvalStatus === 'sendback' || don.approvalStatus === 'rejected')) {
+  // Any non-admin edit should (re)submit for admin approval.
+  if (!canAdmin() && (don.approvalStatus || 'approved') !== 'pending_approval') {
     don.approvalStatus = 'pending_approval';
   }
   try {
@@ -3416,8 +3539,8 @@ async function updateExpense() {
     exp.receiptImage = receiptDataUrl;
   }
   exp.updatedAt=new Date().toISOString();
-  // If a non-admin edits a previously sent-back or rejected record, it should go for approval again.
-  if (!canAdmin() && (exp.approvalStatus === 'sendback' || exp.approvalStatus === 'rejected')) {
+  // Any non-admin edit should (re)submit for admin approval.
+  if (!canAdmin() && (exp.approvalStatus || 'approved') !== 'pending_approval') {
     exp.approvalStatus = 'pending_approval';
   }
   try {
