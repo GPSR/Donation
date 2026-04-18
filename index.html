@@ -3186,11 +3186,22 @@ async function start() {
     // Restore persisted year state before any render
     _loadPersistedYears();
     if (user && user.email) {
-      currentUser = user;
-      if (!currentUser.role) currentUser.role = 'readonly';
-      isLoggedIn = true;
-      await loadDataFromDB();
-      trackActiveSession();
+      try {
+        currentUser = user;
+        if (!currentUser.role) currentUser.role = 'readonly';
+        isLoggedIn = true;
+        await loadDataFromDB();
+        trackActiveSession();
+      } catch (e) {
+        // If session restore fails (offline / blocked network), don't brick the whole app.
+        console.warn('Session restore failed; clearing local session', e);
+        currentUser = null;
+        isLoggedIn = false;
+        donations = [];
+        expenses = [];
+        try { localStorage.removeItem('satram_session'); } catch(_) {}
+        showToast('⚠️ Could not restore session. Please sign in again.');
+      }
     }
     render();
   } catch(err) {
