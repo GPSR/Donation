@@ -1308,12 +1308,16 @@ function render() {
 	    const adminBackBtn = (canAdmin() && _adminReturn && (currentPage==='donation' || currentPage==='expense'))
 	      ? `<button onclick="adminBackToPanel()" style="border:none;background:rgba(255,255,255,.18);color:#FFE9A0;border:1.5px solid rgba(255,220,120,.35);width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:900;cursor:pointer;flex-shrink:0" title="Back to Admin">←</button>`
 	      : '';
+	    const offlinePill = (!navigator.onLine)
+	      ? `<span style="font-size:10px;font-weight:900;background:rgba(0,0,0,.18);border:1.5px solid rgba(255,255,255,.18);color:#FFE9A0;border-radius:999px;padding:4px 10px;letter-spacing:.6px;white-space:nowrap;flex-shrink:0">OFFLINE</span>`
+	      : '';
 	    hdr.innerHTML = `<div class="hdr-compact">
 	      <div class="hdr-compact-left">
 	        ${adminBackBtn}
 	        <span class="hdr-compact-icon">${m.icon}</span>
 	        <span class="hdr-compact-title">${m.title}</span>
 	      </div>
+	      ${offlinePill}
 	      <span class="hdr-compact-yr">${currentYear}</span>
 	      <div onclick="showMyProfile()" title="My Profile" style="width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,.22);color:#FFE9A0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;cursor:pointer;flex-shrink:0;border:1.5px solid rgba(255,220,120,.4)">${(currentUser?.name||'?')[0].toUpperCase()}</div>
 	      <div class="hdr-compact-om" onclick="gotoPage('home')" title="Go Home">🕉</div>
@@ -1385,6 +1389,38 @@ function renderYearPicker() {
 }
 
 /* ─── AUTH RENDERS ─── */
+function getCachedSession() {
+  try {
+    const s = localStorage.getItem('satram_session');
+    if (!s) return null;
+    const u = JSON.parse(s);
+    if (u && u.email && u.id) return u;
+    return null;
+  } catch { return null; }
+}
+
+async function continueOffline() {
+  const u = getCachedSession();
+  if (!u) { showToast('⚠ No saved session on this device'); return; }
+  if (!fsDb || !fbConfigured) {
+    showToast('⚠ Internet required for first login on this device');
+    return;
+  }
+  currentUser = u;
+  if (!currentUser.role) currentUser.role = 'readonly';
+  isLoggedIn = true;
+  currentPage = 'home';
+  try {
+    // With Firestore persistence, this should load cached data while offline.
+    await loadDataFromDB();
+    trackActiveSession(); // will no-op if offline
+  } catch (e) {
+    console.warn('Offline continue: loadDataFromDB failed', e);
+  }
+  render();
+  showToast('📴 Offline mode: changes will sync when internet returns');
+}
+
 function renderLogin() {
   return `<div class="auth-container">
     <div class="auth-card">
@@ -1408,10 +1444,16 @@ function renderLogin() {
 }
 
 function renderLoginForm() {
+  const cached = getCachedSession();
+  const canOffline = !!cached && !navigator.onLine && fbConfigured;
   return `<div>
+    ${(!navigator.onLine)?`<div style="background:#E3F2FD;border:1px solid #90CAF9;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#1565C0;line-height:1.6">
+      📡 You are offline. First-time login needs internet, but you can continue if you signed in on this device before.
+    </div>`:''}
     <div class="auth-form-group"><label class="flabel">Email</label><input class="finput" type="email" id="login-email" placeholder="your@email.com" style="width:100%;padding:10px" onkeydown="if(event.key==='Enter')loginUser()"></div>
     <div class="auth-form-group"><label class="flabel">Password</label><input class="finput" type="password" id="login-pass" placeholder="Enter password" style="width:100%;padding:10px" onkeydown="if(event.key==='Enter')loginUser()"></div>
     <button class="save-btn" style="width:100%" onclick="loginUser()">🔐 Sign In</button>
+    ${canOffline?`<button class="save-btn" style="width:100%;margin-top:10px;background:linear-gradient(135deg,#1565C0,#1976D2)" onclick="continueOffline()">📴 Continue Offline</button>`:''}
   </div>`;
 }
 
@@ -2075,10 +2117,21 @@ function renderDonation() {
 	  }).join('');
   const form     = showDonForm  ? donForm()     : '';
   const editForm = editingDonId ? editDonForm() : '';
+  const hint = shouldShowSwipeHint()
+    ? `<div style="background:#FFF8E1;border:1.5px solid #FFD54F;border-radius:12px;padding:10px 12px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start">
+        <div style="font-size:18px;line-height:1">👈</div>
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:800;color:#8A5A00">Tip</div>
+          <div style="font-size:11px;color:var(--text2);line-height:1.4;margin-top:2px">Swipe left on a donation row to delete it (admin only).</div>
+        </div>
+        <button onclick="dismissSwipeHint()" style="border:none;background:rgba(0,0,0,.06);color:var(--text2);border-radius:10px;padding:7px 10px;font-size:11px;font-weight:800;cursor:pointer;flex-shrink:0">Got it</button>
+      </div>`
+    : '';
   return `<div class="sec-hdr">
     <div class="sec-hdr-left"><h2>Donations</h2><span class="count-pill">${donCount}</span></div>
     <button class="add-btn" onclick="openDonForm()">+ New</button>
   </div>
+  ${hint}
   <div class="stats-row">
     <div class="stat-box orange"><div class="slabel">Total</div><div class="sval">${fmt(totalDon)}</div></div>
     <div class="stat-box green"><div class="slabel">Received</div><div class="sval">${fmt(recvDon)}</div></div>
@@ -2218,18 +2271,29 @@ function renderExpense() {
 	      : `<div class="list-item exp-item ${isViewing?'list-item-open':''}" onclick="toggleExpView('${e.id}')">${itemInner}</div>`;
 	    return delWrap;
 	  }).join('');
-  const form     = showExpForm  ? expForm()     : '';
-  const editForm = editingExpId ? editExpForm() : '';
-  return `<div class="sec-hdr">
-    <div class="sec-hdr-left"><h2>Expenses</h2><span class="count-pill" style="background:linear-gradient(135deg,var(--green-dark),var(--green))">${expCount}</span></div>
-    <button class="add-btn" style="background:linear-gradient(135deg,var(--green-dark),var(--green));box-shadow:0 2px 8px rgba(46,125,50,.3)" onclick="openExpForm()">+ New</button>
-  </div>
-  <div class="stats-row">
-    <div class="stat-box green"><div class="slabel">Total Spent</div><div class="sval">${fmt(totalExp)}</div></div>
-    <div class="stat-box green"><div class="slabel">Paid</div><div class="sval">${fmt(expPaid)}</div></div>
-    <div class="stat-box red"><div class="slabel">Pending</div><div class="sval">${fmt(expPending)}</div></div>
-    <div class="stat-box"><div class="slabel">Entries</div><div class="sval">${expCount}</div></div>
-  </div>
+	  const form     = showExpForm  ? expForm()     : '';
+	  const editForm = editingExpId ? editExpForm() : '';
+	  const hint = shouldShowSwipeHint()
+	    ? `<div style="background:#FFF8E1;border:1.5px solid #FFD54F;border-radius:12px;padding:10px 12px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start">
+	        <div style="font-size:18px;line-height:1">👈</div>
+	        <div style="flex:1">
+	          <div style="font-size:12px;font-weight:800;color:#8A5A00">Tip</div>
+	          <div style="font-size:11px;color:var(--text2);line-height:1.4;margin-top:2px">Swipe left on an expense row to delete it (admin only).</div>
+	        </div>
+	        <button onclick="dismissSwipeHint()" style="border:none;background:rgba(0,0,0,.06);color:var(--text2);border-radius:10px;padding:7px 10px;font-size:11px;font-weight:800;cursor:pointer;flex-shrink:0">Got it</button>
+	      </div>`
+	    : '';
+	  return `<div class="sec-hdr">
+	    <div class="sec-hdr-left"><h2>Expenses</h2><span class="count-pill" style="background:linear-gradient(135deg,var(--green-dark),var(--green))">${expCount}</span></div>
+	    <button class="add-btn" style="background:linear-gradient(135deg,var(--green-dark),var(--green));box-shadow:0 2px 8px rgba(46,125,50,.3)" onclick="openExpForm()">+ New</button>
+	  </div>
+	  ${hint}
+	  <div class="stats-row">
+	    <div class="stat-box green"><div class="slabel">Total Spent</div><div class="sval">${fmt(totalExp)}</div></div>
+	    <div class="stat-box green"><div class="slabel">Paid</div><div class="sval">${fmt(expPaid)}</div></div>
+	    <div class="stat-box red"><div class="slabel">Pending</div><div class="sval">${fmt(expPending)}</div></div>
+	    <div class="stat-box"><div class="slabel">Entries</div><div class="sval">${expCount}</div></div>
+	  </div>
   <div class="sort-bar">
     <span class="sort-bar-label">Sort:</span>
     <span class="sort-chip ${expSort==='serial-desc'?'active green':''}" onclick="expSort='serial-desc';render()">🔢 Newest</span>
@@ -3098,6 +3162,15 @@ function showToast(msg) {
   clearTimeout(t._tid); t._tid=setTimeout(()=>t.style.display='none',2200);
 }
 
+function shouldShowSwipeHint() {
+  try { return canAdmin() && !localStorage.getItem('swipe_delete_hint_shown'); }
+  catch { return false; }
+}
+function dismissSwipeHint() {
+  try { localStorage.setItem('swipe_delete_hint_shown', '1'); } catch {}
+  render();
+}
+
 /* ─── FORM ACTIONS ─── */
 function openDonForm()  {
   if (!canWrite()) {
@@ -3652,24 +3725,31 @@ async function start() {
     try { const s = localStorage.getItem('satram_session'); if (s) user = JSON.parse(s); } catch(e) {}
     // Restore persisted year state before any render
     _loadPersistedYears();
-    if (user && user.email) {
-      try {
-        currentUser = user;
-        if (!currentUser.role) currentUser.role = 'readonly';
-        isLoggedIn = true;
-        await loadDataFromDB();
-        trackActiveSession();
-      } catch (e) {
-        // If session restore fails (offline / blocked network), don't brick the whole app.
-        console.warn('Session restore failed; clearing local session', e);
-        currentUser = null;
-        isLoggedIn = false;
-        donations = [];
-        expenses = [];
-        try { localStorage.removeItem('satram_session'); } catch(_) {}
-        showToast('⚠️ Could not restore session. Please sign in again.');
-      }
-    }
+	    if (user && user.email) {
+	      try {
+	        currentUser = user;
+	        if (!currentUser.role) currentUser.role = 'readonly';
+	        isLoggedIn = true;
+	        await loadDataFromDB();
+	        trackActiveSession();
+	      } catch (e) {
+	        // If session restore fails while offline, keep the session and let the user continue.
+	        const offline = !navigator.onLine;
+	        console.warn('Session restore failed', e);
+	        if (offline) {
+	          showToast('📴 Offline mode: using saved session; data will sync when online');
+	        } else {
+	          // Online but restore failed: clear session to avoid a broken loop.
+	          console.warn('Clearing local session', e);
+	          currentUser = null;
+	          isLoggedIn = false;
+	          donations = [];
+	          expenses = [];
+	          try { localStorage.removeItem('satram_session'); } catch(_) {}
+	          showToast('⚠️ Could not restore session. Please sign in again.');
+	        }
+	      }
+	    }
     render();
   } catch(err) {
     console.error('Init error', err);
@@ -3696,6 +3776,10 @@ async function start() {
     setTimeout(function(){ waitForFirebase(attempt + 1); }, 100);
   }
 })(0);
+
+// Refresh UI on connectivity changes (offline/online pill + login offline button)
+window.addEventListener('online',  () => { try { render(); } catch(_) {} });
+window.addEventListener('offline', () => { try { render(); } catch(_) {} });
 </script>
 </body>
 </html>
