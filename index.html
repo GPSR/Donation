@@ -225,7 +225,22 @@ body{
 .admin-req-actions{display:flex;gap:8px;margin-top:10px}
 .approve-btn{flex:1;padding:10px;background:linear-gradient(135deg,#1B5E20,#2E7D32);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer}
 .reject-btn{flex:1;padding:10px;background:linear-gradient(135deg,#B71C1C,#C62828);color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer}
-.req-badge{display:inline-block;background:var(--red);color:#fff;border-radius:10px;font-size:9px;font-weight:700;padding:1px 5px;margin-left:2px;vertical-align:middle;line-height:1.4}
+.req-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:var(--red);
+  color:#fff;
+  border-radius:999px;
+  font-size:9px;
+  font-weight:800;
+  padding:1px 6px;
+  min-width:16px;
+  margin-left:2px;
+  vertical-align:middle;
+  line-height:1.4;
+  white-space:nowrap;
+}
 
 /* ─── HOME CARDS ─── */
 .home-cards{display:flex;flex-direction:column;gap:10px}
@@ -257,7 +272,20 @@ body{
 .sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .sec-hdr-left{display:flex;align-items:center;gap:7px}
 .sec-hdr h2{font-family:'Cinzel',serif;font-size:14px;font-weight:600;color:var(--saffron-dark)}
-.count-pill{background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border-radius:20px;font-size:10px;font-weight:700;padding:2px 8px;letter-spacing:.3px}
+.count-pill{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));
+  color:#fff;
+  border-radius:999px;
+  font-size:10px;
+  font-weight:800;
+  padding:2px 8px;
+  min-width:22px;
+  letter-spacing:.3px;
+  white-space:nowrap;
+}
 .add-btn{background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border:none;border-radius:10px;padding:9px 16px;font-size:12px;font-weight:700;font-family:'Lato',sans-serif;cursor:pointer;letter-spacing:.3px;transition:opacity .2s,transform .15s;box-shadow:0 2px 8px rgba(212,88,12,.3)}
 .add-btn:active{opacity:.85;transform:scale(.97)}
 
@@ -1485,9 +1513,9 @@ async function renderAdminPanel() {
         <div class="dash-stat-box" onclick="adminTab='users';renderAdminPanel()">
           <div class="dash-stat-num">${pendingReqs.length}</div><div class="dash-stat-lbl">Pending Requests</div>
         </div>
-        <div class="dash-stat-box" onclick="adminTab='records';renderAdminPanel()">
-          <div class="dash-stat-num">${totalPendingRecords}</div><div class="dash-stat-lbl">Records to Approve</div>
-        </div>
+	        <div class="dash-stat-box" onclick="adminTab='records';renderAdminPanel()">
+	          <div class="dash-stat-num">${totalPendingRecords}</div><div class="dash-stat-lbl">Pending For Approval</div>
+	        </div>
         <div class="dash-stat-box" onclick="adminTab='users';renderAdminPanel()">
           <div class="dash-stat-num">${approvedReqs.length}</div><div class="dash-stat-lbl">Approved Users</div>
         </div>
@@ -1519,12 +1547,12 @@ async function renderAdminPanel() {
 
     panel.innerHTML = `
       <div class="sec-hdr"><div class="sec-hdr-left"><h2>Admin Panel</h2></div></div>
-      <div class="admin-tab-row">
-        <button class="admin-tab ${adminTab==='dashboard'?'active':''}" onclick="adminTab='dashboard';renderAdminPanel()">📊 Dashboard</button>
-        <button class="admin-tab ${adminTab==='users'?'active':''}" onclick="adminTab='users';renderAdminPanel()">👥 Users${pendingReqs.length>0?' ('+pendingReqs.length+')':''}</button>
-        <button class="admin-tab ${adminTab==='records'?'active':''}" onclick="adminTab='records';renderAdminPanel()">📋 Records${totalPendingRecords>0?' ('+totalPendingRecords+')':''}</button>
-        <button class="admin-tab ${adminTab==='categories'?'active':''}" onclick="adminTab='categories';renderAdminPanel()">🏷 Categories</button>
-      </div>
+	      <div class="admin-tab-row">
+	        <button class="admin-tab ${adminTab==='dashboard'?'active':''}" onclick="adminTab='dashboard';renderAdminPanel()">📊 Dashboard</button>
+	        <button class="admin-tab ${adminTab==='users'?'active':''}" onclick="adminTab='users';renderAdminPanel()">👥 Users${pendingReqs.length>0?' ('+pendingReqs.length+')':''}</button>
+	        <button class="admin-tab ${adminTab==='records'?'active':''}" onclick="adminTab='records';renderAdminPanel()">📋 Pending For Approval${totalPendingRecords>0?' ('+totalPendingRecords+')':''}</button>
+	        <button class="admin-tab ${adminTab==='categories'?'active':''}" onclick="adminTab='categories';renderAdminPanel()">🏷 Categories</button>
+	      </div>
       ${tabContent}`;
   } catch(err) { const panel=document.getElementById('adminPanel'); if(panel) panel.innerHTML='<div class="empty">Error loading admin panel.</div>'; console.error(err); }
 }
@@ -2124,12 +2152,12 @@ function donForm() {
       <input class="finput" id="df-name" placeholder="Enter full name" autocomplete="off" oninput="donorSuggest(this.value)">
       <div id="df-suggest" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);z-index:200;max-height:180px;overflow-y:auto"></div>
     </div>
-    <div style="display:grid;grid-template-columns:80px 1fr;gap:8px">
-      <div class="fgroup"><label class="flabel">Relation</label><div class="sel-wrap"><select class="fselect" id="df-rel"><option value="">—</option><option>S/O</option><option>H/O</option><option>W/O</option><option>D/O</option></select></div></div>
-      <div class="fgroup"><label class="flabel">Father / Husband Name</label><input class="finput" id="df-relname" placeholder="Enter name"></div>
-    </div>
-    <div class="fgroup"><label class="flabel">Address</label><textarea class="ftextarea" id="df-addr" rows="2" placeholder="House / Street / Area"></textarea></div>
-    <div class="fgroup"><label class="flabel">City</label><input class="finput" id="df-city" placeholder="City or Town"></div>
+	    <div style="display:grid;grid-template-columns:80px 1fr;gap:8px">
+	      <div class="fgroup"><label class="flabel">Relation</label><div class="sel-wrap"><select class="fselect" id="df-rel"><option value="">—</option><option>S/O</option><option>H/O</option><option>W/O</option><option>D/O</option></select></div></div>
+	      <div class="fgroup" style="position:relative"><label class="flabel">Father / Husband Name</label><input class="finput" id="df-relname" placeholder="Enter name" autocomplete="off" oninput="donFieldSuggest(this.value,'df','relname')"><div id="df-relname-suggest" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);z-index:200;max-height:180px;overflow-y:auto"></div></div>
+	    </div>
+	    <div class="fgroup" style="position:relative"><label class="flabel">Address</label><textarea class="ftextarea" id="df-addr" rows="2" placeholder="House / Street / Area" oninput="donFieldSuggest(this.value,'df','address')"></textarea><div id="df-addr-suggest" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);z-index:200;max-height:180px;overflow-y:auto"></div></div>
+	    <div class="fgroup" style="position:relative"><label class="flabel">City</label><input class="finput" id="df-city" placeholder="City or Town" autocomplete="off" oninput="donFieldSuggest(this.value,'df','city')"><div id="df-city-suggest" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);z-index:200;max-height:180px;overflow-y:auto"></div></div>
     <div class="fgroup"><label class="flabel">State</label><div class="sel-wrap"><select class="fselect" id="df-state">${indiaStates('')}</select></div></div>
     <div class="fgroup"><label class="flabel">Mobile Number</label><input class="finput" id="df-mobile" type="tel" placeholder="10-digit mobile" maxlength="10"></div>
 	    <div class="fgroup"><label class="flabel">Donation Type</label>
@@ -2141,7 +2169,7 @@ function donForm() {
 	      </div>
 	    </div>
 	    <div id="df-other-fields" style="display:${donType==='other'?'block':'none'}">
-	      <div class="fgroup"><label class="flabel">Add Notes</label><textarea class="ftextarea" id="df-notes" rows="2" placeholder="Describe the other donation (items, service, etc.)"></textarea></div>
+	      <div class="fgroup" style="position:relative"><label class="flabel">Add Notes</label><textarea class="ftextarea" id="df-notes" rows="2" placeholder="Describe the other donation (items, service, etc.)" oninput="donFieldSuggest(this.value,'df','notes')"></textarea><div id="df-notes-suggest" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);z-index:200;max-height:180px;overflow-y:auto"></div></div>
 	    </div>
 	    <div id="df-money-fields" style="display:${donType==='money'?'block':'none'}">
 	      <div class="amt-card">
@@ -2195,12 +2223,12 @@ function editDonForm() {
       <div class="fgroup"><label class="flabel">Date</label><input class="finput" type="date" id="ef2-date" value="${d.date}"></div>
     </div>
     <div class="fgroup"><label class="flabel">Donor Full Name</label><input class="finput" id="ef2-name" value="${d.name||''}"></div>
-    <div style="display:grid;grid-template-columns:80px 1fr;gap:8px">
-      <div class="fgroup"><label class="flabel">Relation</label><div class="sel-wrap"><select class="fselect" id="ef2-rel"><option value="">—</option><option ${d.relation==='S/O'?'selected':''}>S/O</option><option ${d.relation==='H/O'?'selected':''}>H/O</option><option ${d.relation==='W/O'?'selected':''}>W/O</option><option ${d.relation==='D/O'?'selected':''}>D/O</option></select></div></div>
-      <div class="fgroup"><label class="flabel">Father / Husband Name</label><input class="finput" id="ef2-relname" value="${d.relname||''}" placeholder="Enter name"></div>
-    </div>
-    <div class="fgroup"><label class="flabel">Address</label><textarea class="ftextarea" id="ef2-addr" rows="2">${d.address||''}</textarea></div>
-    <div class="fgroup"><label class="flabel">City</label><input class="finput" id="ef2-city" value="${d.city||''}" placeholder="City or Town"></div>
+	    <div style="display:grid;grid-template-columns:80px 1fr;gap:8px">
+	      <div class="fgroup"><label class="flabel">Relation</label><div class="sel-wrap"><select class="fselect" id="ef2-rel"><option value="">—</option><option ${d.relation==='S/O'?'selected':''}>S/O</option><option ${d.relation==='H/O'?'selected':''}>H/O</option><option ${d.relation==='W/O'?'selected':''}>W/O</option><option ${d.relation==='D/O'?'selected':''}>D/O</option></select></div></div>
+	      <div class="fgroup" style="position:relative"><label class="flabel">Father / Husband Name</label><input class="finput" id="ef2-relname" value="${d.relname||''}" placeholder="Enter name" autocomplete="off" oninput="donFieldSuggest(this.value,'ef2','relname')"><div id="ef2-relname-suggest" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);z-index:200;max-height:180px;overflow-y:auto"></div></div>
+	    </div>
+	    <div class="fgroup" style="position:relative"><label class="flabel">Address</label><textarea class="ftextarea" id="ef2-addr" rows="2" oninput="donFieldSuggest(this.value,'ef2','address')">${d.address||''}</textarea><div id="ef2-addr-suggest" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);z-index:200;max-height:180px;overflow-y:auto"></div></div>
+	    <div class="fgroup" style="position:relative"><label class="flabel">City</label><input class="finput" id="ef2-city" value="${d.city||''}" placeholder="City or Town" autocomplete="off" oninput="donFieldSuggest(this.value,'ef2','city')"><div id="ef2-city-suggest" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);z-index:200;max-height:180px;overflow-y:auto"></div></div>
     <div class="fgroup"><label class="flabel">State</label><div class="sel-wrap"><select class="fselect" id="ef2-state">${indiaStates(d.state||'')}</select></div></div>
     <div class="fgroup"><label class="flabel">Mobile Number</label><input class="finput" id="ef2-mobile" type="tel" value="${d.mobile||''}" maxlength="10"></div>
 	    <div class="fgroup"><label class="flabel">Donation Type</label>
@@ -2212,7 +2240,7 @@ function editDonForm() {
 	      </div>
 	    </div>
 	    <div id="ef2-other-fields" style="display:${donType==='other'?'block':'none'}">
-	      <div class="fgroup"><label class="flabel">Add Notes</label><textarea class="ftextarea" id="ef2-notes" rows="2" placeholder="Describe the other donation (items, service, etc.)">${d.notes||''}</textarea></div>
+	      <div class="fgroup" style="position:relative"><label class="flabel">Add Notes</label><textarea class="ftextarea" id="ef2-notes" rows="2" placeholder="Describe the other donation (items, service, etc.)" oninput="donFieldSuggest(this.value,'ef2','notes')">${d.notes||''}</textarea><div id="ef2-notes-suggest" style="display:none;position:absolute;left:0;right:0;top:100%;background:#fff;border:1.5px solid var(--border);border-radius:10px;box-shadow:var(--shadow-md);z-index:200;max-height:180px;overflow-y:auto"></div></div>
 	    </div>
 	    <div id="ef2-money-fields" style="display:${donType==='money'?'block':'none'}">
 	      <div class="amt-card">
@@ -2980,6 +3008,63 @@ function donorSuggest(q) {
     </div>`;
   }).join('');
 }
+
+function donFieldSuggest(q, prefix, field) {
+  const inputId = prefix + '-' + (field === 'relname' ? 'relname'
+                  : field === 'address' ? 'addr'
+                  : field === 'city' ? 'city'
+                  : field === 'notes' ? 'notes'
+                  : field);
+  const boxId = prefix + '-' + (field === 'relname' ? 'relname-suggest'
+                : field === 'address' ? 'addr-suggest'
+                : field === 'city' ? 'city-suggest'
+                : field === 'notes' ? 'notes-suggest'
+                : field + '-suggest');
+  const box = document.getElementById(boxId);
+  if (!box) return;
+  q = (q||'').trim().toLowerCase();
+  if (q.length < 2) { box.style.display='none'; return; }
+
+  const getVal = (d) => {
+    if (field === 'relname') return d.relname || '';
+    if (field === 'address') return d.address || '';
+    if (field === 'city') return d.city || '';
+    if (field === 'notes') return d.notes || '';
+    return '';
+  };
+  const label = (d) => {
+    if (field === 'address') return (getVal(d)||'').split('\n')[0].slice(0, 80);
+    return (getVal(d)||'').slice(0, 80);
+  };
+
+  const seen = new Map();
+  donations.slice().reverse().forEach(d => {
+    const v = (getVal(d)||'').trim();
+    if (!v) return;
+    const key = v.toLowerCase();
+    if (!seen.has(key)) seen.set(key, d);
+  });
+  const matches = [...seen.values()].filter(d => (getVal(d)||'').toLowerCase().includes(q)).slice(0, 8);
+  if (!matches.length) { box.style.display='none'; return; }
+
+  box.style.display = 'block';
+  box.innerHTML = matches.map(d => {
+    const main = label(d).replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    const sub = [d.name, d.city].filter(Boolean).join(' · ');
+    const value = (getVal(d)||'').replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+    return `<div onclick="donFieldPick('${inputId}','${boxId}','${value}')" style="padding:10px 14px;cursor:pointer;border-bottom:1px solid #F5EAD8;display:flex;flex-direction:column;gap:2px" onmouseover="this.style.background='#FFF4E0'" onmouseout="this.style.background='#fff'">
+      <span style="font-size:13px;font-weight:700;color:var(--text)">${main}</span>
+      ${sub?`<span style="font-size:11px;color:var(--text3)">${sub}</span>`:''}
+    </div>`;
+  }).join('');
+}
+
+function donFieldPick(inputId, boxId, val) {
+  const el = document.getElementById(inputId);
+  if (el) el.value = val || '';
+  const box = document.getElementById(boxId);
+  if (box) box.style.display = 'none';
+}
 function donorFill(id) {
   const d = donations.find(x => x.id === id);
   if (!d) return;
@@ -3006,8 +3091,24 @@ function donorFill(id) {
 }
 // close suggest box when clicking outside
 document.addEventListener('click', function(e) {
-  const box = document.getElementById('df-suggest');
-  if (box && !box.contains(e.target) && e.target.id !== 'df-name') box.style.display='none';
+  const boxes = [
+    ['df-name','df-suggest'],
+    ['df-relname','df-relname-suggest'],
+    ['df-addr','df-addr-suggest'],
+    ['df-city','df-city-suggest'],
+    ['df-notes','df-notes-suggest'],
+    ['ef2-relname','ef2-relname-suggest'],
+    ['ef2-addr','ef2-addr-suggest'],
+    ['ef2-city','ef2-city-suggest'],
+    ['ef2-notes','ef2-notes-suggest']
+  ];
+  boxes.forEach(([inputId, boxId]) => {
+    const box = document.getElementById(boxId);
+    if (!box) return;
+    if (box.contains(e.target)) return;
+    if (e.target && e.target.id === inputId) return;
+    box.style.display = 'none';
+  });
 });
 
 /* ─── SAVE DONATION ─── */
@@ -3090,7 +3191,10 @@ async function updateDonation() {
     don.receiptImage = null;
   }
   don.updatedAt=new Date().toISOString();
-  if (!canAdmin() && don.approvalStatus === 'sendback') don.approvalStatus = 'pending_approval';
+  // If a non-admin edits a previously sent-back or rejected record, it should go for approval again.
+  if (!canAdmin() && (don.approvalStatus === 'sendback' || don.approvalStatus === 'rejected')) {
+    don.approvalStatus = 'pending_approval';
+  }
   try {
     await dbUpdate('donations', don);
     editingDonId=null; receiptDataUrl=null; render();
@@ -3149,7 +3253,10 @@ async function updateExpense() {
     exp.receiptImage = receiptDataUrl;
   }
   exp.updatedAt=new Date().toISOString();
-  if (!canAdmin() && exp.approvalStatus === 'sendback') exp.approvalStatus = 'pending_approval';
+  // If a non-admin edits a previously sent-back or rejected record, it should go for approval again.
+  if (!canAdmin() && (exp.approvalStatus === 'sendback' || exp.approvalStatus === 'rejected')) {
+    exp.approvalStatus = 'pending_approval';
+  }
   try {
     await dbUpdate('expenses', exp);
     editingExpId=null; receiptDataUrl=null; render();
