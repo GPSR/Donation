@@ -3248,6 +3248,11 @@ function pvRow(label, value) {
   </div>`;
 }
 
+function _normText(v) { return (v==null ? '' : String(v)).trim(); }
+function _normNum(v) { const n = parseFloat(v); return isNaN(n) ? 0 : n; }
+function _sameText(a,b) { return _normText(a) === _normText(b); }
+function _sameNum(a,b) { return _normNum(a) === _normNum(b); }
+
 /* ─── FORM ACTIONS ─── */
 function openDonForm()  {
   if (!canWrite()) {
@@ -3532,6 +3537,29 @@ function donorFill(id) {
   setTA('df-addr-te', d.addressTe);
   set('df-city',     d.city);
   set('df-city-te',  d.cityTe);
+  // Donation-specific fill (type/amount/payment/notes) from the most recent record
+  const dtype = (d.donationType === 'other') ? 'other' : 'money';
+  const typeSel = document.getElementById('df-type');
+  if (typeSel) typeSel.value = dtype;
+  // Toggle relevant fields + clear money-only state if switching to other.
+  setDonType(dtype, 'df', typeSel);
+  if (dtype === 'money') {
+    const amt = (parseFloat(d.amount)||0);
+    const amtEl = document.getElementById('df-amt');
+    if (amtEl) amtEl.value = amt || '';
+    const words = document.getElementById('df-words');
+    if (words) words.textContent = amt ? (d.amountWords || amtWords(amt)) : '—';
+    // New record: always reset payment status (don't inherit from past donation).
+    setRecv('no');
+    // Never auto-fill receipt image from old record; keep it empty.
+    receiptDataUrl = null;
+    ['df-receipt-preview','df-receipt-actions'].forEach(x=>{ const el=document.getElementById(x); if(el) el.style.display='none'; });
+    const ph=document.getElementById('df-upload-placeholder'); if(ph) ph.style.display='flex';
+  } else {
+    set('df-notes', d.notes || '');
+    setRecv('no');
+    receiptDataUrl = null;
+  }
   // relation select
   const rel = document.getElementById('df-rel');
   if (rel && d.relation) rel.value = d.relation;
@@ -3635,6 +3663,38 @@ async function updateDonation() {
   if(dtype==='money' && !amt){showToast('⚠ Please enter amount');return;}
   const don=donations.find(d=>d.id===editingDonId);
   if(!don) return;
+
+  // Compute next values without mutating, so we can detect "no changes".
+  const nextType = dtype==='other' ? 'other' : 'money';
+  const nextReceiptImage =
+    (nextType!=='money') ? null
+    : (receiptDataUrl === '__REMOVED__') ? null
+    : (receiptDataUrl ? receiptDataUrl : (don.receiptImage || null));
+  const nextReceived = (nextType==='money') ? (donReceived||don.received||'no') : 'no';
+  const nextAmount = (nextType==='money') ? amt : null;
+  const nextAmountWords = (nextType==='money') ? amtWords(amt) : '';
+  const nextNotes = (nextType==='other') ? notes : '';
+
+  const noChanges =
+    _sameText(don.date, document.getElementById('ef2-date')?.value||don.date) &&
+    _sameText(don.name, name) &&
+    _sameText(don.nameTe, (document.getElementById('ef2-name-te')?.value||'').trim()) &&
+    _sameText(don.relation, document.getElementById('ef2-rel')?.value||'') &&
+    _sameText(don.relname, document.getElementById('ef2-relname')?.value||'') &&
+    _sameText(don.address, document.getElementById('ef2-addr')?.value||'') &&
+    _sameText(don.addressTe, (document.getElementById('ef2-addr-te')?.value||'').trim()) &&
+    _sameText(don.city, document.getElementById('ef2-city')?.value||'') &&
+    _sameText(don.cityTe, (document.getElementById('ef2-city-te')?.value||'').trim()) &&
+    _sameText(don.state, document.getElementById('ef2-state')?.value||'') &&
+    _sameText(don.mobile, document.getElementById('ef2-mobile')?.value||'') &&
+    _sameText(don.donationType||'money', nextType) &&
+    _sameText(don.notes||'', nextNotes) &&
+    (_sameNum(don.amount||0, nextAmount||0) && (_normText(don.amountWords||'') === _normText(nextAmountWords))) &&
+    _sameText(don.received||'no', nextReceived) &&
+    _sameText(don.receiptImage||'', nextReceiptImage||'');
+
+  if (noChanges) { showToast('ℹ️ No changes to update'); return; }
+
   don.date=document.getElementById('ef2-date')?.value||don.date;
   don.name=name;
   don.nameTe=(document.getElementById('ef2-name-te')?.value||'').trim();
@@ -3646,11 +3706,11 @@ async function updateDonation() {
   don.cityTe=(document.getElementById('ef2-city-te')?.value||'').trim();
   don.state=document.getElementById('ef2-state')?.value||'';
   don.mobile=document.getElementById('ef2-mobile')?.value||'';
-  don.donationType = dtype==='other'?'other':'money';
+  don.donationType = nextType;
   if (don.donationType === 'money') {
     don.notes = '';
-    don.amount=amt; don.amountWords=amtWords(amt);
-    don.received=donReceived||don.received||'no';
+    don.amount=nextAmount; don.amountWords=nextAmountWords;
+    don.received=nextReceived;
     // receiptDataUrl: null=no change, '__REMOVED__'=user cleared it, else=new image
     if (receiptDataUrl === '__REMOVED__') {
       don.receiptImage = null;
@@ -3659,7 +3719,7 @@ async function updateDonation() {
     }
     // else: keep don.receiptImage unchanged
   } else {
-    don.notes = notes;
+    don.notes = nextNotes;
     don.amount = null;
     don.amountWords = '';
     don.received = 'no';
@@ -3755,11 +3815,31 @@ async function updateExpense() {
   const paid=parseFloat(document.getElementById('eef-paid')?.value)||0;
   const exp=expenses.find(x=>x.id===editingExpId);
   if(!exp) return;
+
+  const nextReceiptImage =
+    (receiptDataUrl === '__REMOVED__') ? null
+    : (receiptDataUrl ? receiptDataUrl : (exp.receiptImage || null));
+  const nextPending = Math.max(0, amt - paid);
+  const nextNotes = document.getElementById('eef-notes')?.value||'';
+
+  const noChanges =
+    _sameText(exp.date, document.getElementById('eef-date')?.value||exp.date) &&
+    _sameText(exp.title, cat) &&
+    _sameText(exp.category, cat) &&
+    _sameText(exp.vendor, document.getElementById('eef-vendor')?.value||'') &&
+    _sameText(exp.notes, nextNotes) &&
+    _sameNum(exp.amount||0, amt) &&
+    _sameNum(exp.paidAmount||0, paid) &&
+    _sameNum(exp.pendingAmount||0, nextPending) &&
+    _sameText(exp.amountWords||'', amtWords(amt)) &&
+    _sameText(exp.receiptImage||'', nextReceiptImage||'');
+  if (noChanges) { showToast('ℹ️ No changes to update'); return; }
+
   exp.date=document.getElementById('eef-date')?.value||exp.date;
   exp.title=cat; exp.category=cat;
   exp.vendor=document.getElementById('eef-vendor')?.value||'';
-  exp.notes=document.getElementById('eef-notes')?.value||'';
-  exp.amount=amt; exp.paidAmount=paid; exp.pendingAmount=Math.max(0,amt-paid);
+  exp.notes=nextNotes;
+  exp.amount=amt; exp.paidAmount=paid; exp.pendingAmount=nextPending;
   exp.amountWords=amtWords(amt);
   if (receiptDataUrl === '__REMOVED__') {
     exp.receiptImage = null;
