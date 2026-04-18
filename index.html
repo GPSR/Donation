@@ -3264,7 +3264,7 @@ function openPreviewModal(title, rowsHtml, onConfirm) {
       // If we're offline and a save "times out", it is likely queued; keep UX optimistic.
       if (!navigator.onLine && String(e.message||'').toLowerCase().includes('timed out')) {
         overlay.remove();
-        showToast('📴 Saved offline (sync pending)');
+        showToast('📴 No internet. Saved locally and will sync automatically when you’re back online.');
         return;
       }
       // Offline: even if some step fails, try to navigate to the last created/updated record so the user can see it.
@@ -3288,7 +3288,7 @@ function openPreviewModal(title, rowsHtml, onConfirm) {
             } catch(_) {}
           }, 60);
         } catch(_) {}
-        showToast('📴 Saved offline (sync pending)');
+        showToast('📴 No internet. Saved locally and will sync automatically when you’re back online.');
         return;
       }
       btn.disabled=false;
