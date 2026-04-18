@@ -473,7 +473,21 @@ body{
 .record-approve-card.pending-card{border-color:#FFD54F}
 .admin-tab-row{display:flex;gap:6px;margin-bottom:14px;overflow-x:auto;scrollbar-width:none}
 .admin-tab-row::-webkit-scrollbar{display:none}
-.admin-tab{flex:1;padding:9px 6px;border-radius:10px;border:1.5px solid var(--border);background:#fff;font-size:11px;font-weight:700;cursor:pointer;color:var(--text2);white-space:nowrap;min-width:80px}
+.admin-tab{
+  flex:1;
+  padding:9px 6px;
+  border-radius:10px;
+  border:1.5px solid var(--border);
+  background:#fff;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  color:var(--text2);
+  white-space:normal; /* allow long labels like "Pending For Approval" to wrap */
+  line-height:1.15;
+  min-width:96px;
+  text-align:center;
+}
 .admin-tab.active{background:linear-gradient(135deg,var(--saffron-dark),var(--saffron));color:#fff;border-color:var(--saffron)}
 .dash-stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
 .dash-stat-box{background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:12px;text-align:center;cursor:pointer;transition:transform .15s,box-shadow .15s,border-color .15s}
