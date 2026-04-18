@@ -894,11 +894,21 @@ async function saveMyProfile() {
 async function logout() {
   if (!confirm('Are you sure you want to logout?')) return;
   pruneEmptyYears();
-  await clearActiveSession();
+  // When offline, avoid waiting on any network-backed operations during logout.
+  if (!navigator.onLine) {
+    clearActiveSession(); // best-effort (don't await)
+  } else {
+    await clearActiveSession();
+  }
   if (_userUnsub) { _userUnsub(); _userUnsub=null; }
   if (_donUnsub)  { _donUnsub();  _donUnsub=null; }
   if (_expUnsub)  { _expUnsub();  _expUnsub=null; }
-  if (fbAuth) { try { await fbAuth.signOut(); } catch(e) {} }
+  if (fbAuth) {
+    try {
+      if (!navigator.onLine) fbAuth.signOut(); // don't await; can hang on some networks
+      else await fbAuth.signOut();
+    } catch(e) {}
+  }
   currentUser=null; isLoggedIn=false; donations=[]; expenses=[];
   try { localStorage.removeItem('satram_session'); } catch(e) {}
   currentPage='login'; render();
@@ -1292,6 +1302,11 @@ function render() {
   };
   if (currentPage === 'home') {
     hdr.className = 'hdr';
+    const offlinePillHome = (!navigator.onLine)
+      ? `<div style="display:flex;justify-content:center;margin-top:8px">
+           <span style="font-size:10px;font-weight:900;background:rgba(0,0,0,.18);border:1.5px solid rgba(255,255,255,.18);color:#FFE9A0;border-radius:999px;padding:4px 10px;letter-spacing:.8px;white-space:nowrap">OFFLINE</span>
+         </div>`
+      : '';
     hdr.innerHTML = `
       <div class="hdr-deco">
         <div class="hdr-line"></div>
@@ -1301,7 +1316,8 @@ function render() {
       <div class="hdr-blessing">శ్రీ శ్రీ శ్రీ మల్లెం కొండేశ్వర స్వామి వారి దివ్య ఆశీస్సులతో</div>
       <div class="hdr-title">గట్టుపల్లె – గాజులపల్లె</div>
       <div class="hdr-sub">అన్నదాన సత్రం</div>
-      <div class="hdr-tag">మల్లెంకొండ క్రింద</div>`;
+      <div class="hdr-tag">మల్లెంకొండ క్రింద</div>
+      ${offlinePillHome}`;
 	  } else {
 	    const m = PAGE_META[currentPage] || { icon:'📄', title:'Page' };
 	    hdr.className = 'hdr';
@@ -1327,6 +1343,16 @@ function render() {
   requestAnimationFrame(() => {
     if (hdr.offsetHeight) document.documentElement.style.setProperty('--hdr-h', hdr.offsetHeight + 'px');
   });
+
+  // Lightweight offline banner inside the app content area.
+  if (!navigator.onLine) {
+    const offlineBar = `<div id="offlineBar" style="background:#E3F2FD;border:1px solid #90CAF9;border-radius:12px;padding:10px 12px;margin:10px 0 12px;font-size:11px;color:#1565C0;line-height:1.5">
+      📴 Offline mode: you can add records now. They will sync automatically when internet returns.
+    </div>`;
+    if (sc && sc.innerHTML && !document.getElementById('offlineBar')) {
+      sc.innerHTML = offlineBar + sc.innerHTML;
+    }
+  }
 
   // show/hide admin button & badge
   const adminBtn = document.getElementById('nb-admin');
@@ -1759,6 +1785,7 @@ function editCategory(idx) {
 }
 
 async function adminApproveRecord(type, id) {
+  if (!confirm('Approve this record?')) return;
   try {
     const col = type==='don'?'donations':'expenses';
     const arr = type==='don'?donations:expenses;
@@ -2066,7 +2093,11 @@ function renderDonation() {
     const isViewing = viewingDonId===d.id;
     const isRecv = d.received==='yes';
     const appStatus = d.approvalStatus || 'approved';
-    const isOwn = (canWrite() && currentUser && d.submittedBy && String(d.submittedBy) === String(currentUser.id));
+    // Legacy support: old records may not have submittedBy; fall back to userId.
+    const isOwn = (canWrite() && currentUser && (
+      (d.submittedBy && String(d.submittedBy) === String(currentUser.id)) ||
+      (!d.submittedBy && d.userId && String(d.userId) === String(currentUser.id))
+    ));
     // Admin can always edit. Read & Write can edit only their own records.
     const canEditThis = canAdmin() || (canWrite() && isOwn);
     const sendbackRemarks = appStatus === 'sendback' && d.adminRemarks ? `<div class="rbac-warn">↩ <b>Admin Remarks:</b> ${d.adminRemarks}</div>` : '';
@@ -2173,10 +2204,10 @@ function donSearchUpdate(val) {
       || String(d.amount||'').includes(q)
       || (d.date||'').includes(q);
   });
-  const list = yd.map(d => {
-    const isRecv = d.received==='yes';
-    const appStatus = d.approvalStatus || 'approved';
-    return `<div class="list-item don-item" onclick="toggleDonView('${d.id}');donSearch=document.getElementById('don-search-input')?.value||donSearch">
+	  const list = yd.map(d => {
+	    const isRecv = d.received==='yes';
+	    const appStatus = d.approvalStatus || 'approved';
+	    return `<div class="list-item don-item" onclick="toggleDonView('${d.id}');donSearch=document.getElementById('don-search-input')?.value||donSearch">
       <div class="li-top">
         <div>
           <div class="li-serial">#${String(d.serial).padStart(3,'0')} · ${d.date}</div>
@@ -2184,14 +2215,14 @@ function donSearchUpdate(val) {
           ${d.relation&&d.relname?`<div class="li-meta">${d.relation} ${maskedField(d.relname,'text',!isRecv)}</div>`:''}
           <div class="li-meta">${d.city?'🏙 '+maskedField(d.city,'text',!isRecv):''}</div>
         </div>
-        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-          <div class="li-amount">${fmt(d.amount)}</div>
-          <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Received':'Pending'}</span>
-          ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
-        </div>
-      </div>
-    </div>`;
-  }).join('');
+	        <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+	          <div class="li-amount">${fmt(d.amount)}</div>
+	          <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Payment Received':'Payment Pending'}</span>
+	          ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
+	        </div>
+	      </div>
+	    </div>`;
+	  }).join('');
   const container = document.getElementById('don-list-container');
   if (container) {
     container.innerHTML = (q ? `<div class="don-search-results">${yd.length} result${yd.length!==1?'s':''} for "${val}"</div>` : '')
@@ -2231,7 +2262,11 @@ function renderExpense() {
     const sc = isPaid?'recv':isPart?'part':'pend';
 	    const pend = Math.max(0,(parseFloat(e.amount)||0)-(parseFloat(e.paidAmount)||0));
 	    const eAppStatus = e.approvalStatus || 'approved';
-	    const eIsOwn = (canWrite() && currentUser && e.submittedBy && String(e.submittedBy) === String(currentUser.id));
+	    // Legacy support: old records may not have submittedBy; fall back to userId.
+	    const eIsOwn = (canWrite() && currentUser && (
+	      (e.submittedBy && String(e.submittedBy) === String(currentUser.id)) ||
+	      (!e.submittedBy && e.userId && String(e.userId) === String(currentUser.id))
+	    ));
 	    const canEditExp = canAdmin() || (canWrite() && eIsOwn);
 	    const eSendbackRemarks = eAppStatus === 'sendback' && e.adminRemarks ? `<div class="rbac-warn">↩ <b>Admin Remarks:</b> ${e.adminRemarks}</div>` : '';
 	    const detail = isViewing ? `
@@ -3171,6 +3206,48 @@ function dismissSwipeHint() {
   render();
 }
 
+/* ─── PREVIEW CONFIRM MODAL ─── */
+function openPreviewModal(title, rowsHtml, onConfirm) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:950;display:flex;align-items:flex-end;justify-content:center;padding:18px';
+  const cardStyle = 'background:#fff;border-radius:22px;width:100%;max-width:520px;box-shadow:0 -8px 40px rgba(0,0,0,.28);overflow:hidden';
+  overlay.innerHTML = `<div style="${cardStyle}" onclick="event.stopPropagation()">
+    <div style="padding:16px 18px;border-bottom:1px solid #F5EDE0;display:flex;align-items:center;justify-content:space-between;gap:10px">
+      <div style="font-size:15px;font-weight:900;color:#7A2500">${title}</div>
+      <button type="button" style="border:none;background:#F5F0EA;border-radius:10px;padding:8px 10px;font-weight:900;cursor:pointer;color:#666" onclick="this.closest('div[style*=fixed]').remove()">✕</button>
+    </div>
+    <div style="padding:14px 18px;max-height:60vh;overflow:auto">
+      <div style="background:#FFF8E1;border:1px solid #FFD54F;border-radius:12px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#7A5C00;line-height:1.6">
+        Please review the details and confirm.
+      </div>
+      <div style="border:1.5px solid var(--border);border-radius:14px;overflow:hidden">
+        ${rowsHtml}
+      </div>
+    </div>
+    <div style="padding:14px 18px;border-top:1px solid #F5EDE0;display:flex;gap:10px">
+      <button type="button" style="flex:1;padding:12px;border-radius:12px;border:1.5px solid #ddd;background:#f7f7f7;font-weight:900;cursor:pointer" onclick="this.closest('div[style*=fixed]').remove()">Cancel</button>
+      <button type="button" id="pvConfirmBtn" style="flex:2;padding:12px;border-radius:12px;border:none;background:linear-gradient(135deg,#1B5E20,#2E7D32);color:#fff;font-weight:900;cursor:pointer">✅ Confirm</button>
+    </div>
+  </div>`;
+  overlay.addEventListener('click', () => overlay.remove());
+  document.body.appendChild(overlay);
+  const btn = overlay.querySelector('#pvConfirmBtn');
+  btn.onclick = async () => {
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    try { await onConfirm(); overlay.remove(); }
+    catch(e) { console.error(e); btn.disabled=false; btn.textContent='✅ Confirm'; showToast('✗ Failed to save'); }
+  };
+}
+
+function pvRow(label, value) {
+  const v = (value==null || value==='') ? '—' : String(value);
+  return `<div style="display:flex;gap:12px;justify-content:space-between;padding:10px 12px;border-bottom:1px solid #F5EDE0">
+    <div style="font-size:11px;font-weight:900;color:#7A4A1A;letter-spacing:.7px;text-transform:uppercase">${label}</div>
+    <div style="font-size:12px;font-weight:700;color:#1A1A1A;text-align:right;max-width:70%;word-break:break-word">${v.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+  </div>`;
+}
+
 /* ─── FORM ACTIONS ─── */
 function openDonForm()  {
   if (!canWrite()) {
@@ -3498,13 +3575,32 @@ async function saveDonation() {
     approvalStatus: canAdmin() ? 'approved' : 'pending_approval',
     createdAt:new Date().toISOString()
   };
-  try {
+  const rows = [
+    pvRow('Type', d.donationType==='other'?'Other':'Money'),
+    pvRow('Donor', d.name),
+    pvRow('Date', d.date),
+    pvRow('City', d.city),
+    pvRow('Mobile', d.mobile),
+    (d.donationType==='money'?pvRow('Amount', fmt(d.amount)):pvRow('Notes', d.notes)),
+    (d.donationType==='money'?pvRow('Payment', (d.received==='yes'?'Received':'Pending')):''),
+    pvRow('Approval', (d.approvalStatus==='approved'?'Approved':'Pending Approval'))
+  ].filter(Boolean).join('');
+  openPreviewModal('Confirm New Donation', rows, async () => {
     const id=await dbAdd('donations', d); d.id=id;
     donSerial++;
-    await saveToDB(); receiptDataUrl=null; showDonForm=false; render();
+    await saveToDB(); receiptDataUrl=null; showDonForm=false;
+    gotoPage('donation');
+    viewingDonId = String(id);
+    render();
+    setTimeout(() => {
+      viewingDonId = String(id);
+      render();
+      const el = document.querySelector(`[onclick*="toggleDonView('${id}')"]`);
+      if (el && el.scrollIntoView) el.scrollIntoView({ block:'center', behavior:'smooth' });
+    }, 60);
     const msg = canAdmin() ? '✓ Donation #'+String(d.serial).padStart(3,'0')+' saved!' : '✓ Donation submitted for admin approval!';
     showToast(msg);
-  } catch(err){showToast('✗ Error saving donation');console.error(err);}
+  });
 }
 
 /* ─── UPDATE DONATION ─── */
@@ -3553,12 +3649,32 @@ async function updateDonation() {
   if (!canAdmin() && (don.approvalStatus || 'approved') !== 'pending_approval') {
     don.approvalStatus = 'pending_approval';
   }
-  try {
+  const rows = [
+    pvRow('Type', don.donationType==='other'?'Other':'Money'),
+    pvRow('Donor', don.name),
+    pvRow('Date', don.date),
+    pvRow('City', don.city),
+    pvRow('Mobile', don.mobile),
+    (don.donationType==='money'?pvRow('Amount', fmt(don.amount)):pvRow('Notes', don.notes)),
+    (don.donationType==='money'?pvRow('Payment', (don.received==='yes'?'Received':'Pending')):''),
+    pvRow('Approval', (don.approvalStatus==='approved'?'Approved':'Pending Approval'))
+  ].filter(Boolean).join('');
+  openPreviewModal('Confirm Donation Update', rows, async () => {
     await dbUpdate('donations', don);
-    editingDonId=null; receiptDataUrl=null; render();
+    const id = don.id;
+    editingDonId=null; receiptDataUrl=null;
+    gotoPage('donation');
+    viewingDonId = String(id);
+    render();
+    setTimeout(() => {
+      viewingDonId = String(id);
+      render();
+      const el = document.querySelector(`[onclick*="toggleDonView('${id}')"]`);
+      if (el && el.scrollIntoView) el.scrollIntoView({ block:'center', behavior:'smooth' });
+    }, 60);
     const msg = !canAdmin() && don.approvalStatus==='pending_approval' ? '✓ Donation resubmitted for approval!' : '✓ Donation #'+String(don.serial).padStart(3,'0')+' updated!';
     showToast(msg);
-  } catch(err){showToast('✗ Error updating donation');console.error(err);}
+  });
 }
 
 /* ─── SAVE EXPENSE ─── */
@@ -3581,13 +3697,32 @@ async function saveExpense() {
     approvalStatus: canAdmin() ? 'approved' : 'pending_approval',
     createdAt:new Date().toISOString()
   };
-  try {
+  const rows = [
+    pvRow('Category', e.category),
+    pvRow('Date', e.date),
+    pvRow('Vendor', e.vendor),
+    pvRow('Total', fmt(e.amount)),
+    pvRow('Paid', fmt(e.paidAmount||0)),
+    pvRow('Pending', fmt(e.pendingAmount||0)),
+    pvRow('Notes', e.notes),
+    pvRow('Approval', (e.approvalStatus==='approved'?'Approved':'Pending Approval'))
+  ].filter(Boolean).join('');
+  openPreviewModal('Confirm New Expense', rows, async () => {
     const id=await dbAdd('expenses', e); e.id=id;
     expSerial++;
-    await saveToDB(); receiptDataUrl=null; showExpForm=false; render();
+    await saveToDB(); receiptDataUrl=null; showExpForm=false;
+    gotoPage('expense');
+    viewingExpId = String(id);
+    render();
+    setTimeout(() => {
+      viewingExpId = String(id);
+      render();
+      const el = document.querySelector(`[onclick*="toggleExpView('${id}')"]`);
+      if (el && el.scrollIntoView) el.scrollIntoView({ block:'center', behavior:'smooth' });
+    }, 60);
     const msg = canAdmin() ? '✓ Expense #'+String(e.serial).padStart(3,'0')+' saved!' : '✓ Expense submitted for admin approval!';
     showToast(msg);
-  } catch(err){showToast('✗ Error saving expense');console.error(err);}
+  });
 }
 
 /* ─── UPDATE EXPENSE ─── */
@@ -3616,10 +3751,32 @@ async function updateExpense() {
     exp.approvalStatus = 'pending_approval';
   }
   try {
-    await dbUpdate('expenses', exp);
-    editingExpId=null; receiptDataUrl=null; render();
-    const msg = !canAdmin() && exp.approvalStatus==='pending_approval' ? '✓ Expense resubmitted for approval!' : '✓ Expense #'+String(exp.serial).padStart(3,'0')+' updated!';
-    showToast(msg);
+    const rows = [
+      pvRow('Category', exp.category),
+      pvRow('Date', exp.date),
+      pvRow('Vendor', exp.vendor),
+      pvRow('Total', fmt(exp.amount)),
+      pvRow('Paid', fmt(exp.paidAmount||0)),
+      pvRow('Pending', fmt(exp.pendingAmount||0)),
+      pvRow('Notes', exp.notes),
+      pvRow('Approval', (exp.approvalStatus==='approved'?'Approved':'Pending Approval'))
+    ].filter(Boolean).join('');
+    openPreviewModal('Confirm Expense Update', rows, async () => {
+      await dbUpdate('expenses', exp);
+      const id = exp.id;
+      editingExpId=null; receiptDataUrl=null;
+      gotoPage('expense');
+      viewingExpId = String(id);
+      render();
+      setTimeout(() => {
+        viewingExpId = String(id);
+        render();
+        const el = document.querySelector(`[onclick*="toggleExpView('${id}')"]`);
+        if (el && el.scrollIntoView) el.scrollIntoView({ block:'center', behavior:'smooth' });
+      }, 60);
+      const msg = !canAdmin() && exp.approvalStatus==='pending_approval' ? '✓ Expense resubmitted for approval!' : '✓ Expense #'+String(exp.serial).padStart(3,'0')+' updated!';
+      showToast(msg);
+    });
   } catch(err){showToast('✗ Error updating expense');console.error(err);}
 }
 
@@ -3644,6 +3801,7 @@ async function markReceived(id,e){
   if(e) e.stopPropagation();
   const don=donations.find(d=>String(d.id)===String(id));
   if(!don) return;
+  if (!confirm(`Mark donation #${String(don.serial).padStart(3,'0')} as Payment Received?`)) return;
   don.received='yes';
   try{ await dbUpdate('donations', don); render(); showToast('✅ Marked as Received!'); }
   catch(err){ showToast('✗ Error updating'); }
