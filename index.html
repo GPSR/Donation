@@ -634,10 +634,21 @@ async function initFirebase() {
   }
 }
 
+function promiseWithTimeout(p, ms, label) {
+  let t = null;
+  const timeout = new Promise((_, rej) => {
+    t = setTimeout(() => rej(new Error((label || 'Operation') + ' timed out')), ms);
+  });
+  return Promise.race([p, timeout]).finally(() => { if (t) clearTimeout(t); });
+}
+
 /* ── Firestore DB helpers ── */
 async function dbAdd(col, data) {
   const clean = stripUndefined(data);
-  const ref = await fsDb.collection(col).add(clean);
+  // Use a pre-generated doc id so we can proceed even if the network is flaky/offline.
+  const ref = fsDb.collection(col).doc();
+  // In offline mode Firestore should resolve quickly (local queue). Add a guard so UI never "hangs".
+  await promiseWithTimeout(ref.set(clean), 3500, 'Save').catch(e => console.warn('dbAdd delayed', e));
   return ref.id;
 }
 async function dbGetAll(col) {
@@ -647,7 +658,7 @@ async function dbGetAll(col) {
 async function dbUpdate(col, data) {
   const { id, ...rest } = data;
   const clean = stripUndefined(rest);
-  await fsDb.collection(col).doc(String(id)).set(clean);
+  await promiseWithTimeout(fsDb.collection(col).doc(String(id)).set(clean), 3500, 'Update').catch(e => console.warn('dbUpdate delayed', e));
 }
 async function dbGetByField(col, field, val) {
   const snap = await fsDb.collection(col).where(field, '==', val).limit(1).get();
@@ -1098,12 +1109,12 @@ function startRealtimeSync() {
   if (_donUnsub) _donUnsub();
   if (_expUnsub) _expUnsub();
   _donUnsub = fsDb.collection('donations').onSnapshot(snap => {
-    donations = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    donations = snap.docs.map(d => ({ id: d.id, ...d.data(), _pendingWrites: !!d.metadata?.hasPendingWrites }));
     donations.sort((a,b) => (a.serial||0) - (b.serial||0));
     render();
   }, err => console.warn('donations sync error', err));
   _expUnsub = fsDb.collection('expenses').onSnapshot(snap => {
-    expenses = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    expenses = snap.docs.map(d => ({ id: d.id, ...d.data(), _pendingWrites: !!d.metadata?.hasPendingWrites }));
     expenses.sort((a,b) => (a.serial||0) - (b.serial||0));
     render();
   }, err => console.warn('expenses sync error', err));
@@ -2122,21 +2133,23 @@ function renderDonation() {
 	          ${canEditThis?`<button class="det-btn edit-btn" onclick="openEditDonForm('${d.id}',event)">✏️ Edit</button>`:''}
 	        </div>
 	      </div>` : '';
-	    const itemInner = `<div class="li-top">
-	      <div>
+    const offlineChip = d._pendingWrites ? `<span class="badge" style="background:#E3F2FD;color:#1565C0;border:1px solid #90CAF9">OFFLINE</span>` : '';
+    const itemInner = `<div class="li-top">
+      <div>
 	        <div class="li-serial">#${String(d.serial).padStart(3,'0')} · ${d.date}</div>
 	        <div class="li-name">${maskedField(d.name,'text',!isRecv)}</div>
 	        ${d.relation&&d.relname?`<div class="li-meta">${d.relation} ${maskedField(d.relname,'text',!isRecv)}</div>`:''}
 	        <div class="li-meta">${d.city?'🏙 '+maskedField(d.city,'text',!isRecv):''}</div>
 	        ${donNotesSnippetHtml(d, !isRecv)}
 	      </div>
-	      <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
-	        <div class="li-amount">${donAmountHtml(d,appStatus)}</div>
-	        <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Payment Received':'Payment Pending'}</span>
-	        ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
-	        <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
-	      </div>
-	    </div>${detail}`;
+      <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+        <div class="li-amount">${donAmountHtml(d,appStatus)}</div>
+        <span class="badge ${isRecv?'recv':'pend'}">${isRecv?'Payment Received':'Payment Pending'}</span>
+        ${offlineChip}
+        ${appStatus&&appStatus!=='approved'?approvalBadgeHtml(appStatus):''}
+        <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
+      </div>
+    </div>${detail}`;
 	    const delWrap = canAdmin()
 	      ? `<div class="swipe-row ${isViewing?'list-item-open':''}" data-swipe-open="0"
 	           onpointerdown="swipeStart(event,this)" onpointermove="swipeMove(event,this)" onpointerup="swipeEnd(event,this)" onpointercancel="swipeEnd(event,this)">
@@ -2284,6 +2297,7 @@ function renderExpense() {
 	          ${canEditExp?`<button class="det-btn edit-btn" onclick="openEditExpForm('${e.id}',event)">✏️ Edit Expense</button>`:''}
 	        </div>
 	      </div>` : '';
+	    const offlineChip = e._pendingWrites ? `<span class="badge" style="background:#E3F2FD;color:#1565C0;border:1px solid #90CAF9">OFFLINE</span>` : '';
 	    const itemInner = `<div class="li-top">
 	      <div>
 	        <div class="li-serial">#${String(e.serial).padStart(3,'0')} · ${e.date}</div>
@@ -2293,6 +2307,7 @@ function renderExpense() {
 	      <div style="text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:4px">
 	        <div class="li-amount" style="color:var(--green)">${maskedAmount(e.amount,eAppStatus)}</div>
 	        <span class="badge ${sc}">${sl}</span>
+	        ${offlineChip}
 	        ${eAppStatus&&eAppStatus!=='approved'?approvalBadgeHtml(eAppStatus):''}
 	        <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
 	      </div>
@@ -3235,7 +3250,11 @@ function openPreviewModal(title, rowsHtml, onConfirm) {
   btn.onclick = async () => {
     btn.disabled = true;
     btn.textContent = 'Saving…';
-    try { await onConfirm(); overlay.remove(); }
+    try {
+      // Guard against indefinite pending while offline/flaky networks.
+      await promiseWithTimeout(onConfirm(), 6500, 'Save');
+      overlay.remove();
+    }
     catch(e) { console.error(e); btn.disabled=false; btn.textContent='✅ Confirm'; showToast('✗ Failed to save'); }
   };
 }
