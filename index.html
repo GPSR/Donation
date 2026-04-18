@@ -673,7 +673,8 @@ async function dbMetaGet(key) {
   } catch { return null; }
 }
 async function dbMetaSet(key, val) {
-  await fsDb.collection('metadata').doc(key).set({ value: val });
+  await promiseWithTimeout(fsDb.collection('metadata').doc(key).set({ value: val }), 2000, 'Meta save')
+    .catch(e => console.warn('dbMetaSet delayed', e));
 }
 async function dbDelete(col, id) {
   await fsDb.collection(col).doc(String(id)).delete();
@@ -1177,8 +1178,11 @@ async function loadDataFromDB() {
 }
 
 async function saveToDB() {
-  await dbMetaSet('donSerial', donSerial);
-  await dbMetaSet('expSerial', expSerial);
+  // Best-effort: avoid blocking UI when offline.
+  await Promise.all([
+    dbMetaSet('donSerial', donSerial),
+    dbMetaSet('expSerial', expSerial)
+  ]).catch(e => console.warn('saveToDB delayed', e));
 }
 
 /* ─── YEAR HELPERS ─── */
@@ -3251,11 +3255,22 @@ function openPreviewModal(title, rowsHtml, onConfirm) {
     btn.disabled = true;
     btn.textContent = 'Saving…';
     try {
-      // Guard against indefinite pending while offline/flaky networks.
-      await promiseWithTimeout(onConfirm(), 6500, 'Save');
+      // Confirm callback is responsible for handling offline flow; don't turn offline saves into "failed".
+      await promiseWithTimeout(onConfirm(), 8000, 'Save');
       overlay.remove();
     }
-    catch(e) { console.error(e); btn.disabled=false; btn.textContent='✅ Confirm'; showToast('✗ Failed to save'); }
+    catch(e) {
+      console.error(e);
+      // If we're offline and a save "times out", it is likely queued; keep UX optimistic.
+      if (!navigator.onLine && String(e.message||'').toLowerCase().includes('timed out')) {
+        overlay.remove();
+        showToast('📴 Saved offline (sync pending)');
+        return;
+      }
+      btn.disabled=false;
+      btn.textContent='✅ Confirm';
+      showToast('✗ Failed to save');
+    }
   };
 }
 
@@ -3656,7 +3671,7 @@ async function saveDonation() {
   openPreviewModal('Confirm New Donation', rows, async () => {
     const id=await dbAdd('donations', d); d.id=id;
     donSerial++;
-    await saveToDB(); receiptDataUrl=null; showDonForm=false;
+    saveToDB(); receiptDataUrl=null; showDonForm=false;
     gotoPage('donation');
     viewingDonId = String(id);
     render();
@@ -3810,7 +3825,7 @@ async function saveExpense() {
   openPreviewModal('Confirm New Expense', rows, async () => {
     const id=await dbAdd('expenses', e); e.id=id;
     expSerial++;
-    await saveToDB(); receiptDataUrl=null; showExpForm=false;
+    saveToDB(); receiptDataUrl=null; showExpForm=false;
     gotoPage('expense');
     viewingExpId = String(id);
     render();
