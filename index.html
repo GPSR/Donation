@@ -2154,10 +2154,10 @@ function renderDonation() {
         <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
       </div>
     </div>${detail}`;
-	    const delWrap = canAdmin()
+	    const delWrap = (canAdmin() && !isViewing)
 	      ? `<div class="swipe-row ${isViewing?'list-item-open':''}" data-swipe-open="0"
 	           onpointerdown="swipeStart(event,this)" onpointermove="swipeMove(event,this)" onpointerup="swipeEnd(event,this)" onpointercancel="swipeEnd(event,this)">
-	          <div class="swipe-actions"><button class="swipe-del-btn" onclick="deleteDonation('${d.id}',event)">Delete</button></div>
+	          <div class="swipe-actions"><button class="swipe-del-btn" onclick="event.stopPropagation();deleteDonation('${d.id}',event)">Delete</button></div>
 	          <div class="swipe-content"><div class="list-item don-item ${isViewing?'list-item-open':''}" onclick="toggleDonView('${d.id}')">${itemInner}</div></div>
 	        </div>`
 	      : `<div class="list-item don-item ${isViewing?'list-item-open':''}" onclick="toggleDonView('${d.id}')">${itemInner}</div>`;
@@ -2316,10 +2316,10 @@ function renderExpense() {
 	        <span style="font-size:10px;color:var(--text3)">${isViewing?'▲ Close':'▼ View'}</span>
 	      </div>
 	    </div>${detail}`;
-	    const delWrap = canAdmin()
+	    const delWrap = (canAdmin() && !isViewing)
 	      ? `<div class="swipe-row ${isViewing?'list-item-open':''}" data-swipe-open="0"
 	           onpointerdown="swipeStart(event,this)" onpointermove="swipeMove(event,this)" onpointerup="swipeEnd(event,this)" onpointercancel="swipeEnd(event,this)">
-	          <div class="swipe-actions"><button class="swipe-del-btn" onclick="deleteExpense('${e.id}',event)">Delete</button></div>
+	          <div class="swipe-actions"><button class="swipe-del-btn" onclick="event.stopPropagation();deleteExpense('${e.id}',event)">Delete</button></div>
 	          <div class="swipe-content"><div class="list-item exp-item ${isViewing?'list-item-open':''}" onclick="toggleExpView('${e.id}')">${itemInner}</div></div>
 	        </div>`
 	      : `<div class="list-item exp-item ${isViewing?'list-item-open':''}" onclick="toggleExpView('${e.id}')">${itemInner}</div>`;
@@ -3430,6 +3430,8 @@ function swipeStart(e, row) {
   if (!row) return;
   // If the row is already open and the user taps the content area, close it instead of blocking clicks.
   const isDeleteBtn = e.target && (e.target.classList?.contains('swipe-del-btn') || e.target.closest?.('.swipe-del-btn'));
+  // Let the delete button click behave normally; don't start swipe tracking.
+  if (isDeleteBtn) return;
   if (row.classList.contains('swiped') && !isDeleteBtn) {
     row.classList.remove('swiped');
     return;
