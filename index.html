@@ -3267,6 +3267,30 @@ function openPreviewModal(title, rowsHtml, onConfirm) {
         showToast('📴 Saved offline (sync pending)');
         return;
       }
+      // Offline: even if some step fails, try to navigate to the last created/updated record so the user can see it.
+      if (!navigator.onLine && window._postSaveNav && window._postSaveNav.page) {
+        const nav = window._postSaveNav;
+        window._postSaveNav = null;
+        overlay.remove();
+        try {
+          gotoPage(nav.page);
+          if (nav.page === 'donation') viewingDonId = String(nav.id);
+          if (nav.page === 'expense') viewingExpId = String(nav.id);
+          render();
+          setTimeout(() => {
+            try {
+              if (nav.page === 'donation') viewingDonId = String(nav.id);
+              if (nav.page === 'expense') viewingExpId = String(nav.id);
+              render();
+              const sel = nav.page === 'donation' ? `toggleDonView('${nav.id}')` : `toggleExpView('${nav.id}')`;
+              const el = document.querySelector(`[onclick*="${sel}"]`);
+              if (el && el.scrollIntoView) el.scrollIntoView({ block:'center', behavior:'smooth' });
+            } catch(_) {}
+          }, 60);
+        } catch(_) {}
+        showToast('📴 Saved offline (sync pending)');
+        return;
+      }
       btn.disabled=false;
       btn.textContent='✅ Confirm';
       showToast('✗ Failed to save');
@@ -3670,6 +3694,7 @@ async function saveDonation() {
   ].filter(Boolean).join('');
   openPreviewModal('Confirm New Donation', rows, async () => {
     const id=await dbAdd('donations', d); d.id=id;
+    window._postSaveNav = { page:'donation', id };
     donSerial++;
     saveToDB(); receiptDataUrl=null; showDonForm=false;
     gotoPage('donation');
@@ -3777,6 +3802,7 @@ async function updateDonation() {
   openPreviewModal('Confirm Donation Update', rows, async () => {
     await dbUpdate('donations', don);
     const id = don.id;
+    window._postSaveNav = { page:'donation', id };
     editingDonId=null; receiptDataUrl=null;
     gotoPage('donation');
     viewingDonId = String(id);
@@ -3824,6 +3850,7 @@ async function saveExpense() {
   ].filter(Boolean).join('');
   openPreviewModal('Confirm New Expense', rows, async () => {
     const id=await dbAdd('expenses', e); e.id=id;
+    window._postSaveNav = { page:'expense', id };
     expSerial++;
     saveToDB(); receiptDataUrl=null; showExpForm=false;
     gotoPage('expense');
@@ -3899,6 +3926,7 @@ async function updateExpense() {
     openPreviewModal('Confirm Expense Update', rows, async () => {
       await dbUpdate('expenses', exp);
       const id = exp.id;
+      window._postSaveNav = { page:'expense', id };
       editingExpId=null; receiptDataUrl=null;
       gotoPage('expense');
       viewingExpId = String(id);
