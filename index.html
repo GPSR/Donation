@@ -1862,6 +1862,7 @@ function renderDonation() {
 	        <div class="don-detail-row"><span class="don-detail-lbl">🏙 City</span><span>${maskedField(d.city,'text',!isRecv)}</span></div>
 	        <div class="don-detail-row"><span class="don-detail-lbl">📍 State</span><span>${maskedField(d.state,'text',!isRecv)}</span></div>
 	        <div class="don-detail-row"><span class="don-detail-lbl">🎁 Donation Type</span><span style="font-weight:800">${donTypeOf(d)==='money'?'Money':'Other'}</span></div>
+	        ${donTypeOf(d)==='other' && d.notes?`<div class="don-detail-row"><span class="don-detail-lbl">📝 Notes</span><span>${maskedField(d.notes,'text')}</span></div>`:''}
 	        ${donTypeOf(d)==='money'?`<div class="don-detail-row"><span class="don-detail-lbl">💰 Amount</span><span>${maskedAmount(d.amount,appStatus)}</span></div>`:''}
 	        ${donTypeOf(d)==='money'?`<div class="don-detail-row"><span class="don-detail-lbl">📝 Words</span><span style="font-style:italic">${d.amountWords||'—'}</span></div>`:''}
 	        <div class="don-detail-row"><span class="don-detail-lbl">🕒 Saved</span><span>${new Date(d.createdAt).toLocaleString('en-IN')}</span></div>
@@ -2131,18 +2132,21 @@ function donForm() {
     <div class="fgroup"><label class="flabel">City</label><input class="finput" id="df-city" placeholder="City or Town"></div>
     <div class="fgroup"><label class="flabel">State</label><div class="sel-wrap"><select class="fselect" id="df-state">${indiaStates('')}</select></div></div>
     <div class="fgroup"><label class="flabel">Mobile Number</label><input class="finput" id="df-mobile" type="tel" placeholder="10-digit mobile" maxlength="10"></div>
-    <div class="fgroup"><label class="flabel">Donation Type</label>
-      <div class="sel-wrap">
-        <select class="fselect" id="df-type" onchange="setDonType(this.value,'df')">
-          <option value="money" ${donType==='money'?'selected':''}>Money</option>
-          <option value="other" ${donType==='other'?'selected':''}>Other</option>
-        </select>
-      </div>
-    </div>
-    <div id="df-money-fields" style="display:${donType==='money'?'block':'none'}">
-      <div class="amt-card">
-        <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="df-amt" placeholder="0" min="0" oninput="updDonWords()"></div>
-        <div class="divhr"></div>
+	    <div class="fgroup"><label class="flabel">Donation Type</label>
+	      <div class="sel-wrap">
+	        <select class="fselect" id="df-type" onchange="setDonType(this.value,'df')">
+	          <option value="money" ${donType==='money'?'selected':''}>Money</option>
+	          <option value="other" ${donType==='other'?'selected':''}>Other</option>
+	        </select>
+	      </div>
+	    </div>
+	    <div id="df-other-fields" style="display:${donType==='other'?'block':'none'}">
+	      <div class="fgroup"><label class="flabel">Add Notes</label><textarea class="ftextarea" id="df-notes" rows="2" placeholder="Describe the other donation (items, service, etc.)"></textarea></div>
+	    </div>
+	    <div id="df-money-fields" style="display:${donType==='money'?'block':'none'}">
+	      <div class="amt-card">
+	        <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="df-amt" placeholder="0" min="0" oninput="updDonWords()"></div>
+	        <div class="divhr"></div>
         <div class="flabel" style="margin-bottom:3px">Amount in Words</div>
         <div class="words-box" id="df-words">—</div>
       </div>
@@ -2199,18 +2203,21 @@ function editDonForm() {
     <div class="fgroup"><label class="flabel">City</label><input class="finput" id="ef2-city" value="${d.city||''}" placeholder="City or Town"></div>
     <div class="fgroup"><label class="flabel">State</label><div class="sel-wrap"><select class="fselect" id="ef2-state">${indiaStates(d.state||'')}</select></div></div>
     <div class="fgroup"><label class="flabel">Mobile Number</label><input class="finput" id="ef2-mobile" type="tel" value="${d.mobile||''}" maxlength="10"></div>
-    <div class="fgroup"><label class="flabel">Donation Type</label>
-      <div class="sel-wrap">
-        <select class="fselect" id="ef2-type" onchange="setDonType(this.value,'ef2')">
-          <option value="money" ${donType==='money'?'selected':''}>Money</option>
-          <option value="other" ${donType==='other'?'selected':''}>Other</option>
-        </select>
-      </div>
-    </div>
-    <div id="ef2-money-fields" style="display:${donType==='money'?'block':'none'}">
-      <div class="amt-card">
-        <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="ef2-amt" value="${d.amount||''}" min="0" oninput="updEditWords()"></div>
-        <div class="divhr"></div>
+	    <div class="fgroup"><label class="flabel">Donation Type</label>
+	      <div class="sel-wrap">
+	        <select class="fselect" id="ef2-type" onchange="setDonType(this.value,'ef2')">
+	          <option value="money" ${donType==='money'?'selected':''}>Money</option>
+	          <option value="other" ${donType==='other'?'selected':''}>Other</option>
+	        </select>
+	      </div>
+	    </div>
+	    <div id="ef2-other-fields" style="display:${donType==='other'?'block':'none'}">
+	      <div class="fgroup"><label class="flabel">Add Notes</label><textarea class="ftextarea" id="ef2-notes" rows="2" placeholder="Describe the other donation (items, service, etc.)">${d.notes||''}</textarea></div>
+	    </div>
+	    <div id="ef2-money-fields" style="display:${donType==='money'?'block':'none'}">
+	      <div class="amt-card">
+	        <div class="amt-row"><span class="rsym">₹</span><input class="amt-input" type="number" id="ef2-amt" value="${d.amount||''}" min="0" oninput="updEditWords()"></div>
+	        <div class="divhr"></div>
         <div class="flabel" style="margin-bottom:3px">Amount in Words</div>
         <div class="words-box" id="ef2-words">${d.amountWords||'—'}</div>
       </div>
@@ -2892,7 +2899,9 @@ function setRecv(v) {
 function setDonType(v, prefix) {
   donType = (v === 'other') ? 'other' : 'money';
   const wrap = document.getElementById(prefix + '-money-fields');
+  const otherWrap = document.getElementById(prefix + '-other-fields');
   if (wrap) wrap.style.display = (donType === 'money') ? 'block' : 'none';
+  if (otherWrap) otherWrap.style.display = (donType === 'other') ? 'block' : 'none';
   if (donType !== 'money') {
     // Reset money-only state to avoid saving stale amount/receipt info.
     setRecv('no');
@@ -3005,6 +3014,7 @@ document.addEventListener('click', function(e) {
 async function saveDonation() {
   const name=(document.getElementById('df-name')?.value||'').trim();
   const dtype=(document.getElementById('df-type')?.value||donType||'money');
+  const notes=(document.getElementById('df-notes')?.value||'').trim();
   const amt=parseFloat(document.getElementById('df-amt')?.value)||0;
   if(!name){showToast('⚠ Please enter donor name');return;}
   if(dtype==='money' && !amt){showToast('⚠ Please enter amount');return;}
@@ -3021,6 +3031,7 @@ async function saveDonation() {
     state:document.getElementById('df-state')?.value||'',
     mobile:document.getElementById('df-mobile')?.value||'',
     donationType: dtype==='other'?'other':'money',
+    notes: dtype==='other'?notes:'',
     amount: dtype==='money'?amt:null,
     amountWords: dtype==='money'?amtWords(amt):'',
     received: dtype==='money'?(donReceived||'no'):'no',
@@ -3042,6 +3053,7 @@ async function saveDonation() {
 async function updateDonation() {
   const name=(document.getElementById('ef2-name')?.value||'').trim();
   const dtype=(document.getElementById('ef2-type')?.value||donType||'money');
+  const notes=(document.getElementById('ef2-notes')?.value||'').trim();
   const amt=parseFloat(document.getElementById('ef2-amt')?.value)||0;
   if(!name){showToast('⚠ Please enter donor name');return;}
   if(dtype==='money' && !amt){showToast('⚠ Please enter amount');return;}
@@ -3060,6 +3072,7 @@ async function updateDonation() {
   don.mobile=document.getElementById('ef2-mobile')?.value||'';
   don.donationType = dtype==='other'?'other':'money';
   if (don.donationType === 'money') {
+    don.notes = '';
     don.amount=amt; don.amountWords=amtWords(amt);
     don.received=donReceived||don.received||'no';
     // receiptDataUrl: null=no change, '__REMOVED__'=user cleared it, else=new image
@@ -3070,6 +3083,7 @@ async function updateDonation() {
     }
     // else: keep don.receiptImage unchanged
   } else {
+    don.notes = notes;
     don.amount = null;
     don.amountWords = '';
     don.received = 'no';
